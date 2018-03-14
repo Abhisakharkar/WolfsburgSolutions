@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Work</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="mrp"> <strike>this is mrp</strike></string>
+
+    <string-array name="shop_category">
+        <item>category 1</item>
+        <item>category 2</item>
+        <item>category 3</item>
+        <item>category 4</item>
+        <item>category 5</item>
+        <item>category 6</item>
+        <item>category 7</item>
+        <item>category 8</item>
+        <item>category 9</item>
+        <item>category 10</item>
+    </string-array>
+
+</resources>

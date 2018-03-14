@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="134dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="8dp"
+    android:elevation="16dp"
+    app:cardCornerRadius="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="134dp">
+
+        <RadioButton
+            android:id="@+id/item_availability_btn_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical" />
+
+        <RelativeLayout
+            android:id="@+id/item_relativelayout_product_part_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/item_availability_btn_id">
+
+
+            <ImageView
+                android:id="@+id/itemslist_row_image_id"
+                android:layout_marginLeft="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/temp_item_image" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/itemslist_row_image_id"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/itemslist_name_textview_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Item Name"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/itemlist_category_textview_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/item_mrp_textview_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/mrp_strike_effect_vector"
+                    android:text="MRP: Rs.800"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/item_start_btn_id"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="8dp"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/star_btn_solid_vector" />
+
+            <Button
+                android:id="@+id/item_selling_price_textview_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/promote_product_btn_id"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="8dp"
+                android:elevation="4dp"
+                android:backgroundTint="#fff"
+                android:text="Rs.800"
+                android:textColor="#000"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/promote_product_btn_id"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="8dp"
+                android:backgroundTint="@android:color/transparent"
+                android:gravity="center"
+                android:text="Promote product"
+                android:textColor="#123456" />
+
+
+            <FrameLayout
+                android:id="@+id/item_not_available_framelayout_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/item_product_part_disable_view"
+                android:visibility="invisible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Item Not Available"
+                    android:textColor="#fff"
+                    android:textSize="24dp" />
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

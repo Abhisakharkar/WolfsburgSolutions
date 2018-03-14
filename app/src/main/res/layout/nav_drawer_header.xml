@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_drawer_header_percenrRelative_id"
+    android:layout_width="match_parent"
+    android:layout_height="176dp"
+    android:backgroundTint="@color/colorPrimary">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_header_frameLayout_id"
+        android:background="@color/colorPrimary" />
+
+    <LinearLayout
+        android:id="@+id/nav_header_linear_layout_id"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/nav_header_profile_pic_id"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:srcCompat="@drawable/nav_header_pro_pic" />
+
+        <TextView
+            android:id="@+id/nav_header_name_textview_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:layout_marginTop="8dp"
+            android:textColor="#fff"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/nav_header_shopId_textview_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:text="shop id"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

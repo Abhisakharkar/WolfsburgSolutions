@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayoutId"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.abhishek.work.MainActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayoutId"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/CollapsingToolbarLayoutId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:contentScrim="@color/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:scrimAnimationDuration="200"
+                app:titleEnabled="false">
+
+                <ImageView
+                    android:id="@+id/collapsingToolbarImageViewId"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutContainerId"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutNameContainerId"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:layout_alignParentBottom="true">
+
+                        <TextView
+                            android:id="@+id/shopNameTextviewId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="4dp"
+                            android:text="Shop Name"
+                            android:textColor="#fff"
+                            android:textSize="32sp" />
+
+                        <TextView
+                            android:id="@+id/openCloseTextviewId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@id/shopNameTextviewId"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="24dp"
+                            android:textColor="#fff" />
+
+                        <Switch
+                            android:id="@+id/openCloseBtnId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="16dp" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbarId"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    app:contentInsetEnd="0dp"
+                    app:contentInsetLeft="0dp"
+                    app:contentInsetRight="0dp"
+                    app:contentInsetStart="0dp"
+                    app:layout_collapseMode="pin"
+                    app:title="AppName">
+
+                    <RelativeLayout
+                        android:id="@+id/toolbarRelativeLayoutId"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageButton
+                            android:id="@+id/notificationBtnId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentRight="true"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/notification_btn_solid_vector" />
+
+                        <ImageButton
+                            android:id="@+id/starBtnId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@id/notificationBtnId"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/star_btn_solid_vector" />
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.Toolbar>
+
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/contentId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="900dp"
+            android:backgroundTint="#3d3d3d"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/itemslist_recyclerview_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/new_item_fab_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:src="@drawable/fab_plus_vector"
+            app:fabSize="normal" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigationViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_drawer_header"
+        app:menu="@menu/nav_drawer_menu" />
+
+</android.support.v4.widget.DrawerLayout>

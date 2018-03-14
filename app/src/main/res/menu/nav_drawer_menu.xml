@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_menu_home_id"
+        android:title="Home"/>
+    <item
+        android:id="@+id/nav_menu_manageSS_id"
+        android:title="Manage Shop Status"/>
+    <item
+        android:id="@+id/nav_menu_profile_id"
+        android:title="Profile"/>
+    <item
+        android:id="@+id/nav_menu_orders_id"
+        android:title="Orders"/>
+    <item
+        android:id="@+id/nav_menu_membership_id"
+        android:title="Membership"/>
+    <item
+        android:id="@+id/nav_menu_advertise_id"
+        android:title="Advertise"/>
+    <item
+        android:id="@+id/nav_menu_feedback_id"
+        android:title="Contact Us"/>
+
+</menu>

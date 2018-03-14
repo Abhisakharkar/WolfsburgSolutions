@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    // Custom Theme for Sign Up Activity
+    <style name="SignUpActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#ddd</item>
+    </style>
+
+    // Custom Theme for Sign In Activity
+    <style name="SignInActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#ddd</item>
+    </style>
+</resources>

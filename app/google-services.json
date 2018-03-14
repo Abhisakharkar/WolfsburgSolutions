@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_number": "174662666869",
+    "project_id": "wolfsburgretaile-1520678423854"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174662666869:android:538f0e84a508a392",
+        "android_client_info": {
+          "package_name": "com.example.abhishek.work"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174662666869-p9a9k2k81v2hc0t4ktn4msbqe92ka93b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.abhishek.work",
+            "certificate_hash": "3f52e43985893c0aba024583f5122f2993c27bc5"
+          }
+        },
+        {
+          "client_id": "174662666869-ki29jic63apc38tcghbh5g0o4rhdknoo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyDitUgm5miP3CoWYBvWzuL-G0bJIJi30"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-115507297-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
