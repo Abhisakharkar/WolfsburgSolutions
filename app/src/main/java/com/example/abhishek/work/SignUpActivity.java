@@ -3,6 +3,8 @@ package com.example.abhishek.work;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,39 +59,45 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             String password = "" + password_edittext.getText().toString();
             String confirmPassword = "" + confirm_password_edittext.getText().toString();
 
-            if (!email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty()) {
+            if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword)) {
 
-                if (password.equals(confirmPassword)) {
+                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
-                    Authentication authentication = new Authentication(SignUpActivity.this);
-                    authentication.signUp(email, password);
+                    if (TextUtils.equals(password, confirmPassword)) {
 
-                    //server response listener
-                    authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
-                        @Override
-                        public void onResponseReceive(JSONObject responseJSONObject) {
+                        Authentication authentication = new Authentication(SignUpActivity.this);
+                        authentication.signUp(email, password);
+
+                        //server response listener
+                        authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+                            @Override
+                            public void onResponseReceive(JSONObject responseJSONObject) {
 
 
-                            //after server sesponse is received
-                            try {
-                                String signUpStatus = responseJSONObject.getString("signUpStatus");
-                                Toast.makeText(SignUpActivity.this, "main : " + signUpStatus, Toast.LENGTH_SHORT).show();
+                                //after server sesponse is received
+                                try {
+                                    String signUpStatus = responseJSONObject.getString("signUpStatus");
+                                    Toast.makeText(SignUpActivity.this, "main : " + signUpStatus, Toast.LENGTH_SHORT).show();
 
-                                if (signUpStatus.equals("success")) {
-                                    startActivity(new Intent(SignUpActivity.this, ProfileActivity.class));
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Error in signing up ...", Toast.LENGTH_SHORT).show();
+                                    if (signUpStatus.equals("success")) {
+                                        startActivity(new Intent(SignUpActivity.this, ProfileActivity.class));
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Error in signing up ...", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+                        });
 
-                        }
-                    });
+                    } else {
+                        Toast.makeText(this, "passwords are not correct !", Toast.LENGTH_SHORT).show();
+                    }
 
                 } else {
-                    Toast.makeText(this, "passwords are not correct !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "check your email", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show();

@@ -1,5 +1,6 @@
 package com.example.abhishek.work;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,8 +67,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         context = LoginActivity.this;
 
-        networkStatusChecker = new NetworkStatusChecker(this);
 /*
+        networkStatusChecker = new NetworkStatusChecker(this);
+
         if (!networkStatusChecker.isConnected()) {
             //show dialog
             AlertDialog.Builder noNetworkDialog = new AlertDialog.Builder(this);
@@ -85,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                     };
                     Handler h = new Handler();
-                    h.postDelayed(waitTwoSec, 2000);
+                    h.postDelayed(waitTwoSec, 100);
 
                 }
             });
@@ -176,28 +180,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             email = email_edittext.getText().toString();
             password = password_edittext.getText().toString();
 
-            if ((email != null && !email.isEmpty()) && (password != null && !password.isEmpty())) {
-                Authentication authentication = new Authentication(LoginActivity.this);
-                authentication.signInWithEmail(email, password);
+            if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
 
-                authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
-                    @Override
-                    public void onResponseReceive(JSONObject responseJSONObject) {
+                if (Patterns.EMAIL_ADDRESS.matcher(password).matches()) {
 
-                        try {
-                            String response = responseJSONObject.getString("signInStatus");
+                    Authentication authentication = new Authentication(LoginActivity.this);
+                    authentication.signInWithEmail(email, password);
 
-                            if (response.equals("signInPass")) {
-                                //sign in success
-                            } else if (response.equals("signInFailed")) {
-                                //sign in failed
+                    authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+                        @Override
+                        public void onResponseReceive(JSONObject responseJSONObject) {
+
+                            try {
+                                String response = responseJSONObject.getString("signInStatus");
+
+                                if (response.equals("signInPass")) {
+                                    //sign in success
+                                } else if (response.equals("signInFailed")) {
+                                    //sign in failed
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
-                });
+                    });
+
+                } else {
+                    Toast.makeText(context, "check yout email", Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show();
