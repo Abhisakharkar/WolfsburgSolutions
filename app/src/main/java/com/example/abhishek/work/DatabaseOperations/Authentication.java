@@ -26,7 +26,7 @@ import java.util.Map;
 public class Authentication {
 
     //Database URLs
-    private String databaseURL = "http://a84eb416.ngrok.io/work/Auth.php";
+    private String databaseURL = "Server Url";
 
     //Request Objects
     private Context context;
