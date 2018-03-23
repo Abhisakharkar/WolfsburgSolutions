@@ -175,11 +175,21 @@
             android:elevation="5dp"
             android:text="Save Shop Location" />
 
+        <ImageView
+            android:id="@+id/shop_pic_view_id"
+            android:layout_width="144dp"
+            android:layout_height="144dp"
+            android:layout_below="@id/shop_location_btn_id"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#888"
+            android:src="@drawable/nav_header_pro_pic" />
+
         <Button
             android:id="@+id/shop_photo_btn_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/shop_location_btn_id"
+            android:layout_below="@id/shop_pic_view_id"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
@@ -187,11 +197,22 @@
             android:elevation="5dp"
             android:text="Save Shop Photo" />
 
+        <ImageView
+            android:id="@+id/shop_license_pic_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="144dp"
+            android:scaleType="center"
+            android:layout_below="@id/shop_photo_btn_id"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#888"
+            android:src="@drawable/nav_header_pro_pic" />
+
         <Button
             android:id="@+id/shop_license_photo_btn_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/shop_photo_btn_id"
+            android:layout_below="@id/shop_license_pic_view_id"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"

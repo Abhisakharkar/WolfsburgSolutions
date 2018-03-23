@@ -16,6 +16,7 @@
 
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">#ddd</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     // Custom Theme for Sign In Activity

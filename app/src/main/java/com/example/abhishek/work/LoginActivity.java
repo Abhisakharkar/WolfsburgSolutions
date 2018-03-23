@@ -34,6 +34,8 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int RC_SIGN_IN = 105;
