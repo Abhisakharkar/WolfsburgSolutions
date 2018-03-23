@@ -208,10 +208,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 } else {
                     showImageSelectDialog();
                 }
-
                 break;
-
-
         }
     }
 
@@ -364,12 +361,6 @@ public class ProfileActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        /*
-        int locationPermission = ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (locationPermission == PackageManager.PERMISSION_GRANTED) {
-            getLocation();
-        }
-        */
 
         //for location
         if (requestCode == LOC_PERM_REQ_CODE) {
@@ -380,16 +371,6 @@ public class ProfileActivity extends AppCompatActivity implements
                 //location permission not granted
             }
         }
-
-        /*
-        int storageReadPermission = ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int storageWritePermission = ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (storageReadPermission == PackageManager.PERMISSION_GRANTED) {
-            if (storageWritePermission == PackageManager.PERMISSION_GRANTED) {
-                showImageSelectDialog();
-            }
-        }
-        */
 
         if (requestCode == STOARAGE_PERM_REQ_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
