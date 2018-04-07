@@ -8,27 +8,13 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.abhishek.work.DatabaseOperations.Authentication;
-import com.example.abhishek.work.SupportClasses.OnResponseReceiveListener;
-import com.example.abhishek.work.SupportClasses.ServerResponse;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,22 +59,21 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             @Override
                             public void onResponseReceive(JSONObject responseJSONObject) {
 
-
-                                //after server sesponse is received
                                 try {
-                                    String signUpStatus = responseJSONObject.getString("signUpStatus");
-                                    Toast.makeText(SignUpActivity.this, "main : " + signUpStatus, Toast.LENGTH_SHORT).show();
-
-                                    if (signUpStatus.equals("success")) {
-                                        startActivity(new Intent(SignUpActivity.this, ProfileActivity.class));
+                                    boolean result = responseJSONObject.getBoolean("result");
+                                    if (result) {
+                                        //go to profile activity
+                                        Intent intent = new Intent(SignUpActivity.this,ProfileActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
                                     } else {
-                                        Toast.makeText(getApplicationContext(), "Error in signing up ...", Toast.LENGTH_SHORT).show();
+                                        //some error occured
+                                        //try again to sign up
+                                        Toast.makeText(SignUpActivity.this, "Please try again !", Toast.LENGTH_SHORT).show();
                                     }
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
                             }
                         });
 
@@ -102,11 +87,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             } else {
                 Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show();
             }
-
         }
 
         if (view.getId() == R.id.sign_in_link_btn) {
-            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

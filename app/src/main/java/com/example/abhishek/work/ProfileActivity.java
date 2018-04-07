@@ -1,30 +1,27 @@
 package com.example.abhishek.work;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.telephony.PhoneNumberUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,47 +30,60 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.abhishek.work.SupportClasses.AndroidVersionChecker;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.example.abhishek.work.DatabaseOperations.Authentication;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.LocationResponse;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.OnLocationResponseReceiveListener;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity implements
-        View.OnClickListener
-        , GoogleApiClient.ConnectionCallbacks
-        , GoogleApiClient.OnConnectionFailedListener {
+        View.OnClickListener {
 
     private Context context;
 
-    //private String fname, lname, mob_no, address, shop_name, user_id, password, confirm_password, proprieter, category;
-    private EditText fname_edit, lname_edit, mob_no_edit, address_edit, shop_name_edit, password_edit, confirm_password_edit, proprieter_edit;
+    //private String fname, lname, mob_no, address, shop_name, proprietor, category;
+    private EditText mob_no_edit, address_edit, shop_name_edit, password_edit, confirm_password_edit, proprieter_edit;
     private Button save_profile_btn, shop_location_btn, shop_pic_btn, shop_license_btn;
     private Spinner shop_category_spinner;
     private ImageButton imageButton;
     private ImageView shop_pic_imageview, shop_license_imageview;
 
-    //location
-    private LocationManager locationManager;
-    private double longitude;
-    private double latitude;
+    private String proprietor = "", address = "", shopName = "", mobileNo = "";
 
-    //GoogleApiClient
-    private GoogleApiClient googleApiClient;
+    private Authentication authentication = new Authentication(ProfileActivity.this);
+
+    //location
+    private String cityName, countryName, stateName;
+    private double longitude = 0, latitude = 0;
+    private LocationManager locationManager;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest;
+    private LocationResponse locationResponse;
 
     public static final int LOC_PERM_REQ_CODE = 201;
-    public static final int STOARAGE_PERM_REQ_CODE = 202;
-    public static final int CAMERA_REQ_CODE = 203;
-    public static final int GALLERY_REQ_CODE = 204;
+    public static final int LOC_ENABLE_REQ_CODE = 202;
+    public static final int STOARAGE_PERM_REQ_CODE = 203;
+    public static final int CAMERA_REQ_CODE = 204;
+    public static final int GALLERY_REQ_CODE = 205;
 
     private boolean isShopPic = false;
     private boolean isShopLicensePic = false;
@@ -86,78 +96,105 @@ public class ProfileActivity extends AppCompatActivity implements
         context = ProfileActivity.this;
 
         imageButton = (ImageButton) findViewById(R.id.pro_pic_btn_id);
-        fname_edit = (EditText) findViewById(R.id.fname_edittext_id);
-        lname_edit = (EditText) findViewById(R.id.lname_edittext_id);
         mob_no_edit = (EditText) findViewById(R.id.mob_no_edittext_id);
         address_edit = (EditText) findViewById(R.id.shop_address_edittext_id);
         shop_name_edit = (EditText) findViewById(R.id.shop_name_edittext_id);
         password_edit = (EditText) findViewById(R.id.password_edittext_profile_id);
         confirm_password_edit = (EditText) findViewById(R.id.confirm_password_edittext_profile_id);
         proprieter_edit = (EditText) findViewById(R.id.proprieter_edittext_id);
-
         shop_pic_imageview = (ImageView) findViewById(R.id.shop_pic_view_id);
         shop_license_imageview = (ImageView) findViewById(R.id.shop_license_pic_view_id);
-
         shop_category_spinner = (Spinner) findViewById(R.id.shop_category_spinner_id);
-
         save_profile_btn = (Button) findViewById(R.id.save_profile_btn_id);
         shop_location_btn = (Button) findViewById(R.id.shop_location_btn_id);
         shop_license_btn = (Button) findViewById(R.id.shop_license_photo_btn_id);
         shop_pic_btn = (Button) findViewById(R.id.shop_photo_btn_id);
-
 
         save_profile_btn.setOnClickListener(this);
         shop_location_btn.setOnClickListener(this);
         shop_pic_btn.setOnClickListener(this);
         shop_license_btn.setOnClickListener(this);
 
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, 0, this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        googleApiClient.connect();
-
         //location
         locationManager = (LocationManager) getSystemService(context.LOCATION_SERVICE);
+        locationResponse.setOnLocationResponseReceiveListener(new OnLocationResponseReceiveListener() {
+            @Override
+            public void onLocationResponseReceive(double longitude, double latitude) {
+                try {
+                    Geocoder geocoder = new Geocoder(ProfileActivity.this, Locale.getDefault());
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
 
+                    cityName = addresses.get(0).getLocality();
+                    countryName = addresses.get(0).getCountryName();
+                    stateName = addresses.get(0).getAdminArea();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.save_profile_btn_id:
+
+                proprietor = proprieter_edit.getText().toString();
+                mobileNo = mob_no_edit.getText().toString();
+                shopName = shop_name_edit.getText().toString();
+
+                if (!proprietor.isEmpty()) {
+                    if (!mobileNo.isEmpty()) {
+                        if (Patterns.PHONE.matcher(mobileNo).matches()) {
+                            if (!cityName.isEmpty() || !countryName.isEmpty() || !stateName.isEmpty()) {
+                                authentication.sendUserProfile(proprietor, shopName, mobileNo, longitude, latitude, cityName, stateName, countryName);
+                                authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+                                    @Override
+                                    public void onResponseReceive(JSONObject responseJSONObject) {
+                                        try {
+                                            boolean result = responseJSONObject.getBoolean("result");
+                                            if (result) {
+                                                //go to home page
+                                                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                startActivity(intent);
+                                            } else {
+                                                //error .... login again
+                                                Toast.makeText(context, "Please try again !", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(context, "Please set Location !", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(context, "Check mobile number !", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Please enter mobile number !", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, "Please enter proprietor name !", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.shop_location_btn_id:
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                    if (ActivityCompat.checkSelfPermission(context, "android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(context, "android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
+                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            getLocation();
+                        } else {
+                            showEnableGPSDialog();
+                        }
+                    } else {
                         String permissions[] = {"android.permission.ACCESS_FINE_LOCATION"};
                         requestPermissions(permissions, LOC_PERM_REQ_CODE);
-                    } else {
-                        getLocation();
                     }
                 } else {
                     getLocation();
@@ -235,7 +272,7 @@ public class ProfileActivity extends AppCompatActivity implements
                             getImage(0);
                         } else {
                             String[] cameraPermission = {"android.permission.CAMERA"};
-                            requestPermissions(cameraPermission,CAMERA_REQ_CODE);
+                            requestPermissions(cameraPermission, CAMERA_REQ_CODE);
                         }
                     } else {
                         getImage(0);
@@ -273,22 +310,188 @@ public class ProfileActivity extends AppCompatActivity implements
         }
     }
 
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationRequest = new LocationRequest();
+                locationRequest.setInterval(100);
+                locationRequest.setFastestInterval(50);
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+                fusedLocationProviderClient = new FusedLocationProviderClient(this);
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        Location location = locationResult.getLastLocation();
+                        longitude = location.getLongitude();
+                        latitude = location.getLatitude();
+                        locationResponse.saveLocationResponse(longitude, latitude);
+                        fusedLocationProviderClient.removeLocationUpdates(this);
+                    }
+                }, null);
+            } else {
+                showEnableGPSDialog();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                String permissions[] = {"android.permission.ACCESS_FINE_LOCATION"};
+                requestPermissions(permissions, LOC_PERM_REQ_CODE);
+            }
+        }
+    }
+
+    private void showEnableGPSDialog() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(100);
+        locationRequest.setFastestInterval(50);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse locationSettingsResponse = task.getResult(ApiException.class);
+                    //just get location now
+                    if (task.isSuccessful()) {
+                        getLocation();
+                    } else {
+                        AlertDialog.Builder gpsDalog = new AlertDialog.Builder(ProfileActivity.this);
+                        gpsDalog.setMessage("Please enable GPS !");
+                        gpsDalog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                showEnableGPSDialog();
+                            }
+                        });
+                        gpsDalog.setCancelable(false);
+                        gpsDalog.create();
+                        gpsDalog.show();
+                    }
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                    switch (e.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                            //show dialog
+                            try {
+                                resolvableApiException.startResolutionForResult(ProfileActivity.this, LOC_ENABLE_REQ_CODE);
+                            } catch (IntentSender.SendIntentException e1) {
+                                e1.printStackTrace();
+                            }
+                    }
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //for location
+        if (requestCode == LOC_PERM_REQ_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //location permission granted
+                getLocation();
+            } else {
+                //location permission not granted
+                AlertDialog.Builder locationDialog = new AlertDialog.Builder(ProfileActivity.this);
+                locationDialog.setMessage("Please give Location Permission !");
+                locationDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            String permissions[] = {"android.permission.ACCESS_FINE_LOCATION"};
+                            requestPermissions(permissions, LOC_PERM_REQ_CODE);
+                        }
+                    }
+                });
+                locationDialog.create();
+                locationDialog.show();
+            }
+        }
+
+        if (requestCode == STOARAGE_PERM_REQ_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                //storage permissions granted
+                showImageSelectDialog();
+            } else {
+                //storage permission not granted
+                AlertDialog.Builder storageDialog = new AlertDialog.Builder(ProfileActivity.this);
+                storageDialog.setMessage("Please give Storage Permission !");
+                storageDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+                            requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
+                        }
+                    }
+                });
+                storageDialog.create();
+                storageDialog.show();
+            }
+        }
+
+        //camera permissions
+        if (requestCode == CAMERA_REQ_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getImage(0);
+            } else {
+                AlertDialog.Builder cameraDialog = new AlertDialog.Builder(ProfileActivity.this);
+                cameraDialog.setMessage("Please give Camera Permission !");
+                cameraDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            String[] permissions = {"android.permission.CAMERA"};
+                            requestPermissions(permissions, CAMERA_REQ_CODE);
+                        }
+                    }
+                });
+                cameraDialog.create();
+                cameraDialog.show();
+            }
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == LOC_ENABLE_REQ_CODE) {
+            if (resultCode == RESULT_OK) {
+                //gps enabled
+                getLocation();
+            } else {
+                //gps not enabled
+                AlertDialog.Builder gpsDalog = new AlertDialog.Builder(ProfileActivity.this);
+                gpsDalog.setMessage("Please enable GPS !");
+                gpsDalog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showEnableGPSDialog();
+                    }
+                });
+                gpsDalog.setCancelable(false);
+                gpsDalog.create();
+                gpsDalog.show();
+            }
+        }
+
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQ_CODE) {
-
                 Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
-
                 //set bitmap image to imageView
                 if (isShopPic == true && isShopLicensePic == false) {
                     shop_pic_imageview.setImageBitmap(photoBitmap);
                 } else if (isShopPic == false && isShopLicensePic == true) {
                     shop_license_imageview.setImageBitmap(photoBitmap);
                 }
-
                 shop_pic_imageview.setImageBitmap(photoBitmap);
                 //save to file
                 FileOutputStream fileOutputStream = null;
@@ -333,7 +536,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
                 //store bitmap image in app internal memory
                 FileOutputStream fileOutputStream;
-                try{
+                try {
                     if (!(new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images").exists())) {
                         File file = new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images");
                         file.mkdir();
@@ -350,7 +553,7 @@ public class ProfileActivity extends AppCompatActivity implements
                     fileOutputStream = new FileOutputStream(photoFile);
                     photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -358,96 +561,4 @@ public class ProfileActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        //for location
-        if (requestCode == LOC_PERM_REQ_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //location permission granted
-                getLocation();
-            } else {
-                //location permission not granted
-            }
-        }
-
-        if (requestCode == STOARAGE_PERM_REQ_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                //storage permissions granted
-                showImageSelectDialog();
-            } else {
-                //storage permission not granted
-            }
-        }
-
-        //camera permissions
-        if (requestCode == CAMERA_REQ_CODE){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getImage(0);
-            }
-        }
-
-    }
-
-
-    private void getLocation() {
-
-        if (googleApiClient != null) {
-            if (googleApiClient.isConnected()) {
-
-                final int locationPermission = ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-                if (locationPermission == PackageManager.PERMISSION_GRANTED) {
-
-                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-                        final LocationRequest locationRequest = new LocationRequest();
-                        locationRequest.setInterval(100);
-                        locationRequest.setFastestInterval(50);
-                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-
-                        LocationSettingsRequest.Builder locationSettingsRequestBuilder = new LocationSettingsRequest.Builder();
-                        locationSettingsRequestBuilder.addLocationRequest(locationRequest);
-                        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-                        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-                        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-                        final FusedLocationProviderClient fusedLocationProviderClient = new FusedLocationProviderClient(this);
-                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
-                            @Override
-                            public void onLocationResult(LocationResult locationResult) {
-                                Location location = locationResult.getLastLocation();
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                                Toast.makeText(context, "latitude : " + latitude + "\n" + "longitude : " + longitude, Toast.LENGTH_SHORT).show();
-                                fusedLocationProviderClient.removeLocationUpdates(this);
-                            }
-                        }, null);
-
-                    } else {
-                        new AlertDialog.Builder(context)
-                                .setTitle("Enable location")
-                                .setMessage("Please enable location")
-                                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                        startActivity(intent);
-                                    }
-                                })
-                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .create()
-                                .show();
-                    }
-                }
-            }
-        }
-    }
 }

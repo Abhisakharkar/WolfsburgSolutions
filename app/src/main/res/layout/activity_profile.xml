@@ -38,75 +38,10 @@
             android:src="@drawable/nav_header_pro_pic" />
 
         <EditText
-            android:id="@+id/fname_edittext_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pro_pic_btn_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="First Name"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <EditText
-            android:id="@+id/lname_edittext_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fname_edittext_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Last Name"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <EditText
-            android:id="@+id/mob_no_edittext_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/lname_edittext_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Mobile Number"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <EditText
-            android:id="@+id/password_edittext_profile_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mob_no_edittext_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Password"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <EditText
-            android:id="@+id/confirm_password_edittext_profile_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/password_edittext_profile_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Confirm Password"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <EditText
             android:id="@+id/proprieter_edittext_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/confirm_password_edittext_profile_id"
+            android:layout_below="@id/pro_pic_btn_id"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
@@ -115,11 +50,24 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp" />
 
+        <EditText
+            android:id="@+id/mob_no_edittext_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/proprieter_edittext_id"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:hint="Mobile Number"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+
         <TextView
             android:id="@+id/shop_details_textview_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/proprieter_edittext_id"
+            android:layout_below="@id/mob_no_edittext_id"
             android:layout_marginTop="24dp"
             android:gravity="center"
             android:text="Shop Details"
@@ -201,11 +149,11 @@
             android:id="@+id/shop_license_pic_view_id"
             android:layout_width="wrap_content"
             android:layout_height="144dp"
-            android:scaleType="center"
             android:layout_below="@id/shop_photo_btn_id"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:backgroundTint="#888"
+            android:scaleType="center"
             android:src="@drawable/nav_header_pro_pic" />
 
         <Button

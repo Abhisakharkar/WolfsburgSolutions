@@ -1,28 +1,22 @@
 package com.example.abhishek.work;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.NetworkInfo;
-import android.opengl.Visibility;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.abhishek.work.DatabaseOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.NetworkStatusChecker;
-import com.example.abhishek.work.SupportClasses.OnResponseReceiveListener;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,8 +27,6 @@ import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -194,14 +186,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onResponseReceive(JSONObject responseJSONObject) {
 
                             try {
-                                String response = responseJSONObject.getString("signInStatus");
+                                boolean response = responseJSONObject.getBoolean("result");
 
-                                if (response.equals("signInPass")) {
+                                if (response) {
                                     //sign in success
-                                } else if (response.equals("signInFailed")) {
-                                    //sign in failed
-                                }
 
+                                    boolean isPasswordCorrect = responseJSONObject.getBoolean("isPasswordCorrect");
+
+                                    if (isPasswordCorrect) {
+                                        //go to home page
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    } else {
+                                        //show popup that password is wrong
+                                        Toast.makeText(context, "Wrong Password !", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    //sign in failed
+                                    boolean isFoundInTemp = responseJSONObject.getBoolean("isFoundInTemp");
+                                    if (isFoundInTemp) {
+                                        boolean isDataComplete = responseJSONObject.getBoolean("isDataComplete");
+                                        if (isDataComplete) {
+                                            //go to home
+                                            //with full access
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        } else {
+                                            //go to profile page
+                                            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        }
+
+                                    } else {
+                                        //account not exist
+                                        //go to sign up
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                        builder.setTitle("Account does not exist");
+                                        builder.setMessage("Do you want to Sign Up ?");
+                                        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                            }
+                                        });
+                                        builder.create();
+                                        builder.show();
+                                    }
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -211,14 +253,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     Toast.makeText(context, "check yout email", Toast.LENGTH_SHORT).show();
                 }
-
             } else {
                 Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show();
             }
         }
 
         if (view.getId() == R.id.sign_up_link_btn_id) {
-            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
@@ -249,5 +292,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("Do you want to Exit ?");
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create();
+        builder.show();
     }
 }

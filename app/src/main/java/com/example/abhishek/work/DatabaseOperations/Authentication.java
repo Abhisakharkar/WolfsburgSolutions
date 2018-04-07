@@ -4,29 +4,23 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.abhishek.work.SupportClasses.OnResponseReceiveListener;
-import com.example.abhishek.work.SupportClasses.ServerResponse;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Authentication {
 
     //Database URLs
-    private String databaseURL = "Server Url";
+    private String databaseURL = "http://d1e6119b.ngrok.io/";
 
     //Request Objects
     private Context context;
@@ -63,19 +57,45 @@ public class Authentication {
         }
     }
 
+    //send profile data to server
+    public void sendUserProfile(String proprietor,String shopName,String mobileNo
+            ,double longitude,double latitude
+            ,String cityName,String stateName,String countryName){
+
+        try {
+
+            jsonObject = new JSONObject();
+            jsonObject.put("proprietor",proprietor);
+            jsonObject.put("enterpriseName",shopName);
+            jsonObject.put("contactNo",mobileNo);
+            jsonObject.put("city",cityName);
+            jsonObject.put("state",stateName);
+            jsonObject.put("country",countryName);
+            jsonObject.put("longitude",longitude);
+            jsonObject.put("latitude",latitude);
+
+            databaseURL = databaseURL+"addRetailerToTemp.js";
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
     public void signUp(String email, String password) {
 
         headers = new HashMap<>();
-        headers.put("req_type", "signUp");
-        headers.put("email", email);
-        headers.put("password", password);
+        //headers.put("req_type", "signUp");
+        headers.put("mail", email.toString());
+        headers.put("password", password.toString());
         try {
             jsonObject = new JSONObject();
-            jsonObject.put("req_type", "signUp");
-            jsonObject.put("email", email);
-            jsonObject.put("password", password);
+            //jsonObject.put("req_type", "signUp");
+            jsonObject.put("mail", email.toString());
+            jsonObject.put("password", password.toString());
+            Toast.makeText(context, email + " " + password, Toast.LENGTH_SHORT).show();
             reqBody = jsonObject.toString();
-
+            databaseURL = databaseURL+"signUp.js";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -87,15 +107,15 @@ public class Authentication {
 
         headers = new HashMap<>();
         headers.put("req_type", "signInWithEmail");
-        headers.put("email", email);
+        headers.put("mail", email);
         headers.put("password", password);
         try {
             jsonObject = new JSONObject();
             jsonObject.put("req_type", "signInWithEmail");
-            jsonObject.put("email", email);
+            jsonObject.put("mail", email);
             jsonObject.put("password", password);
             reqBody = jsonObject.toString();
-
+            databaseURL = databaseURL + "checkInPermanent.js";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -106,14 +126,35 @@ public class Authentication {
     private void sendRequest(String URL) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(headers)
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("sendRequest Response", response.toString());
+                try {
+                    //responseJSONObject = new JSONObject(response);
+                    Toast.makeText(context, "response : " + response.toString(), Toast.LENGTH_SHORT).show();
+                    serverResponse.saveResponse(responseJSONObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Response_Error", error.toString());
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
+/*
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("sendRequest Response", response.toString());
                 try {
                     responseJSONObject = new JSONObject(response);
+                    Toast.makeText(context, "response : "+ response.toString(), Toast.LENGTH_SHORT).show();
                     serverResponse.saveResponse(responseJSONObject);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -146,5 +187,6 @@ public class Authentication {
             }
         };
         requestQueue.add(stringRequest);
+*/
     }
 }
