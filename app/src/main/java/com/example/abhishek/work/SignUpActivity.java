@@ -1,6 +1,7 @@
 package com.example.abhishek.work;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +23,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText email_edittext, password_edittext, confirm_password_edittext;
     private Button signUpBtn, signInLinkBtn;
 
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +39,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         signUpBtn.setOnClickListener(this);
         signInLinkBtn.setOnClickListener(this);
+
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.sign_up_btn_id) {
 
-            String email = "" + email_edittext.getText().toString();
-            String password = "" + password_edittext.getText().toString();
+            final String email = "" + email_edittext.getText().toString();
+            final String password = "" + password_edittext.getText().toString();
             String confirmPassword = "" + confirm_password_edittext.getText().toString();
 
             if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword)) {
@@ -53,7 +60,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                         Authentication authentication = new Authentication(SignUpActivity.this);
                         authentication.signUp(email, password);
-
                         //server response listener
                         authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
                             @Override
@@ -62,6 +68,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 try {
                                     boolean result = responseJSONObject.getBoolean("result");
                                     if (result) {
+                                        //sign up successfull
+
+                                        //save data to SharedPref
+                                        editor.putString("email",email);
+                                        editor.putString("password",password);
+                                        editor.commit();
+
+
+
                                         //go to profile activity
                                         Intent intent = new Intent(SignUpActivity.this,ProfileActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

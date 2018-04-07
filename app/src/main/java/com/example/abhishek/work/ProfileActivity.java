@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -88,6 +88,9 @@ public class ProfileActivity extends AppCompatActivity implements
     private boolean isShopPic = false;
     private boolean isShopLicensePic = false;
 
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +117,9 @@ public class ProfileActivity extends AppCompatActivity implements
         shop_location_btn.setOnClickListener(this);
         shop_pic_btn.setOnClickListener(this);
         shop_license_btn.setOnClickListener(this);
+
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         //location
         locationManager = (LocationManager) getSystemService(context.LOCATION_SERVICE);
@@ -149,6 +155,19 @@ public class ProfileActivity extends AppCompatActivity implements
                     if (!mobileNo.isEmpty()) {
                         if (Patterns.PHONE.matcher(mobileNo).matches()) {
                             if (!cityName.isEmpty() || !countryName.isEmpty() || !stateName.isEmpty()) {
+
+                                //save data to sharedPref
+                                editor.putString("proprietor",proprietor);
+                                editor.putString("mobileNo",mobileNo);
+                                editor.putString("shopName",shopName);
+                                editor.putString("longitude",String.valueOf(longitude));
+                                editor.putString("latitude",String.valueOf(latitude));
+                                editor.putString("city",cityName);
+                                editor.putString("state",stateName);
+                                editor.putString("country",countryName);
+                                editor.commit();
+
+                                //send data to server
                                 authentication.sendUserProfile(proprietor, shopName, mobileNo, longitude, latitude, cityName, stateName, countryName);
                                 authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
                                     @Override
@@ -157,7 +176,7 @@ public class ProfileActivity extends AppCompatActivity implements
                                             boolean result = responseJSONObject.getBoolean("result");
                                             if (result) {
                                                 //go to home page
-                                                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                                                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 startActivity(intent);
                                             } else {

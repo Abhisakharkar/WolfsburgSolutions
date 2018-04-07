@@ -11,7 +11,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.abhishek.work.MainActivity">
+        tools:context="com.example.abhishek.work.HomeActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayoutId"

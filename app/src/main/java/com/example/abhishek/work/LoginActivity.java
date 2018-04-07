@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                     if (isPasswordCorrect) {
                                         //go to home page
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                     } else {
@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         if (isDataComplete) {
                                             //go to home
                                             //with full access
-                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(intent);
                                         } else {
