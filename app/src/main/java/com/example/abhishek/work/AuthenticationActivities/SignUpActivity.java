@@ -1,4 +1,4 @@
-package com.example.abhishek.work;
+package com.example.abhishek.work.AuthenticationActivities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.abhishek.work.ProfileActivity;
+import com.example.abhishek.work.R;
 import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 

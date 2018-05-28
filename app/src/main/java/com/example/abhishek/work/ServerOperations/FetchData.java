@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class FetchData {
 
-    private String URL = "http://3be4b96c.ngrok.io/";
+    private String URL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
     private Context context;
     private ServerResponse serverResponse = new ServerResponse();
     private JSONObject reqBody = new JSONObject();
@@ -37,18 +37,17 @@ public class FetchData {
         URL = URL+"magento_product_display";
         try {
             reqBody.put("name", name);
-            reqBody.put("id",id);
+            reqBody.put("id_category",id);
 
             header.put("Content-Type","application/json");
             header.put("name",name);
-            header.put("id",String.valueOf(id));
+            header.put("id_category",String.valueOf(id));
             sendRequest();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-    //1
     private void sendRequest(){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 

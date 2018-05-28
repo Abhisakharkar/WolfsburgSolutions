@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class Authentication {
 
     //Database URLs
-    private String databaseURL = "http://3ve4b96c.ngrok.io/";
+    private String databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
 
     //Request Objects
     private Context context;
@@ -32,18 +32,19 @@ public class Authentication {
     //Custom Response receive listener
     public ServerResponse serverResponse = new ServerResponse();
 
-    //cunstructor
+    //constructor
     public Authentication(Context context) {
         this.context = context;
     }
 
-
+    //Deprecated
     //method to check if required profile data of user is saved in database or not
     public void checkData(String email) {
 
         headers = new HashMap<>();
         headers.put("req_type", "checkDataIsAvailable");
         headers.put("email", email);
+        headers.put("Content-Type","application/json");
         try {
             jsonObject = new JSONObject();
             jsonObject.put("req_type", "checkDataIsAvailable");
@@ -74,7 +75,7 @@ public class Authentication {
             jsonObject.put("longitude",longitude);
             jsonObject.put("latitude",latitude);
 
-            databaseURL = databaseURL+"addRetailerToTemp.js";
+            databaseURL = databaseURL+"addRetailerToTemp";
 
         }catch (Exception e){
             e.printStackTrace();
@@ -88,6 +89,7 @@ public class Authentication {
         //headers.put("req_type", "signUp");
         headers.put("mail", email.toString());
         headers.put("password", password.toString());
+        headers.put("Content-Type","application/json");
         try {
             jsonObject = new JSONObject();
             //jsonObject.put("req_type", "signUp");
@@ -95,7 +97,7 @@ public class Authentication {
             jsonObject.put("password", password.toString());
             Toast.makeText(context, email + " " + password, Toast.LENGTH_SHORT).show();
             reqBody = jsonObject.toString();
-            databaseURL = databaseURL+"signup";
+            databaseURL = databaseURL+"addRetailerToTemp";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -109,13 +111,14 @@ public class Authentication {
         headers.put("req_type", "signInWithEmail");
         headers.put("mail", email);
         headers.put("password", password);
+        headers.put("Content-Type","application/json");
         try {
             jsonObject = new JSONObject();
             jsonObject.put("req_type", "signInWithEmail");
             jsonObject.put("mail", email);
             jsonObject.put("password", password);
             reqBody = jsonObject.toString();
-            databaseURL = databaseURL + "checkInPermanent.js";
+            databaseURL = databaseURL + "checkInPermanent";
             sendRequest(databaseURL);
 
         } catch (Exception e) {

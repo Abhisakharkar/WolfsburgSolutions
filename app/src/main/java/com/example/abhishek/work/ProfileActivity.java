@@ -121,6 +121,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
         //location
         locationManager = (LocationManager) getSystemService(context.LOCATION_SERVICE);
+        locationResponse = new LocationResponse();
         locationResponse.setOnLocationResponseReceiveListener(new OnLocationResponseReceiveListener() {
             @Override
             public void onLocationResponseReceive(double longitude, double latitude) {

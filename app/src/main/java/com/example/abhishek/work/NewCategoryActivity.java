@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.Model.CategoryData;
@@ -46,6 +47,7 @@ public class NewCategoryActivity extends AppCompatActivity {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
+                    Log.e("get_category Response",responseJSONObject.toString());
                     JSONArray jsonArray = responseJSONObject.getJSONArray("items");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject j = (JSONObject) jsonArray.get(i);
