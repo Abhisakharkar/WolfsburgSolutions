@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.abhishek.work.DatabaseOperations.Authentication;
+import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.LocationResponse;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.OnLocationResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
