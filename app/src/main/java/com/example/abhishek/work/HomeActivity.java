@@ -78,8 +78,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-
         //Shop Open/Close switch click listner
         openCloseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -96,13 +94,13 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this,SignUpActivity.class));
+                startActivity(new Intent(HomeActivity.this,NewCategoryActivity.class));
             }
         });
 
         arrayList = new ArrayList<ItemData>();
 
-        ItemData i1 = new ItemData();
+        /*ItemData i1 = new ItemData();
         i1.setName("item1");
         i1.setCategory("book");
         i1.setStar(true);
@@ -130,7 +128,7 @@ public class HomeActivity extends AppCompatActivity {
         i2.setMrp("Rs.1000");
         i2.setSellingPrice("Rs.950");
 
-        arrayList.add(i2);
+        arrayList.add(i2);*/
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

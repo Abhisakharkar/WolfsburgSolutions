@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class Authentication {
 
     //Database URLs
-    private String databaseURL = "http://d1e6119b.ngrok.io/";
+    private String databaseURL = "http://3ve4b96c.ngrok.io/";
 
     //Request Objects
     private Context context;
@@ -95,7 +95,7 @@ public class Authentication {
             jsonObject.put("password", password.toString());
             Toast.makeText(context, email + " " + password, Toast.LENGTH_SHORT).show();
             reqBody = jsonObject.toString();
-            databaseURL = databaseURL+"signUp.js";
+            databaseURL = databaseURL+"signup";
             sendRequest(databaseURL);
 
         } catch (Exception e) {

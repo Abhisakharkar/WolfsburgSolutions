@@ -3,11 +3,11 @@
     package="com.example.abhishek.work">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,19 +17,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".HomeActivity" >
-        </activity>
-        <activity android:name=".SignUpActivity"
-            android:theme="@style/SignUpActivityTheme"></activity>
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/SignInActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileActivity"></activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:theme="@style/SignUpActivityTheme" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/SignInActivityTheme" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".NewCategoryActivity">
+
+        </activity>
+        <activity android:name=".NewProductActivity" />
+        <activity android:name=".AddNewProductActivity">
+
+        </activity>
     </application>
 
 </manifest>

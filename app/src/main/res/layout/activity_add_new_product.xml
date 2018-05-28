@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.abhishek.work.AddNewProductActivity">
+
+    <Spinner
+        android:id="@+id/add_new_product_activity_spinner_1_id"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:entries="@array/new_item_spinner_category"
+        android:prompt="@string/new_item_spinner" />
+
+</LinearLayout>

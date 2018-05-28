@@ -17,4 +17,23 @@
         <item>category 10</item>
     </string-array>
 
+    <string name="new_item_spinner">Select Category</string>
+    <string-array name="new_item_spinner_category">
+        <item>cat 1</item>
+        <item>cat 2</item>
+        <item>cat 3</item>
+        <item>cat 4</item>
+        <item>cat 5</item>
+        <item>cat 6</item>
+        <item>cat 7</item>
+        <item>cat 8</item>
+        <item>cat 9</item>
+        <item>cat 10</item>
+        <item>cat 11</item>
+        <item>cat 12</item>
+        <item>cat 13</item>
+        <item>cat 14</item>
+        <item>cat 15</item>
+    </string-array>
+
 </resources>

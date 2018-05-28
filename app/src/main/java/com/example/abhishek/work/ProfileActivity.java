@@ -102,8 +102,6 @@ public class ProfileActivity extends AppCompatActivity implements
         mob_no_edit = (EditText) findViewById(R.id.mob_no_edittext_id);
         address_edit = (EditText) findViewById(R.id.shop_address_edittext_id);
         shop_name_edit = (EditText) findViewById(R.id.shop_name_edittext_id);
-        password_edit = (EditText) findViewById(R.id.password_edittext_profile_id);
-        confirm_password_edit = (EditText) findViewById(R.id.confirm_password_edittext_profile_id);
         proprieter_edit = (EditText) findViewById(R.id.proprieter_edittext_id);
         shop_pic_imageview = (ImageView) findViewById(R.id.shop_pic_view_id);
         shop_license_imageview = (ImageView) findViewById(R.id.shop_license_pic_view_id);

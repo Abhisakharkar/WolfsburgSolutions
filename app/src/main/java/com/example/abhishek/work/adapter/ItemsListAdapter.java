@@ -41,7 +41,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
     public void onBindViewHolder(ItemsListViewHolder holder, int position) {
 
         this.position = position;
-
+/*
         //radio button set
         if(itemList.get(position).isAvailable()){
             holder.itemAvailabilityBtn.setSelected(true);
@@ -66,7 +66,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
             holder.itemStarImageBtn.setImageResource(R.drawable.star_btn_hollow_vector);
         }
 
-
+*/
     }
 
     @Override
@@ -163,7 +163,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
 
                 // item star button click listener
             }else if(id == itemStarImageBtn.getId()){
-
+/*
                 if(itemList.get(position).isStar()){
                     itemStarImageBtn.setImageResource(R.drawable.star_btn_hollow_vector);
                     itemList.get(position).setStar(false);
@@ -172,7 +172,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     itemList.get(position).setStar(true);
                 }
 
-
+*/
                 // item promote product button click listener
             }else if(id == promoteItemBtn.getId()){
 
