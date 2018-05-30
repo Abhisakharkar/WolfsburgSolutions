@@ -37,7 +37,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             @Override
             public void onClick(View view) {
                 //TODO show details
-
+                
             }
         });
 
