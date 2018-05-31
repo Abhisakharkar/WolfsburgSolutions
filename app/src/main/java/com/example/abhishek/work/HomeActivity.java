@@ -142,7 +142,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onStart();
 
         //TODO send request to server for all products of this retailer
-        //TODO 
+        //TODO send request to "display_product_details" with parameters :- retailerID
     }
 }
 
