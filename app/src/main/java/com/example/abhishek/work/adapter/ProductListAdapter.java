@@ -36,8 +36,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         holder.nameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO show details
-                
+                //TODO send request to magento_get_attribute_group with attribute_set_id
             }
         });
 
@@ -45,6 +44,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             @Override
             public void onClick(View view) {
                 //TODO add product to local database
+                //TODO add to database at server
+                //return of server
+                // --> result:boolean
+                //if false  --> retry
             }
         });
     }

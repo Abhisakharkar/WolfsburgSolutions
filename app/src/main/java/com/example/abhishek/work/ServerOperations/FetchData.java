@@ -48,6 +48,12 @@ public class FetchData {
         }
     }
 
+    public void getProductDetails(String product_SKU){
+        URL = URL+"magento_info_product";
+
+        //send only this
+    }
+
     private void sendRequest(){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 

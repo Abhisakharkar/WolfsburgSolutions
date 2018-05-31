@@ -135,7 +135,14 @@ public class HomeActivity extends AppCompatActivity {
         myListAdapter = new ItemsListAdapter(arrayList);
         recyclerView.setAdapter(myListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //TODO send request to server for all products of this retailer
+        //TODO 
     }
 }
 
