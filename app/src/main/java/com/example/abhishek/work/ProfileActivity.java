@@ -546,9 +546,9 @@ public class ProfileActivity extends AppCompatActivity implements
                 Bitmap photoBitmap = (BitmapFactory.decodeFile(picturePath));
 
                 //set photo to imageView
-                if (isShopPic == true && isShopLicensePic == false) {
+                if (isShopPic == false && isShopLicensePic == true) {
                     shop_pic_imageview.setImageBitmap(photoBitmap);
-                } else if (isShopPic == false && isShopLicensePic == true) {
+                } else if (isShopPic == true && isShopLicensePic == false) {
                     shop_license_imageview.setImageBitmap(photoBitmap);
                 }
 

@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void checkData() {
         if (email != null || !email.isEmpty()) {
             Authentication authentication = new Authentication(LoginActivity.this);
-            authentication.checkData(email);
+            //authentication.checkData(email);
 
             authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
                 @Override

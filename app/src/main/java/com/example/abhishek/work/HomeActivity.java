@@ -6,13 +6,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -36,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     private Switch openCloseSwitch;
     private ItemData itemData;
     private FloatingActionButton fab;
+    private NavigationView navigationView;
 
     //Recycler View
     private RecyclerView recyclerView;
@@ -74,6 +78,7 @@ public class HomeActivity extends AppCompatActivity {
         openCloseSwitch = (Switch) findViewById(R.id.openCloseBtnId);
         recyclerView = (RecyclerView) findViewById(R.id.itemslist_recyclerview_id);
         fab = (FloatingActionButton) findViewById(R.id.new_item_fab_id);
+        navigationView = (NavigationView) findViewById(R.id.home_activity_navigation_view_id);
 
         // Make image blur and set as collapsing toolbar Background
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_toolbar_background);
@@ -122,6 +127,35 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setAdapter(myListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        //navigation draver implementation
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.home_nav_menu_home_id){
+
+                }else if (itemId == R.id.home_nav_menu_manageSS_id){
+
+                }else if (itemId == R.id.home_nav_menu_profile_id){
+
+                    startActivity(new Intent(HomeActivity.this,ProfileActivity.class));
+
+                }else if (itemId == R.id.home_nav_menu_orders_id){
+
+                }else if (itemId == R.id.home_nav_menu_membership_id){
+
+                }else if (itemId == R.id.home_nav_menu_advertise_id){
+
+                }else if (itemId == R.id.home_nav_menu_contact_id){
+
+                }
+
+                return false;
+            }
+        });
+
         //local database
         databaseHelper = new LocalDatabaseHelper(context);
     }
@@ -139,7 +173,7 @@ public class HomeActivity extends AppCompatActivity {
         //** not implemented in Authentication.java
 
 
-        
+
         arrayList.addAll(databaseHelper.getAllProducts());
         myListAdapter.notifyDataSetChanged();
     }
