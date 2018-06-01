@@ -37,27 +37,6 @@ public class Authentication {
         this.context = context;
     }
 
-    //Deprecated
-    //method to check if required profile data of user is saved in database or not
-    public void checkData(String email) {
-
-        headers = new HashMap<>();
-        headers.put("req_type", "checkDataIsAvailable");
-        headers.put("email", email);
-        headers.put("Content-Type", "application/json");
-        try {
-            jsonObject = new JSONObject();
-            jsonObject.put("req_type", "checkDataIsAvailable");
-            jsonObject.put("email", email);
-            reqBody = jsonObject.toString();
-
-            sendRequest(databaseURL);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     //send profile data to server
     public void sendUserProfile(String proprietor, String shopName, String mobileNo
             , double longitude, double latitude
@@ -92,6 +71,7 @@ public class Authentication {
 
     }
 
+    //check if user is present in permanent table in server at the time of SignUp
     public void checkInPermanent(String mail, String password) {
         headers = new HashMap<>();
         headers.put("mail", mail);
@@ -110,6 +90,8 @@ public class Authentication {
         }
     }
 
+    //user not present in permanent or temp table in server
+    //sign up the user
     public void signUp(String email, String password) {
 
         headers = new HashMap<>();
@@ -171,6 +153,7 @@ public class Authentication {
         }
     }
 
+    //sign in the user
     public void signInWithEmail(String email, String password) {
 
         headers = new HashMap<>();
@@ -192,6 +175,7 @@ public class Authentication {
         }
     }
 
+    //send user email for verification (to verification script)
     public void verifyEmail(String mail) {
         databaseURL = databaseURL + "verify_email_id";
         headers = new HashMap<>();
@@ -207,6 +191,31 @@ public class Authentication {
         }
     }
 
+    //send verification code from email to server to complete verification
+    public void sendVerificationCode(int code){
+
+        headers = new HashMap<>();
+        headers.put("code",String.valueOf(code));
+        headers.put("Content-Type", "application/json");
+        try{
+            jsonObject = new JSONObject();
+            jsonObject.put("code",code);
+            reqBody = jsonObject.toString();
+            //TODO complete URL
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void isUserVerified(String mail){
+
+    }
+
+    public void isProfileDataComplete(String mail){
+
+    }
+
+    //actually send request with given body and headers to given url
     private void sendRequest(String URL) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 

@@ -102,9 +102,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                             //send user to verification activity
 
 
-
                                             //calling to verification script
-
+                                            authentication.verifyEmail(email);
 
                                         }else {
                                             //signup failed

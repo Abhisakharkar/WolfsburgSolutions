@@ -53,6 +53,20 @@ public class HomeActivity extends AppCompatActivity {
 
         context = HomeActivity.this;
 
+        //TODO    IMPORTANT
+        //every time homeActivity starts, check if profile is complete and is verified
+        //if both is done then give access to home
+        //else make user complete profile and verification both
+
+
+
+
+
+
+
+
+
+
         //initialize ui components
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayoutId);
         shopNametxt = (TextView) findViewById(R.id.shopNameTextviewId);
@@ -116,6 +130,16 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        //TODO :  todo things listed in onCreate
+
+        //check if email is verified
+        //** not implemented in Authentication.java
+
+        //check if all the profile data is complete
+        //** not implemented in Authentication.java
+
+
+        
         arrayList.addAll(databaseHelper.getAllProducts());
         myListAdapter.notifyDataSetChanged();
     }
