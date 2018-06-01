@@ -11,7 +11,7 @@ import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.Model.CategoryData;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
-import com.example.abhishek.work.adapter.CategoryListAdapter;
+import com.example.abhishek.work.adapters.CategoryListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -21,9 +21,11 @@ import android.widget.TextView;
 
 import com.example.abhishek.work.Model.ItemData;
 import com.example.abhishek.work.SupportClasses.BlurBuilder;
-import com.example.abhishek.work.adapter.ItemsListAdapter;
+import com.example.abhishek.work.SupportClasses.LocalDatabaseHelper;
+import com.example.abhishek.work.adapters.ItemsListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -41,14 +43,15 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<ItemData> arrayList;
     private RecyclerView.LayoutManager layoutManager;
 
-    //
+    //local database
+    private LocalDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        context = this;
+        context = HomeActivity.this;
 
         //initialize ui components
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayoutId);
@@ -99,50 +102,22 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         arrayList = new ArrayList<ItemData>();
-
-        /*ItemData i1 = new ItemData();
-        i1.setName("item1");
-        i1.setCategory("book");
-        i1.setStar(true);
-        i1.setAvailable(true);
-        i1.setMrp("Rs.500");
-        i1.setSellingPrice("Rs.350");
-
-        arrayList.add(i1);
-
-        ItemData i3 = new ItemData();
-        i3.setName("item3");
-        i3.setCategory("cloth");
-        i3.setStar(true);
-        i3.setAvailable(false);
-        i3.setMrp("Rs.1200");
-        i3.setSellingPrice("Rs.800");
-
-        arrayList.add(i3);
-
-        ItemData i2 = new ItemData();
-        i2.setName("item2");
-        i2.setCategory("electronics");
-        i2.setStar(false);
-        i2.setAvailable(true);
-        i2.setMrp("Rs.1000");
-        i2.setSellingPrice("Rs.950");
-
-        arrayList.add(i2);*/
-
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         myListAdapter = new ItemsListAdapter(arrayList);
         recyclerView.setAdapter(myListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //local database
+        databaseHelper = new LocalDatabaseHelper(context);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        //TODO send request to server for all products of this retailer
-        //TODO send request to "display_product_details" with parameters :- retailerID
+        arrayList.addAll(databaseHelper.getAllProducts());
+        myListAdapter.notifyDataSetChanged();
     }
 }
 

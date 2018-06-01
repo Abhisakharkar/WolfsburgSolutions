@@ -83,19 +83,76 @@ public class Authentication {
 
     }
 
+    public void checkInPermanent(String mail,String password){
+        headers = new HashMap<>();
+        headers.put("mail",mail);
+        headers.put("password",password);
+        headers.put("Content-Type","application/json");
+        try{
+            jsonObject = new JSONObject();
+            jsonObject.put("mail",mail);
+            jsonObject.put("password",password);
+            reqBody = jsonObject.toString();
+            databaseURL = databaseURL + "/check_in_perm";
+            sendRequest(databaseURL);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void signUp(String email, String password) {
 
         headers = new HashMap<>();
         //headers.put("req_type", "signUp");
         headers.put("mail", email.toString());
         headers.put("password", password.toString());
+        headers.put("enterpriseName","");
+        headers.put("propritor","");
+        headers.put("contactNo","0");
+        headers.put("profilePhoto","");
+        headers.put("latLocation","0.0");
+        headers.put("longLocation","0.0");
+        headers.put("address","");
+        headers.put("city","");
+        headers.put("state","");
+        headers.put("country","");
+        headers.put("membership","0");
+        headers.put("subData","2010-01-01");
+        headers.put("openCloseIsManual","0");
+        headers.put("shopOpenTime","00:00:00");
+        headers.put("shopCloseTime","00:00:00");
+        headers.put("shopOpenTime2","00:00:00");
+        headers.put("shopCloseTime2","00:00:00");
+        headers.put("shopPhoto","");
+        headers.put("shopActLicense","");
+        headers.put("currentSate","0");
         headers.put("Content-Type","application/json");
         try {
             jsonObject = new JSONObject();
             //jsonObject.put("req_type", "signUp");
             jsonObject.put("mail", email.toString());
             jsonObject.put("password", password.toString());
-            Toast.makeText(context, email + " " + password, Toast.LENGTH_SHORT).show();
+            jsonObject.put("enterpriseName","");
+            jsonObject.put("propritor","");
+            jsonObject.put("contactNo","0");
+            jsonObject.put("profilePhoto","");
+            jsonObject.put("latLocation","0.0");
+            jsonObject.put("longLocation","0.0");
+            jsonObject.put("address","");
+            jsonObject.put("city","");
+            jsonObject.put("state","");
+            jsonObject.put("country","");
+            jsonObject.put("membership","0");
+            jsonObject.put("subData","2010-01-01");
+            jsonObject.put("openCloseIsManual","0");
+            jsonObject.put("shopOpenTime","00:00:00");
+            jsonObject.put("shopCloseTime","00:00:00");
+            jsonObject.put("shopOpenTime2","00:00:00");
+            jsonObject.put("shopCloseTime2","00:00:00");
+            jsonObject.put("shopPhoto","");
+            jsonObject.put("shopActLicense","");
+            jsonObject.put("currentSate","0");
             reqBody = jsonObject.toString();
             databaseURL = databaseURL+"addRetailerToTemp";
             sendRequest(databaseURL);

@@ -60,12 +60,68 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                     if (TextUtils.equals(password, confirmPassword)) {
 
-                        Authentication authentication = new Authentication(SignUpActivity.this);
-                        authentication.signUp(email, password);
+                        final Authentication authentication = new Authentication(SignUpActivity.this);
+
+                        //check in permanent
+                        authentication.checkInPermanent(email,password);
+
                         //server response listener
                         authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
                             @Override
                             public void onResponseReceive(JSONObject responseJSONObject) {
+
+                                try{
+                                    String response_from = responseJSONObject.getString("response_from");
+                                    if (response_from.equals("check_in")) {
+                                        boolean result = responseJSONObject.getBoolean("result");
+                                        if (result) {
+                                            //email exists
+                                            //tell user that his email exists and go to login
+                                        } else {
+                                            //email does not exist
+                                            //it checks in temp database and sends result
+                                            //process result of temporary database
+
+                                            boolean tempResult = responseJSONObject.getBoolean("temp_result");
+                                            if (tempResult) {
+                                                //email exist in temp database
+                                                //tell user to go to login
+                                            } else {
+                                                //email does not exits
+                                                //this is new user
+                                                //sign up this new account
+                                                authentication.signUp(email,password);
+                                            }
+                                        }
+                                    }else if (response_from.equals("signup")){
+                                        boolean result = responseJSONObject.getBoolean("result");
+                                        if (result){
+                                            //signup successfull
+                                        }else {
+                                            //signup failed
+                                        }
+                                    }
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                // Deprecated
 
                                 try {
                                     boolean result = responseJSONObject.getBoolean("result");

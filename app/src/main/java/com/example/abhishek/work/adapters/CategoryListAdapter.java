@@ -1,4 +1,4 @@
-package com.example.abhishek.work.adapter;
+package com.example.abhishek.work.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.abhishek.work.Model.CategoryData;
 import com.example.abhishek.work.NewProductActivity;
 import com.example.abhishek.work.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.CategoryViewHolder> {

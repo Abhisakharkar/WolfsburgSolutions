@@ -13,7 +13,7 @@ import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.Model.ProductData;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
-import com.example.abhishek.work.adapter.ProductListAdapter;
+import com.example.abhishek.work.adapters.ProductListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,7 +66,10 @@ public class NewProductActivity extends AppCompatActivity {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                         ProductData productData = new ProductData();
                         productData.setName(jsonObject.getString("name"));
-                        productData.setId(jsonObject.getInt("id"));
+                        productData.setProductID(jsonObject.getInt("id"));
+                        productData.setAttribute_set_id(jsonObject.getInt("attribute_set_id"));
+                        productData.setPrice(jsonObject.getDouble("price"));
+                        productData.setPhoto(jsonObject.getString("photo"));
                         arrayList.add(productData);
                         adapter.notifyDataSetChanged();
                     }

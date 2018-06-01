@@ -207,7 +207,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                 } else {
                                     //sign in failed
-                                    boolean isFoundInTemp = responseJSONObject.getBoolean("isFoundInTemp");
+                                    boolean isFoundInTemp = responseJSONObject.getBoolean("temp_result");
                                     if (isFoundInTemp) {
                                         boolean isDataComplete = responseJSONObject.getBoolean("isDataComplete");
                                         if (isDataComplete) {
