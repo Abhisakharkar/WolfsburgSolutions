@@ -97,6 +97,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         boolean result = responseJSONObject.getBoolean("result");
                                         if (result){
                                             //signup successfull
+                                            //call to verification script
+                                            //tell user to verify
+                                            //send user to verification activity
+
+
+
+                                            //calling to verification script
+
+
                                         }else {
                                             //signup failed
                                         }
