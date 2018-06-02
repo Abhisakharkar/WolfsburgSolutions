@@ -219,6 +219,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         //set isSignedIn = true in sharedPref
                                         editor.putBoolean("isSignedIn",true);
                                         editor.putString("email",email);
+                                        editor.putString("password",password);
                                         editor.commit();
 
                                         //go to home page

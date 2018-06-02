@@ -207,12 +207,20 @@ public class Authentication {
         }
     }
 
-    public void isUserVerified(String mail){
-
-    }
-
     public void isProfileDataComplete(String mail){
+        headers = new HashMap<>();
+        headers.put("mail",mail);
+        headers.put("Content-Type", "application/json");
+        try{
+            jsonObject = new JSONObject();
+            jsonObject.put("mail",mail);
 
+            databaseURL = databaseURL + "isDataFilled";
+            sendRequest(databaseURL);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //actually send request with given body and headers to given url

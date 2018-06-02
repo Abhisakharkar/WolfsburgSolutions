@@ -108,12 +108,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                             //calling to verification script
                                             authentication.verifyEmail(email);
 
+                                            editor.putString("email",email);
+                                            editor.putString("password",password);
+
                                             AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                                             builder.setMessage("Verification code is sent to email.\nPlease verify your account.");
                                             builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    startActivity(new Intent(SignUpActivity.this, VerificationActivity.class));
+                                                    Intent intent = new Intent(SignUpActivity.this, VerificationActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
                                                 }
                                             });
                                             builder.setCancelable(false);
