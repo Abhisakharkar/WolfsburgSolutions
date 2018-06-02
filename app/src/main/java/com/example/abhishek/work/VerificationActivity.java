@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
@@ -31,6 +32,8 @@ public class VerificationActivity extends AppCompatActivity {
 
         context = this;
         authentication = new Authentication(context);
+
+        Toast.makeText(context, "Please verify your email !", Toast.LENGTH_SHORT).show();
 
         codeEdittext = (EditText) findViewById(R.id.verification_activity_code_edittext_id);
         verifyBtn = (Button) findViewById(R.id.verification_activity_verify_btn_id);

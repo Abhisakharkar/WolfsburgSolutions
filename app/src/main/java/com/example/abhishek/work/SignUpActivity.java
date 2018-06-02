@@ -1,5 +1,7 @@
-package com.example.abhishek.work.AuthenticationActivities;
+package com.example.abhishek.work;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.abhishek.work.ProfileActivity;
-import com.example.abhishek.work.R;
 import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -27,6 +26,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
+    private String email,password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         if (view.getId() == R.id.sign_up_btn_id) {
 
-            final String email = "" + email_edittext.getText().toString();
-            final String password = "" + password_edittext.getText().toString();
+            email = "" + email_edittext.getText().toString();
+            password = "" + password_edittext.getText().toString();
             String confirmPassword = "" + confirm_password_edittext.getText().toString();
 
             if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword)) {
@@ -77,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         if (result) {
                                             //email exists
                                             //tell user that his email exists and go to login
+                                            Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
                                         } else {
                                             //email does not exist
                                             //it checks in temp database and sends result
@@ -86,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                             if (tempResult) {
                                                 //email exist in temp database
                                                 //tell user to go to login
+                                                Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 //email does not exits
                                                 //this is new user
@@ -105,8 +108,21 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                             //calling to verification script
                                             authentication.verifyEmail(email);
 
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                                            builder.setMessage("Verification code is sent to email.\nPlease verify your account.");
+                                            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    startActivity(new Intent(SignUpActivity.this, VerificationActivity.class));
+                                                }
+                                            });
+                                            builder.setCancelable(false);
+                                            AlertDialog dialog = builder.create();
+                                            dialog.show();
+
                                         }else {
                                             //signup failed
+                                            Toast.makeText(SignUpActivity.this, "Error in Sign Up ! try again later.", Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
@@ -119,18 +135,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-
-
-
-
-
-
-
-
-
-
                                 // Deprecated
-
+                                /*
                                 try {
                                     boolean result = responseJSONObject.getBoolean("result");
                                     if (result) {
@@ -155,6 +161,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                */
                             }
                         });
 

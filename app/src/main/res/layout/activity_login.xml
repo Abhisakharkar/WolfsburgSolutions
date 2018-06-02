@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.abhishek.work.AuthenticationActivities.LoginActivity">
+    tools:context="com.example.abhishek.work.LoginActivity">
 
     <TextView
         android:id="@+id/signIn_textview_id"
@@ -58,7 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/signIn_btn_id"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp" />
+        android:layout_marginTop="48dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/sign_up_layout_id"

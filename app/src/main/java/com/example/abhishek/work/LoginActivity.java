@@ -1,9 +1,10 @@
-package com.example.abhishek.work.AuthenticationActivities;
+package com.example.abhishek.work;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,9 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.abhishek.work.HomeActivity;
-import com.example.abhishek.work.ProfileActivity;
-import com.example.abhishek.work.R;
 import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.NetworkStatusChecker;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
@@ -38,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Context context;
 
     //Check sign in status
-    private Boolean isSignedIn;
+    private Boolean isSignedIn = false;
 
     //Ui components
     private EditText email_edittext, password_edittext;
@@ -58,11 +56,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //Check if connected to internet or not
     NetworkStatusChecker networkStatusChecker;
 
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         context = LoginActivity.this;
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
 /*
         networkStatusChecker = new NetworkStatusChecker(this);
@@ -102,8 +106,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 */
 
-        checkSignInStatus();
 
+
+        checkSignInStatus();
         if (!isSignedIn) {
             setContentView(R.layout.activity_login);
 
@@ -126,9 +131,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         } else if (isSignedIn) {
-            checkData();
+
+            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+
+            //Deprecated
+            //checkData();
         }
+
     }
+
 
     public void checkData() {
         if (email != null || !email.isEmpty()) {
@@ -158,6 +169,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void checkSignInStatus() {
+
+        isSignedIn = sharedPreferences.getBoolean("isSignedIn",false);
+
+
+        //Deprecated
+        /*
         googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
         if (googleSignInAccount == null) {
             isSignedIn = false;
@@ -165,12 +182,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             isSignedIn = true;
             email = googleSignInAccount.getEmail();
         }
+        */
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.google_signIn_btn_id) {
-            SignInWithGoogle();
+            //Deprecated
+            //SignInWithGoogle();
         }
 
         if (view.getId() == R.id.signIn_btn_id) {
@@ -189,14 +208,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onResponseReceive(JSONObject responseJSONObject) {
 
                             try {
-                                boolean response = responseJSONObject.getBoolean("result");
+                                boolean result = responseJSONObject.getBoolean("result");
 
-                                if (response) {
+                                if (result) {
                                     //sign in success
 
                                     boolean isPasswordCorrect = responseJSONObject.getBoolean("isPasswordCorrect");
 
                                     if (isPasswordCorrect) {
+                                        //set isSignedIn = true in sharedPref
+                                        editor.putBoolean("isSignedIn",true);
+                                        editor.putString("email",email);
+                                        editor.commit();
+
                                         //go to home page
                                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -209,6 +233,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     //sign in failed
                                     boolean isFoundInTemp = responseJSONObject.getBoolean("temp_result");
                                     if (isFoundInTemp) {
+
+                                        //not verified account send to verification activity
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                        builder.setMessage("Please complete email verification !");
+                                        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                startActivity(new Intent(LoginActivity.this,VerificationActivity.class));
+                                            }
+                                        });
+                                        builder.setCancelable(false);
+                                        AlertDialog dialog = builder.create();
+                                        dialog.show();
+
+                                        //Deprecated
+                                        /*
                                         boolean isDataComplete = responseJSONObject.getBoolean("isDataComplete");
                                         if (isDataComplete) {
                                             //go to home
@@ -222,6 +262,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(intent);
                                         }
+                                        */
 
                                     } else {
                                         //account not exist
@@ -268,6 +309,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+
+    //Deprecated
+    /*
     private void SignInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -296,6 +340,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+    */
 
     @Override
     public void onBackPressed() {
