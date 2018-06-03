@@ -116,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity implements
         shop_pic_btn.setOnClickListener(this);
         shop_license_btn.setOnClickListener(this);
 
-        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         //location
@@ -156,14 +156,14 @@ public class ProfileActivity extends AppCompatActivity implements
                             if (!cityName.isEmpty() || !countryName.isEmpty() || !stateName.isEmpty()) {
 
                                 //save data to sharedPref
-                                editor.putString("proprietor",proprietor);
-                                editor.putString("mobileNo",mobileNo);
-                                editor.putString("shopName",shopName);
-                                editor.putString("longitude",String.valueOf(longitude));
-                                editor.putString("latitude",String.valueOf(latitude));
-                                editor.putString("city",cityName);
-                                editor.putString("state",stateName);
-                                editor.putString("country",countryName);
+                                editor.putString("proprietor", proprietor);
+                                editor.putString("mobileNo", mobileNo);
+                                editor.putString("shopName", shopName);
+                                editor.putString("longitude", String.valueOf(longitude));
+                                editor.putString("latitude", String.valueOf(latitude));
+                                editor.putString("city", cityName);
+                                editor.putString("state", stateName);
+                                editor.putString("country", countryName);
                                 editor.commit();
 
                                 //send data to server
@@ -501,9 +501,13 @@ public class ProfileActivity extends AppCompatActivity implements
             }
         }
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_REQ_CODE) {
+
+        if (requestCode == CAMERA_REQ_CODE) {
+
+            if (resultCode == RESULT_OK) {
                 Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
+
+
                 //set bitmap image to imageView
                 if (isShopPic == true && isShopLicensePic == false) {
                     shop_pic_imageview.setImageBitmap(photoBitmap);
@@ -533,8 +537,13 @@ public class ProfileActivity extends AppCompatActivity implements
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
 
-            } else if (requestCode == GALLERY_REQ_CODE) {
+        }
+
+        if (requestCode == GALLERY_REQ_CODE) {
+
+            if (resultCode == RESULT_OK) {
                 //get bitmap image
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
@@ -574,9 +583,9 @@ public class ProfileActivity extends AppCompatActivity implements
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         }
+
     }
 
 }

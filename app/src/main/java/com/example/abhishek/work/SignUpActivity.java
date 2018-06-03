@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private Authentication authentication;
 
     private String email,password;
 
@@ -45,102 +47,85 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
         editor = sharedPreferences.edit();
-    }
 
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.sign_up_btn_id) {
+        //server response listener
+        authentication = new Authentication(SignUpActivity.this);
+        authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+            @Override
+            public void onResponseReceive(JSONObject responseJSONObject) {
 
-            email = "" + email_edittext.getText().toString();
-            password = "" + password_edittext.getText().toString();
-            String confirmPassword = "" + confirm_password_edittext.getText().toString();
+                try{
+                    Log.e("signUp response",responseJSONObject.toString());
+                    String response_from = responseJSONObject.getString("response_from");
+                    if (response_from.equals("check_in")) {
+                        Log.e("response_signupActivity","check_in : true");
+                        boolean result = responseJSONObject.getBoolean("result");
+                        if (result) {
+                            //email exists
+                            //tell user that his email exists and go to login
+                            Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            //email does not exist
+                            //it checks in temp database and sends result
+                            //process result of temporary database
 
-            if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword)) {
-
-                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-
-                    if (TextUtils.equals(password, confirmPassword)) {
-
-                        final Authentication authentication = new Authentication(SignUpActivity.this);
-
-                        //check in permanent
-                        authentication.checkInPermanent(email,password);
-
-                        //server response listener
-                        authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
-                            @Override
-                            public void onResponseReceive(JSONObject responseJSONObject) {
-
-                                try{
-                                    String response_from = responseJSONObject.getString("response_from");
-                                    if (response_from.equals("check_in")) {
-                                        boolean result = responseJSONObject.getBoolean("result");
-                                        if (result) {
-                                            //email exists
-                                            //tell user that his email exists and go to login
-                                            Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            //email does not exist
-                                            //it checks in temp database and sends result
-                                            //process result of temporary database
-
-                                            boolean tempResult = responseJSONObject.getBoolean("temp_result");
-                                            if (tempResult) {
-                                                //email exist in temp database
-                                                //tell user to go to login
-                                                Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                //email does not exits
-                                                //this is new user
-                                                //sign up this new account
-                                                authentication.signUp(email,password);
-                                            }
-                                        }
-                                    }else if (response_from.equals("signup")){
-                                        boolean result = responseJSONObject.getBoolean("result");
-                                        if (result){
-                                            //signup successfull
-                                            //call to verification script
-                                            //tell user to verify
-                                            //send user to verification activity
+                            boolean tempResult = responseJSONObject.getBoolean("temp_result");
+                            if (tempResult) {
+                                //email exist in temp database
+                                //tell user to go to login
+                                Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //email does not exits
+                                //this is new user
+                                //sign up this new account
+                                authentication.signUp(email,password);
+                            }
+                        }
+                    }else if (response_from.equals("signup")){
+                        boolean result = responseJSONObject.getBoolean("result");
+                        if (result){
+                            //signup successfull
+                            //call to verification script
+                            //tell user to verify
+                            //send user to verification activity
 
 
-                                            //calling to verification script
-                                            authentication.verifyEmail(email);
+                            //calling to verification script
+                            authentication.verifyEmail(email);
 
-                                            editor.putString("email",email);
-                                            editor.putString("password",password);
+                            editor.putString("email",email);
+                            editor.putString("password",password);
 
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                                            builder.setMessage("Verification code is sent to email.\nPlease verify your account.");
-                                            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    Intent intent = new Intent(SignUpActivity.this, VerificationActivity.class);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(intent);
-                                                }
-                                            });
-                                            builder.setCancelable(false);
-                                            AlertDialog dialog = builder.create();
-                                            dialog.show();
-
-                                        }else {
-                                            //signup failed
-                                            Toast.makeText(SignUpActivity.this, "Error in Sign Up ! try again later.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-
-                                }catch (Exception e){
-                                    e.printStackTrace();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                            builder.setMessage("Verification code is sent to email.\nPlease verify your account.");
+                            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(SignUpActivity.this, VerificationActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
                                 }
+                            });
+                            builder.setCancelable(false);
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                        }else {
+                            //signup failed
+                            Toast.makeText(SignUpActivity.this, "Error in Sign Up ! try again later.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
 
 
 
 
 
-                                // Deprecated
+                // Deprecated
                                 /*
                                 try {
                                     boolean result = responseJSONObject.getBoolean("result");
@@ -167,8 +152,26 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     e.printStackTrace();
                                 }
                                 */
-                            }
-                        });
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.sign_up_btn_id) {
+
+            email = "" + email_edittext.getText().toString();
+            password = "" + password_edittext.getText().toString();
+            String confirmPassword = "" + confirm_password_edittext.getText().toString();
+
+            if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword)) {
+
+                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+                    if (TextUtils.equals(password, confirmPassword)) {
+
+                        //check in permanent
+                        authentication.checkInPermanent(email,password);
 
                     } else {
                         Toast.makeText(this, "passwords are not correct !", Toast.LENGTH_SHORT).show();

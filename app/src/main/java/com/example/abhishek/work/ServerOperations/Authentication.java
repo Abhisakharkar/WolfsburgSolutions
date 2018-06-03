@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class Authentication {
 
     //Database URLs
-    private String databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
+    private String databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/";
 
     //Request Objects
     private Context context;
@@ -63,7 +63,7 @@ public class Authentication {
             jsonObject.put("country", countryName);
             jsonObject.put("longitude", longitude);
             jsonObject.put("latitude", latitude);
-            databaseURL = databaseURL + "addRetailerToTemp";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/addRetailerToTemp";
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +82,7 @@ public class Authentication {
             jsonObject.put("mail", mail);
             jsonObject.put("password", password);
             reqBody = jsonObject.toString();
-            databaseURL = databaseURL + "/check_in_perm";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/check_in_perm";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -145,7 +145,7 @@ public class Authentication {
             jsonObject.put("shopActLicense", "");
             jsonObject.put("currentSate", "0");
             reqBody = jsonObject.toString();
-            databaseURL = databaseURL + "addRetailerToTemp";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/addRetailerToTemp";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -167,7 +167,7 @@ public class Authentication {
             jsonObject.put("mail", email);
             jsonObject.put("password", password);
             reqBody = jsonObject.toString();
-            databaseURL = databaseURL + "checkInPermanent";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/checkInPermanent";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -177,7 +177,7 @@ public class Authentication {
 
     //send user email for verification (to verification script)
     public void verifyEmail(String mail) {
-        databaseURL = databaseURL + "verify_email_id";
+        databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/verify_email_id";
         headers = new HashMap<>();
         headers.put("mail", mail);
         headers.put("Content-Type", "application/json");
@@ -215,7 +215,7 @@ public class Authentication {
             jsonObject = new JSONObject();
             jsonObject.put("mail",mail);
 
-            databaseURL = databaseURL + "isDataFilled";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/isDataFilled";
             sendRequest(databaseURL);
 
         }catch (Exception e){
@@ -234,7 +234,6 @@ public class Authentication {
                 Log.e("sendRequest Response", response.toString());
                 try {
                     //responseJSONObject = new JSONObject(response);
-                    Toast.makeText(context, "response : " + response.toString(), Toast.LENGTH_SHORT).show();
                     serverResponse.saveResponse(responseJSONObject);
                 } catch (Exception e) {
                     e.printStackTrace();
