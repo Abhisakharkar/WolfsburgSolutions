@@ -16,27 +16,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity" >
-
-        </activity>
+        <activity android:name=".HomeActivity" />
         <activity
             android:name=".SignUpActivity"
-            android:theme="@style/SignUpActivityTheme" />
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/SignInActivityTheme" />
-        <activity android:name=".ProfileActivity">
+            android:theme="@style/SignUpActivityTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/SignInActivityTheme" />
+        <activity android:name=".ProfileActivity">
+
+        </activity>
         <activity android:name=".NewCategoryActivity" />
         <activity android:name=".NewProductActivity" />
         <activity android:name=".AddNewProductActivity" />
         <activity android:name=".ProductEditActivity" />
-        <activity android:name=".VerificationActivity"></activity>
+        <activity android:name=".VerificationActivity" />
+        <activity android:name=".ShopPhotoActivity" />
+        <activity android:name=".LicensePhotoActivity"></activity>
     </application>
 
 </manifest>

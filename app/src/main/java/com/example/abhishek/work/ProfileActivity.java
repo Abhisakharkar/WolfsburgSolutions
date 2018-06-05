@@ -507,7 +507,6 @@ public class ProfileActivity extends AppCompatActivity implements
             if (resultCode == RESULT_OK) {
                 Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
 
-
                 //set bitmap image to imageView
                 if (isShopPic == true && isShopLicensePic == false) {
                     shop_pic_imageview.setImageBitmap(photoBitmap);
@@ -515,6 +514,7 @@ public class ProfileActivity extends AppCompatActivity implements
                     shop_license_imageview.setImageBitmap(photoBitmap);
                 }
                 shop_pic_imageview.setImageBitmap(photoBitmap);
+                shop_pic_imageview.setVisibility(View.VISIBLE);
                 //save to file
                 FileOutputStream fileOutputStream = null;
                 try {

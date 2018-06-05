@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 public class Authentication {
 
     //Database URLs
-    private String databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/";
+    private String databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
 
     //Request Objects
     private Context context;
@@ -63,7 +64,7 @@ public class Authentication {
             jsonObject.put("country", countryName);
             jsonObject.put("longitude", longitude);
             jsonObject.put("latitude", latitude);
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/addRetailerToTemp";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/addRetailerToTemp";
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +83,7 @@ public class Authentication {
             jsonObject.put("mail", mail);
             jsonObject.put("password", password);
             reqBody = jsonObject.toString();
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/check_in_perm";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/check_in_perm";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -145,7 +146,7 @@ public class Authentication {
             jsonObject.put("shopActLicense", "");
             jsonObject.put("currentSate", "0");
             reqBody = jsonObject.toString();
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/addRetailerToTemp";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/addRetailerToTemp";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -167,7 +168,7 @@ public class Authentication {
             jsonObject.put("mail", email);
             jsonObject.put("password", password);
             reqBody = jsonObject.toString();
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/checkInPermanent";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/checkInPermanent";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -177,7 +178,7 @@ public class Authentication {
 
     //send user email for verification (to verification script)
     public void verifyEmail(String mail) {
-        databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/verify_email_id";
+        databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/verify_email_id";
         headers = new HashMap<>();
         headers.put("mail", mail);
         headers.put("Content-Type", "application/json");
@@ -192,33 +193,33 @@ public class Authentication {
     }
 
     //send verification code from email to server to complete verification
-    public void sendVerificationCode(int code){
+    public void sendVerificationCode(int code) {
 
         headers = new HashMap<>();
-        headers.put("code",String.valueOf(code));
+        headers.put("code", String.valueOf(code));
         headers.put("Content-Type", "application/json");
-        try{
+        try {
             jsonObject = new JSONObject();
-            jsonObject.put("code",code);
+            jsonObject.put("code", code);
             reqBody = jsonObject.toString();
             //TODO complete URL
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void isProfileDataComplete(String mail){
+    public void isProfileDataComplete(String mail) {
         headers = new HashMap<>();
-        headers.put("mail",mail);
+        headers.put("mail", mail);
         headers.put("Content-Type", "application/json");
-        try{
+        try {
             jsonObject = new JSONObject();
-            jsonObject.put("mail",mail);
+            jsonObject.put("mail", mail);
 
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:4040/isDataFilled";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/isDataFilled";
             sendRequest(databaseURL);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -245,6 +246,25 @@ public class Authentication {
                 Log.e("Response_Error", error.toString());
             }
         });
+
+        //retry policy
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+                Log.e("Retry Error", error.toString());
+            }
+        });
+
         requestQueue.add(jsonObjectRequest);
 /*
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {

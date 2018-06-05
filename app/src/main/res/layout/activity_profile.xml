@@ -125,13 +125,14 @@
 
         <ImageView
             android:id="@+id/shop_pic_view_id"
-            android:layout_width="144dp"
-            android:layout_height="144dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/shop_location_btn_id"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:backgroundTint="#888"
-            android:src="@drawable/nav_header_pro_pic" />
+            android:src="@drawable/nav_header_pro_pic"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/shop_photo_btn_id"
