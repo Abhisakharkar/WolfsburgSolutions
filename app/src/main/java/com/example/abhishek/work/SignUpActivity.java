@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 
 import org.json.JSONObject;
 
@@ -28,8 +29,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private Authentication authentication;
+    private ServerResponse serverResponse;
 
-    private String email,password;
+    private String email, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +47,21 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         signUpBtn.setOnClickListener(this);
         signInLinkBtn.setOnClickListener(this);
 
-        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         //server response listener
         authentication = new Authentication(SignUpActivity.this);
-        authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+        serverResponse = authentication.getServerResponseInstance();
+        serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
 
-                try{
-                    Log.e("signUp response",responseJSONObject.toString());
+                try {
+                    Log.e("signUp response", responseJSONObject.toString());
                     String response_from = responseJSONObject.getString("response_from");
                     if (response_from.equals("check_in")) {
-                        Log.e("response_signupActivity","check_in : true");
+                        Log.e("response_signupActivity", "check_in : true");
                         boolean result = responseJSONObject.getBoolean("result");
                         if (result) {
                             //email exists
@@ -78,12 +81,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 //email does not exits
                                 //this is new user
                                 //sign up this new account
-                                authentication.signUp(email,password);
+                                authentication.signUp(email, password);
                             }
                         }
-                    }else if (response_from.equals("signup")){
+                    } else if (response_from.equals("signup")) {
                         boolean result = responseJSONObject.getBoolean("result");
-                        if (result){
+                        if (result) {
                             //signup successfull
                             //call to verification script
                             //tell user to verify
@@ -93,8 +96,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             //calling to verification script
                             authentication.verifyEmail(email);
 
-                            editor.putString("email",email);
-                            editor.putString("password",password);
+                            editor.putString("email", email);
+                            editor.putString("password", password);
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
                             builder.setMessage("Verification code is sent to email.\nPlease verify your account.");
@@ -110,19 +113,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             AlertDialog dialog = builder.create();
                             dialog.show();
 
-                        }else {
+                        } else {
                             //signup failed
                             Toast.makeText(SignUpActivity.this, "Error in Sign Up ! try again later.", Toast.LENGTH_SHORT).show();
                         }
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-
-
 
 
                 // Deprecated
@@ -171,7 +170,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     if (TextUtils.equals(password, confirmPassword)) {
 
                         //check in permanent
-                        authentication.checkInPermanent(email,password);
+                        authentication.checkInPermanent(email, password);
 
                     } else {
                         Toast.makeText(this, "passwords are not correct !", Toast.LENGTH_SHORT).show();
@@ -186,7 +185,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         if (view.getId() == R.id.sign_in_link_btn) {
-            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
@@ -194,7 +193,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(SignUpActivity.this,LoginActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

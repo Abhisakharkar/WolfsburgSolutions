@@ -38,6 +38,10 @@ public class Authentication {
         this.context = context;
     }
 
+    public ServerResponse getServerResponseInstance(){
+        return serverResponse;
+    }
+
     //send profile data to server
     public void sendUserProfile(String proprietor, String shopName, String mobileNo
             , double longitude, double latitude
@@ -64,7 +68,7 @@ public class Authentication {
             jsonObject.put("country", countryName);
             jsonObject.put("longitude", longitude);
             jsonObject.put("latitude", latitude);
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/addRetailerToTemp";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/details_input_temp";
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,6 +107,7 @@ public class Authentication {
         headers.put("propritor", "");
         headers.put("contactNo", "0");
         headers.put("profilePhoto", "");
+        headers.put("retailerID","1000001");
         headers.put("latLocation", "0.0");
         headers.put("longLocation", "0.0");
         headers.put("address", "");
@@ -127,6 +132,7 @@ public class Authentication {
             jsonObject.put("password", password.toString());
             jsonObject.put("enterpriseName", "");
             jsonObject.put("propritor", "");
+            jsonObject.put("retailerID","1000001");
             jsonObject.put("contactNo", "0");
             jsonObject.put("profilePhoto", "");
             jsonObject.put("latLocation", "0.0");
@@ -146,7 +152,7 @@ public class Authentication {
             jsonObject.put("shopActLicense", "");
             jsonObject.put("currentSate", "0");
             reqBody = jsonObject.toString();
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/addRetailerToTemp";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/add_retailer_to_";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -168,7 +174,7 @@ public class Authentication {
             jsonObject.put("mail", email);
             jsonObject.put("password", password);
             reqBody = jsonObject.toString();
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/checkInPermanent";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/check_in_perm";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -234,8 +240,13 @@ public class Authentication {
             public void onResponse(JSONObject response) {
                 Log.e("sendRequest Response", response.toString());
                 try {
+                    //temp
+                    JSONObject j = new JSONObject();
+                    j = response;
+                    Log.e("j",j.toString());
+
                     //responseJSONObject = new JSONObject(response);
-                    serverResponse.saveResponse(responseJSONObject);
+                    serverResponse.saveResponse(response);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -243,7 +254,7 @@ public class Authentication {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response_Error", error.toString());
+                Log.e("Response_Error",databaseURL + " : " + error.toString());
             }
         });
 
@@ -266,47 +277,5 @@ public class Authentication {
         });
 
         requestQueue.add(jsonObjectRequest);
-/*
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e("sendRequest Response", response.toString());
-                try {
-                    responseJSONObject = new JSONObject(response);
-                    Toast.makeText(context, "response : "+ response.toString(), Toast.LENGTH_SHORT).show();
-                    serverResponse.saveResponse(responseJSONObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Response_Error", error.toString());
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> header = headers;
-                return header;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "text/plain; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return reqBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        };
-        requestQueue.add(stringRequest);
-*/
     }
 }
