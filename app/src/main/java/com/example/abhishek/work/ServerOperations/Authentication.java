@@ -107,7 +107,7 @@ public class Authentication {
         headers.put("propritor", "");
         headers.put("contactNo", "0");
         headers.put("profilePhoto", "");
-        headers.put("retailerID","1000001");
+        headers.put("retailerId","1001");
         headers.put("latLocation", "0.0");
         headers.put("longLocation", "0.0");
         headers.put("address", "");
@@ -115,7 +115,7 @@ public class Authentication {
         headers.put("state", "");
         headers.put("country", "");
         headers.put("membership", "0");
-        headers.put("subData", "2010-01-01");
+        headers.put("subDate", "2010-01-01");
         headers.put("openCloseIsManual", "0");
         headers.put("shopOpenTime", "00:00:00");
         headers.put("shopCloseTime", "00:00:00");
@@ -123,7 +123,7 @@ public class Authentication {
         headers.put("shopCloseTime2", "00:00:00");
         headers.put("shopPhoto", "");
         headers.put("shopActLicense", "");
-        headers.put("currentSate", "0");
+        headers.put("currentState", "0");
         headers.put("Content-Type", "application/json");
         try {
             jsonObject = new JSONObject();
@@ -132,7 +132,7 @@ public class Authentication {
             jsonObject.put("password", password.toString());
             jsonObject.put("enterpriseName", "");
             jsonObject.put("propritor", "");
-            jsonObject.put("retailerID","1000001");
+            jsonObject.put("retailerId","1001");
             jsonObject.put("contactNo", "0");
             jsonObject.put("profilePhoto", "");
             jsonObject.put("latLocation", "0.0");
@@ -142,7 +142,7 @@ public class Authentication {
             jsonObject.put("state", "");
             jsonObject.put("country", "");
             jsonObject.put("membership", "0");
-            jsonObject.put("subData", "2010-01-01");
+            jsonObject.put("subDate", "2010-01-01");
             jsonObject.put("openCloseIsManual", "0");
             jsonObject.put("shopOpenTime", "00:00:00");
             jsonObject.put("shopCloseTime", "00:00:00");
@@ -150,9 +150,9 @@ public class Authentication {
             jsonObject.put("shopCloseTime2", "00:00:00");
             jsonObject.put("shopPhoto", "");
             jsonObject.put("shopActLicense", "");
-            jsonObject.put("currentSate", "0");
+            jsonObject.put("currentState", "0");
             reqBody = jsonObject.toString();
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/add_retailer_to_";
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/add_retailer_info_temp";
             sendRequest(databaseURL);
 
         } catch (Exception e) {
@@ -208,7 +208,10 @@ public class Authentication {
             jsonObject = new JSONObject();
             jsonObject.put("code", code);
             reqBody = jsonObject.toString();
-            //TODO complete URL
+
+            //TODO send mail and password also
+
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/verifiication_complete";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -259,6 +262,7 @@ public class Authentication {
         });
 
         //retry policy
+        /*
         jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
             @Override
             public int getCurrentTimeout() {
@@ -275,6 +279,7 @@ public class Authentication {
                 Log.e("Retry Error", error.toString());
             }
         });
+        */
 
         requestQueue.add(jsonObjectRequest);
     }

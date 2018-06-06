@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             editor.putString("email", email);
                             editor.putString("password", password);
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
                             builder.setMessage("Verification code is sent to email.\nPlease verify your account.");
                             builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                 @Override
