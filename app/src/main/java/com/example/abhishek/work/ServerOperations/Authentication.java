@@ -107,7 +107,7 @@ public class Authentication {
         headers.put("propritor", "");
         headers.put("contactNo", "0");
         headers.put("profilePhoto", "");
-        headers.put("retailerId","1001");
+        headers.put("retailerId","1003");
         headers.put("latLocation", "0.0");
         headers.put("longLocation", "0.0");
         headers.put("address", "");
@@ -125,7 +125,9 @@ public class Authentication {
         headers.put("shopActLicense", "");
         headers.put("currentState", "0");
         headers.put("Content-Type", "application/json");
+
         try {
+            /*
             jsonObject = new JSONObject();
             //jsonObject.put("req_type", "signUp");
             jsonObject.put("mail", email.toString());
@@ -152,6 +154,7 @@ public class Authentication {
             jsonObject.put("shopActLicense", "");
             jsonObject.put("currentState", "0");
             reqBody = jsonObject.toString();
+            */
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/add_retailer_info_temp";
             sendRequest(databaseURL);
 

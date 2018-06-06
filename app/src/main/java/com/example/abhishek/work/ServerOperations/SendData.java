@@ -1,8 +1,11 @@
 package com.example.abhishek.work.ServerOperations;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -10,9 +13,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
+import com.example.abhishek.work.SupportClasses.VolleyMultipartRequest;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,6 +100,52 @@ public class SendData {
             }
         };
         requestQueue.add(jsonObjectRequest);
+    }
+
+
+
+    public void sendImageUploadRequest(Bitmap photoBitmap, final String imageName, int retailerId) {
+
+        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/upload";
+        header.put("retailerId",String.valueOf(retailerId));
+        header.put("imageName",imageName);
+
+        //bitmap to byte convert
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        photoBitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+        final byte[] photoByteArray = byteArrayOutputStream.toByteArray();
+
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, url
+                , new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                Log.e("Network_Response",response.toString());
+                //TODO process response here OR implement serverResponse for NetworkResponse type of response
+            }
+        }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Response_Error",error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String,String> params = new HashMap<>();
+                params = header;
+                return params;
+            }
+
+            @Override
+            protected Map<String, VolleyMultipartRequest.DataPart> getByteData() throws AuthFailureError {
+
+                Map<String,DataPart> params = new HashMap<>();
+                params.put("image",new DataPart(imageName + ".jpeg",photoByteArray));
+                return params;
+            }
+        };
+        Volley.newRequestQueue(context).add(volleyMultipartRequest);
     }
 
 

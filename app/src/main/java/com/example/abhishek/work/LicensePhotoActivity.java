@@ -19,6 +19,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.abhishek.work.ServerOperations.SendData;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
+
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -238,6 +241,11 @@ public class LicensePhotoActivity extends AppCompatActivity {
 
                     //set name
                     String photoName = "shop_license_photo";
+
+                    //Sending photo to server
+                    SendData sendData = new SendData(context);
+                    sendData.sendImageUploadRequest(photoBitmap,photoName,1001);
+
 
                     //save photo to memory
                     File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName + ".jpeg");

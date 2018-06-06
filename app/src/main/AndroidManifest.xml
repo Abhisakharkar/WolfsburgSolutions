@@ -20,7 +20,11 @@
         <activity
             android:name=".SignUpActivity"
             android:theme="@style/SignUpActivityTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -33,11 +37,7 @@
         <activity android:name=".AddNewProductActivity" />
         <activity android:name=".ProductEditActivity" />
         <activity android:name=".VerificationActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ShopPhotoActivity" />
         <activity android:name=".LicensePhotoActivity"></activity>
