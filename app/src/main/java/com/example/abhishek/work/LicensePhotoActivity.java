@@ -40,6 +40,8 @@ public class LicensePhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_license_photo);
 
+        context = this;
+
         licenseImageview = (ImageView) findViewById(R.id.license_photo_activity_imageview_id);
         saveImageBtn = (Button) findViewById(R.id.license_photo_activity_save_btn_id);
         editImageBtn = (Button) findViewById(R.id.license_photo_activity_edit_btn_id);
