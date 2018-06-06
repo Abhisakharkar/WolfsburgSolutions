@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
 
-                if (Patterns.EMAIL_ADDRESS.matcher(password).matches()) {
+                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
                     Authentication authentication = new Authentication(LoginActivity.this);
                     authentication.signInWithEmail(email, password);
