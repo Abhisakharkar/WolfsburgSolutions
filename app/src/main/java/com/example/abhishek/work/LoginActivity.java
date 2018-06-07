@@ -236,12 +236,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     if (isFoundInTemp) {
 
                                         //not verified account send to verification activity
+
+                                        editor.putBoolean("isSignedIn",true);
+                                        editor.putString("mail",email);
+                                        editor.putString("password",password);
+                                        editor.commit();
+
                                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                         builder.setMessage("Please complete email verification !");
                                         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                startActivity(new Intent(LoginActivity.this,VerificationActivity.class));
+                                                Intent intent = new Intent(LoginActivity.this, VerificationActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                startActivity(intent);
                                             }
                                         });
                                         builder.setCancelable(false);

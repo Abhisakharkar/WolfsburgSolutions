@@ -167,7 +167,8 @@ public class ProfileActivity extends AppCompatActivity implements
                                 editor.commit();
 
                                 //send data to server
-                                authentication.sendUserProfile(proprietor, shopName, mobileNo, longitude, latitude, cityName, stateName, countryName);
+                                int retailerID = sharedPreferences.getInt("retailerID", 0);
+                                authentication.sendUserProfile(retailerID, proprietor, shopName, mobileNo, longitude, latitude, cityName, stateName, countryName);
                                 authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
                                     @Override
                                     public void onResponseReceive(JSONObject responseJSONObject) {

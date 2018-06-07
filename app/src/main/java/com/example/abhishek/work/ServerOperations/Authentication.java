@@ -44,22 +44,36 @@ public class Authentication {
     }
 
     //send profile data to server
-    public void sendUserProfile(String proprietor, String shopName, String mobileNo
+    public void sendUserProfile(int retailerID, String proprietor, String shopName, String mobileNo
             , double longitude, double latitude
             , String cityName, String stateName, String countryName) {
 
         headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
-        headers.put("proprietor", proprietor);
+        headers.put("retailerId",String.valueOf(retailerID));
         headers.put("enterpriseName", shopName);
+        headers.put("propritor", proprietor);
         headers.put("contactNo", mobileNo);
+        headers.put("profilePhoto", "");
+        headers.put("latLocation", String.valueOf(latitude));
+        headers.put("longLocation", String.valueOf(longitude));
+        headers.put("address", "");
         headers.put("city", cityName);
         headers.put("state", stateName);
         headers.put("country", countryName);
-        headers.put("longitude", String.valueOf(longitude));
-        headers.put("latitude", String.valueOf(latitude));
+        headers.put("membership", "0");
+        headers.put("subDate", "2010-01-01");
+        headers.put("openCloseIsManual", "0");
+        headers.put("shopOpenTime", "00:00:00");
+        headers.put("shopCloseTime", "00:00:00");
+        headers.put("shopOpenTime2", "00:00:00");
+        headers.put("shopCloseTime2", "00:00:00");
+        headers.put("shopPhoto", "");
+        headers.put("shopActLicense", "");
+        headers.put("currentState", "0");
 
         try {
+            /*
             jsonObject = new JSONObject();
             jsonObject.put("proprietor", proprietor);
             jsonObject.put("enterpriseName", shopName);
@@ -69,8 +83,9 @@ public class Authentication {
             jsonObject.put("country", countryName);
             jsonObject.put("longitude", longitude);
             jsonObject.put("latitude", latitude);
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/details_input_temp";
-
+            */
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/update_retailer";
+            sendRequest(databaseURL);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -211,10 +226,13 @@ public class Authentication {
         headers.put("password",password);
         headers.put("Content-Type", "application/json");
         try {
+            /*
             jsonObject = new JSONObject();
             jsonObject.put("code", code);
             reqBody = jsonObject.toString();
+            */
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/verifiication_complete";
+            sendRequest(databaseURL);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -225,10 +243,11 @@ public class Authentication {
         headers.put("mail", mail);
         headers.put("Content-Type", "application/json");
         try {
+            /*
             jsonObject = new JSONObject();
             jsonObject.put("mail", mail);
-
-            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/isDataFilled";
+            */
+            databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/is_data_filled";
             sendRequest(databaseURL);
 
         } catch (Exception e) {

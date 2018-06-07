@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,16 +46,19 @@ public class VerificationActivity extends AppCompatActivity {
         codeEdittext = (EditText) findViewById(R.id.verification_activity_code_edittext_id);
         verifyBtn = (Button) findViewById(R.id.verification_activity_verify_btn_id);
 
-        mail = sharedPreferences.getString("mail","");
-        password = sharedPreferences.getString("password","");
+
 
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (codeEdittext.getText().toString() != null || !codeEdittext.getText().toString().isEmpty()) {
+                mail = sharedPreferences.getString("mail","");
+                password = sharedPreferences.getString("password","");
+                int code = 0;
+                code = Integer.parseInt(codeEdittext.getText().toString());
+                if ( code != 0 ) {
                     if (!mail.isEmpty() && !password.isEmpty()) {
-                        code = Integer.parseInt(codeEdittext.getText().toString());
                         authentication.sendVerificationCode(code, mail, password);
+                        Log.e("code sent to server","");
                     }else {
                         Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
                     }

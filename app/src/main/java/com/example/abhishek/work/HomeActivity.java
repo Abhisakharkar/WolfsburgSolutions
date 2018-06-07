@@ -178,7 +178,7 @@ public class HomeActivity extends AppCompatActivity {
                             //account is verified
 
                             //now check id profile is complete or not
-                            String email = sharedPreferences.getString("email", "");
+                            String email = sharedPreferences.getString("mail", "");
                             if (!email.isEmpty()) {
                                 authentication.isProfileDataComplete(email);
                             } else {
@@ -199,18 +199,19 @@ public class HomeActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         }
-                    }
+                    } else if (response_from.equals("is_data_filled")) {
 
-                    boolean isDataFilled = responseJSONObject.getBoolean("isDataFilled");
-                    if (isDataFilled) {
-                        //profile is complete
-                    } else {
-                        //profile is not complete
-                        //send user to profile activity
-                        Toast.makeText(context, "Complete your profile !", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        boolean isDataFilled = responseJSONObject.getBoolean("isDataFilled");
+                        if (isDataFilled) {
+                            //profile is complete
+                        } else {
+                            //profile is not complete
+                            //send user to profile activity
+                            Toast.makeText(context, "Complete your profile !", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
                     }
 
                 } catch (JSONException e) {
@@ -230,19 +231,23 @@ public class HomeActivity extends AppCompatActivity {
         //TODO :  todo things listed in onCreate
 
         //check if email is verified
-        String email = sharedPreferences.getString("email", "");
+        String mail = sharedPreferences.getString("mail", "");
         String password = sharedPreferences.getString("password", "");
-        if (!email.isEmpty() && !password.isEmpty()) {
-            authentication.checkInPermanent(email, password);
+        if (!mail.isEmpty() && !password.isEmpty()) {
+            authentication.checkInPermanent(mail, password);
         } else {
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
 
-        arrayList.addAll(databaseHelper.getAllProducts());
-        myListAdapter.notifyDataSetChanged();
+        int productsCount = databaseHelper.getProductesCount();
+        if (productsCount > 0) {
+            arrayList.addAll(databaseHelper.getAllProducts());
+            myListAdapter.notifyDataSetChanged();
+        }
     }
+
 }
 
 
