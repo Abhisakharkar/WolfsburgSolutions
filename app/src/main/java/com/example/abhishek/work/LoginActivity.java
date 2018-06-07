@@ -26,6 +26,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,7 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
 
         context = LoginActivity.this;
-        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
 /*
@@ -107,7 +108,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 */
 
 
-
         checkSignInStatus();
         if (!isSignedIn) {
             setContentView(R.layout.activity_login);
@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         } else if (isSignedIn) {
 
-            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
             //Deprecated
             //checkData();
@@ -170,7 +170,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void checkSignInStatus() {
 
-        isSignedIn = sharedPreferences.getBoolean("isSignedIn",false);
+        isSignedIn = sharedPreferences.getBoolean("isSignedIn", false);
 
 
         //Deprecated
@@ -217,12 +217,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                     if (isPasswordCorrect) {
                                         //set isSignedIn = true in sharedPref
-                                        editor.putBoolean("isSignedIn",true);
-                                        editor.putString("email",email);
-                                        editor.putString("password",password);
+                                        editor.putBoolean("isSignedIn", true);
+                                        editor.putString("email", email);
+                                        editor.putString("password", password);
 
                                         int retailerId = responseJSONObject.getInt("retailerId");
-                                        editor.putInt("retailerId",retailerId);
+                                        editor.putInt("retailerId", retailerId);
                                         editor.commit();
 
                                         //go to home page
@@ -240,9 +240,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                         //not verified account send to verification activity
 
-                                        editor.putBoolean("isSignedIn",true);
-                                        editor.putString("mail",email);
-                                        editor.putString("password",password);
+                                        editor.putBoolean("isSignedIn", true);
+                                        editor.putString("mail", email);
+                                        editor.putString("password", password);
+
+                                        JSONArray jsonArray = responseJSONObject.getJSONArray("data");
+                                        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+                                        int retailerId = jsonObject.getInt("RetailerID");
+
+                                        editor.putInt("retailerId",retailerId);
                                         editor.commit();
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -315,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if (view.getId() == R.id.sign_up_link_btn_id) {
-            Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
