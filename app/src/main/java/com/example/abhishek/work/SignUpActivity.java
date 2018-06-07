@@ -98,6 +98,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                             editor.putString("email", email);
                             editor.putString("password", password);
+                            int retailerID = responseJSONObject.getInt("retailerID");
+                            editor.putInt("retailerID",retailerID);
+                            editor.commit();
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
                             builder.setMessage("Verification code is sent to email.\nPlease verify your account.");

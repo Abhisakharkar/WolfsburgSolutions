@@ -1,6 +1,7 @@
 package com.example.abhishek.work.ServerOperations;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -107,7 +108,7 @@ public class Authentication {
         headers.put("propritor", "");
         headers.put("contactNo", "0");
         headers.put("profilePhoto", "");
-        headers.put("retailerId","1003");
+        headers.put("retailerId","1675");
         headers.put("latLocation", "0.0");
         headers.put("longLocation", "0.0");
         headers.put("address", "");
@@ -127,7 +128,7 @@ public class Authentication {
         headers.put("Content-Type", "application/json");
 
         try {
-            /*
+
             jsonObject = new JSONObject();
             //jsonObject.put("req_type", "signUp");
             jsonObject.put("mail", email.toString());
@@ -154,7 +155,7 @@ public class Authentication {
             jsonObject.put("shopActLicense", "");
             jsonObject.put("currentState", "0");
             reqBody = jsonObject.toString();
-            */
+
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/add_retailer_info_temp";
             sendRequest(databaseURL);
 
@@ -202,18 +203,17 @@ public class Authentication {
     }
 
     //send verification code from email to server to complete verification
-    public void sendVerificationCode(int code) {
+    public void sendVerificationCode(int code,String mail,String password) {
 
         headers = new HashMap<>();
         headers.put("code", String.valueOf(code));
+        headers.put("mail",mail);
+        headers.put("password",password);
         headers.put("Content-Type", "application/json");
         try {
             jsonObject = new JSONObject();
             jsonObject.put("code", code);
             reqBody = jsonObject.toString();
-
-            //TODO send mail and password also
-
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/verifiication_complete";
         } catch (Exception e) {
             e.printStackTrace();
@@ -263,26 +263,6 @@ public class Authentication {
                 Log.e("Response_Error",databaseURL + " : " + error.toString());
             }
         });
-
-        //retry policy
-        /*
-        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 50000;
-            }
-
-            @Override
-            public int getCurrentRetryCount() {
-                return 50000;
-            }
-
-            @Override
-            public void retry(VolleyError error) throws VolleyError {
-                Log.e("Retry Error", error.toString());
-            }
-        });
-        */
 
         requestQueue.add(jsonObjectRequest);
     }
