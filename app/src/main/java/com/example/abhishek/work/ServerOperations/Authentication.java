@@ -73,6 +73,29 @@ public class Authentication {
         headers.put("currentState", "0");
 
         try {
+            jsonObject = new JSONObject();
+            jsonObject.put("enterpriseName", shopName);
+            jsonObject.put("propritor", proprietor);
+            jsonObject.put("retailerId",retailerID);
+            jsonObject.put("contactNo", mobileNo);
+            jsonObject.put("profilePhoto", "");
+            jsonObject.put("latLocation", String.valueOf(latitude));
+            jsonObject.put("longLocation", String.valueOf(longitude));
+            jsonObject.put("address", "");
+            jsonObject.put("city", cityName);
+            jsonObject.put("state", stateName);
+            jsonObject.put("country", countryName);
+            jsonObject.put("membership", "0");
+            jsonObject.put("subDate", "2010-01-01");
+            jsonObject.put("openCloseIsManual", "0");
+            jsonObject.put("shopOpenTime", "00:00:00");
+            jsonObject.put("shopCloseTime", "00:00:00");
+            jsonObject.put("shopOpenTime2", "00:00:00");
+            jsonObject.put("shopCloseTime2", "00:00:00");
+            jsonObject.put("shopPhoto", "");
+            jsonObject.put("shopActLicense", "");
+            jsonObject.put("currentState", "0");
+            reqBody = jsonObject.toString();
             /*
             jsonObject = new JSONObject();
             jsonObject.put("proprietor", proprietor);

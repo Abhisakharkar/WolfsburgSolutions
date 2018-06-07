@@ -220,6 +220,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putBoolean("isSignedIn",true);
                                         editor.putString("email",email);
                                         editor.putString("password",password);
+
+                                        int retailerId = responseJSONObject.getInt("retailerId");
+                                        editor.putInt("retailerId",retailerId);
                                         editor.commit();
 
                                         //go to home page

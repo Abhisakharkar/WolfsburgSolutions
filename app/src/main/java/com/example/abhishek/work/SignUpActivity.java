@@ -96,8 +96,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             //calling to verification script
                             authentication.verifyEmail(email);
 
-                            editor.putString("email", email);
+                            editor.putString("mail", email);
                             editor.putString("password", password);
+                            Log.e("email : password",email + " : "+ password);
                             int retailerID = responseJSONObject.getInt("retailerID");
                             editor.putInt("retailerID",retailerID);
                             editor.commit();
