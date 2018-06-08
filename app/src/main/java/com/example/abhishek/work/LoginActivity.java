@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -200,7 +201,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
-                    Authentication authentication = new Authentication(LoginActivity.this);
+                    final Authentication authentication = new Authentication(LoginActivity.this);
                     authentication.signInWithEmail(email, password);
 
                     authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
@@ -208,64 +209,71 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onResponseReceive(JSONObject responseJSONObject) {
 
                             try {
-                                boolean result = responseJSONObject.getBoolean("result");
+                                String response_from = responseJSONObject.getString("response_from");
+                                if (response_from.equals("check_in")) {
 
-                                if (result) {
-                                    //sign in success
+                                    boolean result = responseJSONObject.getBoolean("result");
+                                    if (result) {
+                                        //sign in success
+                                        boolean isPasswordCorrect = responseJSONObject.getBoolean("isPasswordCorrect");
+                                        if (isPasswordCorrect) {
+                                            //set isSignedIn = true in sharedPref
+                                            editor.putBoolean("isSignedIn", true);
+                                            editor.putString("email", email);
+                                            editor.putString("password", password);
 
-                                    boolean isPasswordCorrect = responseJSONObject.getBoolean("isPasswordCorrect");
+                                            JSONArray jsonArray = responseJSONObject.getJSONArray("data");
+                                            Log.e("jsonArray", jsonArray.toString());
+                                            JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+                                            Log.e("jsonObject", jsonObject.toString());
+                                            int retailerId = jsonObject.getInt("RetailerID");
+                                            Log.e("retailerId", String.valueOf(retailerId));
+                                            editor.putInt("retailerId", retailerId);
+                                            editor.commit();
 
-                                    if (isPasswordCorrect) {
-                                        //set isSignedIn = true in sharedPref
-                                        editor.putBoolean("isSignedIn", true);
-                                        editor.putString("email", email);
-                                        editor.putString("password", password);
+                                            //check if data is complete
+                                            authentication.isProfileDataComplete(email);
 
-                                        int retailerId = responseJSONObject.getInt("retailerId");
-                                        editor.putInt("retailerId", retailerId);
-                                        editor.commit();
-
-                                        //go to home page
-                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
+                                        } else {
+                                            //show popup that password is wrong
+                                            Toast.makeText(context, "Wrong Password !", Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
-                                        //show popup that password is wrong
-                                        Toast.makeText(context, "Wrong Password !", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    //sign in failed
-                                    boolean isFoundInTemp = responseJSONObject.getBoolean("temp_result");
-                                    if (isFoundInTemp) {
+                                        //sign in failed
+                                        boolean isFoundInTemp = responseJSONObject.getBoolean("temp_result");
+                                        if (isFoundInTemp) {
 
-                                        //not verified account send to verification activity
+                                            //not verified account send to verification activity
 
-                                        editor.putBoolean("isSignedIn", true);
-                                        editor.putString("mail", email);
-                                        editor.putString("password", password);
+                                            editor.putBoolean("isSignedIn", true);
+                                            editor.putString("mail", email);
+                                            editor.putString("password", password);
 
-                                        JSONArray jsonArray = responseJSONObject.getJSONArray("data");
-                                        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
-                                        int retailerId = jsonObject.getInt("RetailerID");
+                                            JSONArray jsonArray = responseJSONObject.getJSONArray("data");
+                                            Log.e("jsonArray", jsonArray.toString());
+                                            JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+                                            Log.e("jsonObject", jsonObject.toString());
+                                            int retailerId = jsonObject.getInt("RetailerID");
+                                            Log.e("retailerId", String.valueOf(retailerId));
 
-                                        editor.putInt("retailerId",retailerId);
-                                        editor.commit();
+                                            editor.putInt("retailerId", retailerId);
+                                            editor.commit();
 
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setMessage("Please complete email verification !");
-                                        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                Intent intent = new Intent(LoginActivity.this, VerificationActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        builder.setCancelable(false);
-                                        AlertDialog dialog = builder.create();
-                                        dialog.show();
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                            builder.setMessage("Please complete email verification !");
+                                            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    Intent intent = new Intent(LoginActivity.this, VerificationActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                }
+                                            });
+                                            builder.setCancelable(false);
+                                            AlertDialog dialog = builder.create();
+                                            dialog.show();
 
-                                        //Deprecated
+                                            //Deprecated
                                         /*
                                         boolean isDataComplete = responseJSONObject.getBoolean("isDataComplete");
                                         if (isDataComplete) {
@@ -282,29 +290,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         }
                                         */
 
-                                    } else {
-                                        //account not exist
-                                        //go to sign up
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                        builder.setTitle("Account does not exist");
-                                        builder.setMessage("Do you want to Sign Up ?");
-                                        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                dialogInterface.dismiss();
-                                            }
-                                        });
-                                        builder.create();
-                                        builder.show();
+                                        } else {
+                                            //account not exist
+                                            //go to sign up
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                            builder.setTitle("Account does not exist");
+                                            builder.setMessage("Do you want to Sign Up ?");
+                                            builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                }
+                                            });
+                                            builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            });
+                                            builder.create();
+                                            builder.show();
+                                        }
                                     }
+                                }else if (response_from.equals("is_data_filled")){
+
+                                    boolean isDataFilled = responseJSONObject.getBoolean("isDataFilled");
+                                    if (isDataFilled){
+                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    }else {
+                                        Toast.makeText(context, "Complete your profile !", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    }
+
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

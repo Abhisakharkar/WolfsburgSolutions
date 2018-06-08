@@ -114,14 +114,70 @@
         <Button
             android:id="@+id/shop_location_btn_id"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_below="@id/shop_address_edittext_id"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorWhite"
             android:elevation="5dp"
-            android:text="Save Shop Location" />
+            android:text="Set Shop Location" />
+
+
+        <View
+            android:id="@+id/profile_activity_divider_line_1_id"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/shop_location_btn_id"
+            android:layout_marginTop="16dp"
+            android:background="#dfdfdf" />
+
+        <TextView
+            android:id="@+id/profile_activity_shop_photo_textview_id"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_below="@id/profile_activity_divider_line_1_id"
+            android:gravity="center"
+            android:text="Save Shop Photo"
+            android:textSize="24dp" />
+
+        <View
+            android:id="@+id/profile_activity_divider_line_2_id"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/profile_activity_shop_photo_textview_id"
+            android:background="#dfdfdf" />
+
+        <TextView
+            android:id="@+id/profile_activity_shop_license_photo_textview_id"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_below="@id/profile_activity_divider_line_2_id"
+            android:gravity="center"
+            android:text="Save Shop License Photo"
+            android:textSize="24dp" />
+
+        <View
+            android:id="@+id/profile_activity_divider_line_3_id"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/profile_activity_shop_license_photo_textview_id"
+            android:background="#dfdfdf" />
+
+        <Button
+            android:id="@+id/save_profile_btn_id"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_below="@id/profile_activity_divider_line_3_id"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:elevation="5dp"
+            android:text="Save Profile"
+            android:textColor="@color/colorWhite" />
+
+        <!--
 
         <ImageView
             android:id="@+id/shop_pic_view_id"
@@ -181,7 +237,7 @@
             android:elevation="5dp"
             android:text="Save Profile"
             android:textColor="@color/colorWhite" />
-
+            -->
 
     </RelativeLayout>
 

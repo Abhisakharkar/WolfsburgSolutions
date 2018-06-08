@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.work.ServerOperations.Authentication;
@@ -49,6 +50,7 @@ import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -62,7 +64,8 @@ public class ProfileActivity extends AppCompatActivity implements
 
     //private String fname, lname, mob_no, address, shop_name, proprietor, category;
     private EditText mob_no_edit, address_edit, shop_name_edit, password_edit, confirm_password_edit, proprieter_edit;
-    private Button save_profile_btn, shop_location_btn, shop_pic_btn, shop_license_btn;
+    private Button save_profile_btn, shop_location_btn;
+    private TextView shop_pic_textview, shop_license_pic_textview;
     private Spinner shop_category_spinner;
     private ImageButton imageButton;
     private ImageView shop_pic_imageview, shop_license_imageview;
@@ -103,21 +106,29 @@ public class ProfileActivity extends AppCompatActivity implements
         address_edit = (EditText) findViewById(R.id.shop_address_edittext_id);
         shop_name_edit = (EditText) findViewById(R.id.shop_name_edittext_id);
         proprieter_edit = (EditText) findViewById(R.id.proprieter_edittext_id);
-        shop_pic_imageview = (ImageView) findViewById(R.id.shop_pic_view_id);
-        shop_license_imageview = (ImageView) findViewById(R.id.shop_license_pic_view_id);
+        //shop_pic_imageview = (ImageView) findViewById(R.id.shop_pic_view_id);
+        //shop_license_imageview = (ImageView) findViewById(R.id.shop_license_pic_view_id);
         shop_category_spinner = (Spinner) findViewById(R.id.shop_category_spinner_id);
         save_profile_btn = (Button) findViewById(R.id.save_profile_btn_id);
         shop_location_btn = (Button) findViewById(R.id.shop_location_btn_id);
-        shop_license_btn = (Button) findViewById(R.id.shop_license_photo_btn_id);
-        shop_pic_btn = (Button) findViewById(R.id.shop_photo_btn_id);
+        shop_pic_textview = (TextView) findViewById(R.id.profile_activity_shop_photo_textview_id);
+        shop_license_pic_textview = (TextView) findViewById(R.id.profile_activity_shop_license_photo_textview_id);
 
         save_profile_btn.setOnClickListener(this);
         shop_location_btn.setOnClickListener(this);
-        shop_pic_btn.setOnClickListener(this);
-        shop_license_btn.setOnClickListener(this);
+        shop_pic_textview.setOnClickListener(this);
+        shop_license_pic_textview.setOnClickListener(this);
 
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+
+        //get data if previously filled
+        
+
+
+
+
 
         //location
         locationManager = (LocationManager) getSystemService(context.LOCATION_SERVICE);
@@ -221,8 +232,10 @@ public class ProfileActivity extends AppCompatActivity implements
 
                 break;
 
-            case R.id.shop_license_photo_btn_id:
+            case R.id.profile_activity_shop_license_photo_textview_id:
 
+                startActivity(new Intent(ProfileActivity.this, LicensePhotoActivity.class));
+                /*
                 isShopLicensePic = true;
                 isShopPic = false;
 
@@ -241,11 +254,14 @@ public class ProfileActivity extends AppCompatActivity implements
                 } else {
                     showImageSelectDialog();
                 }
+                */
 
                 break;
 
-            case R.id.shop_photo_btn_id:
+            case R.id.profile_activity_shop_photo_textview_id:
 
+                startActivity(new Intent(ProfileActivity.this, ShopPhotoActivity.class));
+                /*
                 isShopLicensePic = false;
                 isShopPic = true;
 
@@ -264,10 +280,12 @@ public class ProfileActivity extends AppCompatActivity implements
                 } else {
                     showImageSelectDialog();
                 }
+                */
                 break;
         }
     }
 
+    /*
     private void showImageSelectDialog() {
 
         final String[] options = {"Camera", "Gallery"};
@@ -314,6 +332,7 @@ public class ProfileActivity extends AppCompatActivity implements
         builder.show();
     }
 
+
     private void getImage(int option) {
         if (option == 0) {
             Intent captureImageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -328,7 +347,7 @@ public class ProfileActivity extends AppCompatActivity implements
             startActivityForResult(intent, GALLERY_REQ_CODE);
         }
     }
-
+*/
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -432,7 +451,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 locationDialog.show();
             }
         }
-
+/*
         if (requestCode == STOARAGE_PERM_REQ_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 //storage permissions granted
@@ -475,7 +494,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 cameraDialog.show();
             }
         }
-
+*/
     }
 
     @Override
@@ -502,7 +521,7 @@ public class ProfileActivity extends AppCompatActivity implements
             }
         }
 
-
+/*
         if (requestCode == CAMERA_REQ_CODE) {
 
             if (resultCode == RESULT_OK) {
@@ -586,6 +605,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 }
             }
         }
+        */
 
     }
 

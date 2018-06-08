@@ -164,6 +164,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        /*
         //server response listener
         authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override
@@ -219,6 +220,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+        */
 
         //local database
         databaseHelper = new LocalDatabaseHelper(context);
@@ -228,8 +230,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        //TODO :  todo things listed in onCreate
-
+        /*
         //check if email is verified
         String mail = sharedPreferences.getString("mail", "");
         String password = sharedPreferences.getString("password", "");
@@ -240,6 +241,7 @@ public class HomeActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+        */
 
         int productsCount = databaseHelper.getProductesCount();
         if (productsCount > 0) {
