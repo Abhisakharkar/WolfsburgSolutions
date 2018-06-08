@@ -4,13 +4,16 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.android.volley.VolleyError;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
+import com.example.abhishek.work.SupportClasses.MultipartRequest;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.UploadNotificationConfig;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -18,6 +21,7 @@ import java.util.UUID;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -50,18 +54,25 @@ public class ImageUpload {
 
         try {
             new MultipartUploadRequest(context, uploadId, url)
-                    .addFileToUpload(photoPath, photoName)
+                    .addFileToUpload(photoPath, photoName, photoName)
                     .setNotificationConfig(new UploadNotificationConfig())
                     .setMaxRetries(1)
                     .setMethod("POST")
-                    .addHeader("ENCTYPE","multipart/form-data")
-                    .addHeader("Content-Type","multipart/form-data")
+                    .addHeader("ENCTYPE","recfile")
                     .startUpload();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+
+    public void uploadImage4(String name,String path){
+        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/upload";
+        MultipartRequest multipartRequest = new MultipartRequest(context);
+        multipartRequest.addFile(name,path,name);
+        multipartRequest.execute(url);
+    }
 
     public void uploadImage(String photoName, String photoPath) {
 
@@ -70,7 +81,8 @@ public class ImageUpload {
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart(photoName, photoPath)
-                .addFormDataPart("type", "file")
+                .addFormDataPart("imageFile",photoName,RequestBody.create(MediaType.parse("JPEG"),new File(photoPath)))
+                .addFormDataPart("type", "imageFile")
                 .addFormDataPart("name", "imageFile")
                 .build();
 
@@ -78,9 +90,7 @@ public class ImageUpload {
 
         request = new Request.Builder()
                 .url(url)
-                .addHeader("Content-Type", "multipart/form-data")
-                .addHeader("name", "imageFile")
-                .addHeader("ENCTYPE", "multipart/form-data")
+                .addHeader("type","imageFile")
                 .post(requestBody)
                 .build();
 
@@ -97,5 +107,7 @@ public class ImageUpload {
                 Log.e("imageUpload Response", response.message().toString());
             }
         });
+
+
     }
 }

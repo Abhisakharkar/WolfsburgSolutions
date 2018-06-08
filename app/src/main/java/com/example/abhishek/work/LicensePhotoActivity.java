@@ -232,7 +232,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
                     fileOutputStream.close();
 
                     //send image to server
-                    imageUpload.uploadImage(photoFile.getAbsolutePath().toString(),photoName);
+                    imageUpload.uploadImage(photoName,photoFile.getAbsolutePath().toString());
 
                 } catch (Exception e) {
                     e.printStackTrace();
