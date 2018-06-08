@@ -185,6 +185,18 @@ public class ProfileActivity extends AppCompatActivity implements
                         longitude = jsonObject.getDouble("LongitudeLocation");
                         latitude = jsonObject.getDouble("LatitudeLocation");
 
+                        //save data to sharedpreferences
+                        editor.putString("propritor", proprietor);
+                        editor.putString("shopName", shopName);
+                        editor.putString("mobileNo", mobileNo);
+                        editor.putString("city", cityName);
+                        editor.putString("state", stateName);
+                        editor.putString("country", countryName);
+                        editor.putString("longitude", String.valueOf(longitude));
+                        editor.putString("latitude", String.valueOf(latitude));
+                        editor.commit();
+
+                        //set edittext
                         proprieter_edit.setText(proprietor);
                         mob_no_edit.setText(mobileNo);
                         shop_name_edit.setText(shopName);
@@ -221,6 +233,11 @@ public class ProfileActivity extends AppCompatActivity implements
                     cityName = addresses.get(0).getLocality();
                     countryName = addresses.get(0).getCountryName();
                     stateName = addresses.get(0).getAdminArea();
+
+                    editor.putString("city", cityName);
+                    editor.putString("state", stateName);
+                    editor.putString("country", countryName);
+                    editor.commit();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -423,6 +440,10 @@ public class ProfileActivity extends AppCompatActivity implements
                         Location location = locationResult.getLastLocation();
                         longitude = location.getLongitude();
                         latitude = location.getLatitude();
+
+                        editor.putString("longitude", String.valueOf(longitude));
+                        editor.putString("latitude", String.valueOf(latitude));
+
                         locationResponse.saveLocationResponse(longitude, latitude);
                         fusedLocationProviderClient.removeLocationUpdates(this);
                     }
