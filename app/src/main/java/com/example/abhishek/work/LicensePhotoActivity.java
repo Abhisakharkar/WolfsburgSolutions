@@ -3,6 +3,7 @@ package com.example.abhishek.work;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,7 +20,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.abhishek.work.ServerOperations.ImageUpload;
 import com.example.abhishek.work.ServerOperations.SendData;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 
@@ -36,12 +39,19 @@ public class LicensePhotoActivity extends AppCompatActivity {
     private ImageView licenseImageview;
     private Button saveImageBtn, editImageBtn;
 
+    private String photoName;
+    private SharedPreferences sharedPreferences;
+
+    private ImageUpload imageUpload;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_license_photo);
 
         context = this;
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
+        imageUpload = new ImageUpload();
 
         licenseImageview = (ImageView) findViewById(R.id.license_photo_activity_imageview_id);
         saveImageBtn = (Button) findViewById(R.id.license_photo_activity_save_btn_id);
@@ -72,7 +82,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // not implemented
-                Log.e("UploadImage","not implemented");
+                Log.e("UploadImage", "not implemented");
             }
         });
     }
@@ -205,13 +215,25 @@ public class LicensePhotoActivity extends AppCompatActivity {
                         file.mkdir();
                     }
                     //set photo name
-                    String photoName = "shop_license_photo";
+                    int retailerId = sharedPreferences.getInt("retailerId", 0);
+                    if (retailerId == 0) {
+                        Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LicensePhotoActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } else {
+                        photoName = "lp" + "." + retailerId + ".jpeg";
+                    }
 
                     //save photo to memory
-                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName + ".jpeg");
+                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName);
                     fileOutputStream = new FileOutputStream(photoFile);
                     photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
+
+                    //send image to server
+                    imageUpload.uploadImage(photoName, photoFile.getAbsolutePath().toString());
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -244,18 +266,25 @@ public class LicensePhotoActivity extends AppCompatActivity {
                     }
 
                     //set name
-                    String photoName = "shop_license_photo";
-
-                    //Sending photo to server
-                    SendData sendData = new SendData(context);
-                    sendData.sendImageUploadRequest(photoBitmap,photoName,1001);
-
+                    int retailerId = sharedPreferences.getInt("retailerId", 0);
+                    if (retailerId == 0) {
+                        Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LicensePhotoActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } else {
+                        photoName = "lp" + "." + retailerId + ".jpeg";
+                    }
 
                     //save photo to memory
-                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName + ".jpeg");
+                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName);
                     fileOutputStream = new FileOutputStream(photoFile);
                     photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
+
+                    //send photo to server
+                    imageUpload.uploadImage(photoName, photoFile.getAbsolutePath().toString());
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
