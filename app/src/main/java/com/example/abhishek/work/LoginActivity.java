@@ -113,7 +113,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (!isSignedIn) {
             setContentView(R.layout.activity_login);
 
-            mail_edittext = (EditText) findViewById(R.id.email_edittext_signup_id);
+            Log.e("mail_edittext",(mail_edittext==null ? "null" : "not null"));
+            mail_edittext = (EditText) findViewById(R.id.email_edittext_login_id);
+            Log.e("mail_edittext",(mail_edittext==null ? "null" : "not null"));
             password_edittext = (EditText) findViewById(R.id.password_edittext_login_id);
             signin_btn = (Button) findViewById(R.id.signIn_btn_id);
             signUp_link_btn = (Button) findViewById(R.id.sign_up_link_btn_id);
@@ -131,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
 
-        } else if (isSignedIn) {
+        } else {
 
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
@@ -194,6 +196,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if (view.getId() == R.id.signIn_btn_id) {
+            Log.e("edittext",mail_edittext.getText().toString() + " ... ... ");
             mail = mail_edittext.getText().toString();
             password = password_edittext.getText().toString();
 

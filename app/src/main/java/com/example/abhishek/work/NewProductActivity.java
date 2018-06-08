@@ -67,9 +67,9 @@ public class NewProductActivity extends AppCompatActivity {
                         ProductData productData = new ProductData();
                         productData.setName(jsonObject.getString("name"));
                         productData.setProductID(jsonObject.getInt("id"));
-                        productData.setAttribute_set_id(jsonObject.getInt("attribute_set_id"));
+                        productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
                         productData.setPrice(jsonObject.getDouble("price"));
-                        productData.setPhoto(jsonObject.getString("photo"));
+                        productData.setPhoto(jsonObject.getString("image-url"));
                         arrayList.add(productData);
                         adapter.notifyDataSetChanged();
                     }

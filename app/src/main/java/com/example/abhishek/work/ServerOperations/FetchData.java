@@ -34,7 +34,7 @@ public class FetchData {
     }
 
     public void getProducts(String name,int id){
-        URL = URL+"magento_product_display";
+        URL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/magento_product_display";
         try {
             reqBody.put("name", name);
             reqBody.put("id_category",id);
@@ -49,7 +49,7 @@ public class FetchData {
     }
 
     public void getProductDetails(String product_SKU){
-        URL = URL+"magento_info_product";
+        URL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/magento_info_product";
 
         //send only this
     }
