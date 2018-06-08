@@ -51,7 +51,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
 
         context = this;
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
-        imageUpload = new ImageUpload();
+        imageUpload = new ImageUpload(this);
 
         licenseImageview = (ImageView) findViewById(R.id.license_photo_activity_imageview_id);
         saveImageBtn = (Button) findViewById(R.id.license_photo_activity_save_btn_id);
@@ -232,7 +232,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
                     fileOutputStream.close();
 
                     //send image to server
-                    imageUpload.uploadImage(photoName, photoFile.getAbsolutePath().toString());
+                    imageUpload.uploadImage(photoFile.getAbsolutePath().toString(),photoName);
 
                 } catch (Exception e) {
                     e.printStackTrace();
