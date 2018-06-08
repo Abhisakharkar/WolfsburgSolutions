@@ -48,6 +48,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -124,10 +125,87 @@ public class ProfileActivity extends AppCompatActivity implements
 
 
         //get data if previously filled
-        
+        proprietor = sharedPreferences.getString("proprieter", "");
+        if (!proprietor.isEmpty()) {
+            mobileNo = sharedPreferences.getString("mobileNo", "");
+            shopName = sharedPreferences.getString("shopName", "");
+            address = sharedPreferences.getString("shopAddress", "");
+            cityName = sharedPreferences.getString("city", "");
+            stateName = sharedPreferences.getString("state", "");
+            countryName = sharedPreferences.getString("country", "");
 
+            proprieter_edit.setText(proprietor);
+            mob_no_edit.setText(mobileNo);
+            shop_name_edit.setText(shopName);
+            address_edit.setText(address);
+        } else {
+            String mail = sharedPreferences.getString("mail", "");
+            if (mail.isEmpty()) {
+                Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } else {
+                authentication.isProfileDataComplete(mail);
+            }
+        }
 
+        //server response
+        authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+            @Override
+            public void onResponseReceive(JSONObject responseJSONObject) {
+                try {
+                    String response_from = responseJSONObject.getString("response_from");
+                    if (response_from.equals("is_data_filled")) {
 
+                        boolean isDataFilled = responseJSONObject.getBoolean("isDataFilled");
+                        if (isDataFilled) {
+                            String mail = sharedPreferences.getString("mail", "");
+                            String password = sharedPreferences.getString("password", "");
+                            if (!mail.isEmpty()) {
+                                authentication.checkInPermanent(mail, password);
+                            } else {
+                                Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        }
+
+                    } else if (response_from.equals("check_in")) {
+
+                        JSONArray jsonArray = responseJSONObject.getJSONArray("data");
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+                        shopName = jsonObject.getString("EnterpriseName");
+                        proprietor = jsonObject.getString("Propritor");
+                        mobileNo = String.valueOf(jsonObject.getInt("ContactNo"));
+                        cityName = jsonObject.getString("City");
+                        stateName = jsonObject.getString("State");
+                        countryName = jsonObject.getString("Country");
+                        longitude = jsonObject.getDouble("LongitudeLocation");
+                        latitude = jsonObject.getDouble("LatitudeLocation");
+
+                        proprieter_edit.setText(proprietor);
+                        mob_no_edit.setText(mobileNo);
+                        shop_name_edit.setText(shopName);
+                        address_edit.setText(address);
+
+                    } else if (response_from.equals("add_retailer_into_perm")) {
+
+                        boolean result = responseJSONObject.getBoolean("result");
+                        if (result) {
+                            //saved successfully
+                            Toast.makeText(context, "Profile saved successfully !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            //error ....
+                            Toast.makeText(context, "Please try again !", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
         //location
@@ -180,25 +258,6 @@ public class ProfileActivity extends AppCompatActivity implements
                                 //send data to server
                                 int retailerID = sharedPreferences.getInt("retailerID", 0);
                                 authentication.sendUserProfile(retailerID, proprietor, shopName, mobileNo, longitude, latitude, cityName, stateName, countryName);
-                                authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
-                                    @Override
-                                    public void onResponseReceive(JSONObject responseJSONObject) {
-                                        try {
-                                            boolean result = responseJSONObject.getBoolean("result");
-                                            if (result) {
-                                                //go to home page
-                                                Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(intent);
-                                            } else {
-                                                //error .... login again
-                                                Toast.makeText(context, "Please try again !", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
                             } else {
                                 Toast.makeText(context, "Please set Location !", Toast.LENGTH_SHORT).show();
                             }

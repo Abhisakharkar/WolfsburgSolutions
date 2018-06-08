@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Boolean isSignedIn = false;
 
     //Ui components
-    private EditText email_edittext, password_edittext;
+    private EditText mail_edittext, password_edittext;
     private Button signin_btn, signUp_link_btn;
     private SignInButton googleSignIn_btn;
     private ProgressDialog progressDialog;
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private GoogleSignInAccount googleSignInAccount;
 
     //User Data
-    private String email = "";
+    private String mail = "";
     private String password = "";
 
     //Check if connected to internet or not
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (!isSignedIn) {
             setContentView(R.layout.activity_login);
 
-            email_edittext = (EditText) findViewById(R.id.email_edittext_login_id);
+            mail_edittext = (EditText) findViewById(R.id.email_edittext_signup_id);
             password_edittext = (EditText) findViewById(R.id.password_edittext_login_id);
             signin_btn = (Button) findViewById(R.id.signIn_btn_id);
             signUp_link_btn = (Button) findViewById(R.id.sign_up_link_btn_id);
@@ -143,9 +143,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     public void checkData() {
-        if (email != null || !email.isEmpty()) {
+        if (mail != null || !mail.isEmpty()) {
             Authentication authentication = new Authentication(LoginActivity.this);
-            //authentication.checkData(email);
+            //authentication.checkData(mail);
 
             authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
                 @Override
@@ -181,7 +181,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             isSignedIn = false;
         } else {
             isSignedIn = true;
-            email = googleSignInAccount.getEmail();
+            mail = googleSignInAccount.getmail();
         }
         */
     }
@@ -194,15 +194,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if (view.getId() == R.id.signIn_btn_id) {
-            email = email_edittext.getText().toString();
+            mail = mail_edittext.getText().toString();
             password = password_edittext.getText().toString();
 
-            if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
+            if (!TextUtils.isEmpty(mail) || !TextUtils.isEmpty(password)) {
 
-                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
 
                     final Authentication authentication = new Authentication(LoginActivity.this);
-                    authentication.signInWithEmail(email, password);
+                    authentication.signInWithEmail(mail, password);
 
                     authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
                         @Override
@@ -219,7 +219,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         if (isPasswordCorrect) {
                                             //set isSignedIn = true in sharedPref
                                             editor.putBoolean("isSignedIn", true);
-                                            editor.putString("email", email);
+                                            editor.putString("mail", mail);
                                             editor.putString("password", password);
 
                                             JSONArray jsonArray = responseJSONObject.getJSONArray("data");
@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             editor.commit();
 
                                             //check if data is complete
-                                            authentication.isProfileDataComplete(email);
+                                            authentication.isProfileDataComplete(mail);
 
                                         } else {
                                             //show popup that password is wrong
@@ -246,7 +246,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             //not verified account send to verification activity
 
                                             editor.putBoolean("isSignedIn", true);
-                                            editor.putString("mail", email);
+                                            editor.putString("mail", mail);
                                             editor.putString("password", password);
 
                                             JSONArray jsonArray = responseJSONObject.getJSONArray("data");
@@ -260,7 +260,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             editor.commit();
 
                                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                            builder.setMessage("Please complete email verification !");
+                                            builder.setMessage("Please complete mail verification !");
                                             builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -336,10 +336,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     });
 
                 } else {
-                    Toast.makeText(context, "check yout email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "check yout mail", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Enter mail and password", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -372,7 +372,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 //now signed in successfully
                 //code after successfull sign in
-                email = googleSignInAccount.getEmail();
+                mail = googleSignInAccount.getmail();
                 checkData();
 
 
