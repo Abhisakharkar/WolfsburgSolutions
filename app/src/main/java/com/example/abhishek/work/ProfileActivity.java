@@ -21,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -125,7 +126,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
 
         //get data if previously filled
-        proprietor = sharedPreferences.getString("proprieter", "");
+        proprietor = sharedPreferences.getString("proprietor", "");
         if (!proprietor.isEmpty()) {
             mobileNo = sharedPreferences.getString("mobileNo", "");
             shopName = sharedPreferences.getString("shopName", "");
@@ -186,7 +187,7 @@ public class ProfileActivity extends AppCompatActivity implements
                         latitude = jsonObject.getDouble("LatitudeLocation");
 
                         //save data to sharedpreferences
-                        editor.putString("propritor", proprietor);
+                        editor.putString("proprietor", proprietor);
                         editor.putString("shopName", shopName);
                         editor.putString("mobileNo", mobileNo);
                         editor.putString("city", cityName);
