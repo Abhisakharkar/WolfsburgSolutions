@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class SendData {
 
-    private String URL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
+    private String serverURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
     private Context context;
     //private ServerResponse serverResponse = new ServerResponse();
     private ServerResponse serverResponse;
@@ -35,7 +35,6 @@ public class SendData {
     }
 
     public void addProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
-        URL = URL + "add_product";
         String image = "product_"+retailerID+".jpeg";
         //photo : blank
 
@@ -45,6 +44,7 @@ public class SendData {
             header.put("retailerID",retailerID);
             header.put("productID",productID);
             header.put("price",price);
+            header.put("photo","0");
             header.put("desc",desc);
             header.put("avail",String.valueOf(avail));
             header.put("star",String.valueOf(star));
@@ -54,23 +54,58 @@ public class SendData {
             reqBody.put("productID",productID);
             reqBody.put("price",price);
             reqBody.put("desc",desc);
+            reqBody.put("photo","0");
             reqBody.put("avail",String.valueOf(avail));
             reqBody.put("star",String.valueOf(star));
             reqBody.put("comment",comment);
 
-            sendRequest();
+            String url = serverURL+"add_product";
+            sendRequest(url);
 
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private void sendRequest(){
+    public void updateProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
+        String image = "product_"+retailerID+".jpeg";
+        //photo : blank
+
+        try{
+            header.put("Content-Type","application/json");
+            //send all this info
+            header.put("retailerID",retailerID);
+            header.put("productID",productID);
+            header.put("price",price);
+            header.put("photo","0");
+            header.put("desc",desc);
+            header.put("avail",String.valueOf(avail));
+            header.put("star",String.valueOf(star));
+            header.put("comment",comment);
+
+            reqBody.put("retailerID",retailerID);
+            reqBody.put("productID",productID);
+            reqBody.put("price",price);
+            reqBody.put("desc",desc);
+            reqBody.put("photo","0");
+            reqBody.put("avail",String.valueOf(avail));
+            reqBody.put("star",String.valueOf(star));
+            reqBody.put("comment",comment);
+
+            String url = serverURL+"update_product";
+            sendRequest(url);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void sendRequest(String url){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST
-                , URL
+                , url
                 , new JSONObject(header)
                 , new Response.Listener<JSONObject>() {
             @Override
@@ -81,6 +116,7 @@ public class SendData {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("Response Error",error.toString());
             }
         }){
             @Override

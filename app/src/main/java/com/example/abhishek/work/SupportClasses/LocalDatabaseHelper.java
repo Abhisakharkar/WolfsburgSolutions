@@ -45,7 +45,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ItemData getProduct(String productID) {
+    public ItemData getProduct(int productID) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(ItemData.TABLE_NAME
@@ -53,7 +53,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                         , ItemData.COLUMN_PRICE, ItemData.COLUMN_DESCRIPTION, ItemData.COLUMN_PHOTO
                         , ItemData.COLUMN_AVAILABILITY, ItemData.COLUMN_STAR}
                 , ItemData.COLUMN_PRODUCT_ID + "=?"
-                , new String[]{productID}
+                , new String[]{String.valueOf(productID)}
                 , null
                 , null
                 , null
@@ -61,17 +61,23 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null) {
             cursor.moveToFirst();
-        }
-        ItemData itemData = new ItemData();
-        itemData.setProductID(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRODUCT_ID)));
-        itemData.setPrice(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRICE)));
-        itemData.setDescription(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_DESCRIPTION)));
-        itemData.setPhoto(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_PHOTO)));
-        itemData.setAvailability(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_AVAILABILITY)));
-        itemData.setStar(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_STAR)));
-        cursor.close();
 
-        return itemData;
+            ItemData itemData = new ItemData();
+            itemData.setProductID(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRODUCT_ID)));
+            itemData.setPrice(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRICE)));
+            itemData.setDescription(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_DESCRIPTION)));
+            itemData.setPhoto(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_PHOTO)));
+            itemData.setAvailability(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_AVAILABILITY)));
+            itemData.setStar(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_STAR)));
+            cursor.close();
+
+            return itemData;
+        }else {
+            ItemData itemData = new ItemData();
+            itemData.setProductID(-1);
+            return itemData;
+        }
+
     }
 
     public List<ItemData> getAllProducts() {

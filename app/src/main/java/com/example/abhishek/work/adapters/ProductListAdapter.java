@@ -3,6 +3,7 @@ package com.example.abhishek.work.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +47,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, NewProductActivity.class);
+                Intent intent = new Intent(context, ProductEditActivity.class);
                 intent.putExtra("name", arrayList.get(position).getName());
                 intent.putExtra("productID", arrayList.get(position).getProductID());
+                Log.e("id id",String.valueOf(arrayList.get(position).getProductID()));
                 intent.putExtra("attribute_set_id", arrayList.get(position).getAttribute_set_id());
                 intent.putExtra("price", arrayList.get(position).getPrice());
                 intent.putExtra("photo",arrayList.get(position).getPhoto());

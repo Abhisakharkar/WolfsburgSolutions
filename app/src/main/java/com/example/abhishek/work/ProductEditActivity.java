@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,6 +57,8 @@ public class ProductEditActivity extends AppCompatActivity {
         productID = intent.getIntExtra("productID",-1);
         photo = intent.getStringExtra("photo");
 
+        Log.e("productID",String.valueOf(productID));
+
         priceEdittext = (EditText) findViewById(R.id.product_edit_activity_selling_price_edittext_id);
         commentEdittext = (EditText) findViewById(R.id.product_edit_activity_comment_edittext_id);
         descriptionEdittext = (EditText) findViewById(R.id.product_edit_activity_descriptio_edittext_id);
@@ -95,12 +98,24 @@ public class ProductEditActivity extends AppCompatActivity {
                 itemData.setSellingPrice(Double.parseDouble(priceTxt));
                 itemData.setStar(isStar);
                 itemData.setAvailability(isAvailable);
-                //
-                databaseHelper.insertItem(itemData);
 
-                //sending product data to server
-                sendData.addProductToShop(String.valueOf(retailerID),String.valueOf(productID)
-                        ,String.valueOf(priceTxt),descriptionTxt,isAvailable,isStar,commentTxt);
+                //check if item is already present
+                ItemData tempItemData = databaseHelper.getProduct(productID);
+                if (tempItemData.getProductID() == -1){
+                    //item already present
+                    //update existing item
+                    databaseHelper.insertItem(itemData);
+                    //sending product data to server
+                    sendData.addProductToShop(String.valueOf(retailerID),String.valueOf(productID)
+                            ,String.valueOf(priceTxt),descriptionTxt,isAvailable,isStar,commentTxt);
+                }else {
+                    //item not present
+                    //add this new item
+                    databaseHelper.updateProduct(itemData);
+                    //sending product data to server
+                    sendData.updateProductToShop(String.valueOf(retailerID),String.valueOf(productID)
+                            ,String.valueOf(priceTxt),descriptionTxt,isAvailable,isStar,commentTxt);
+                }
 
             }
         });

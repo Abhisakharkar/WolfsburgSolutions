@@ -21,7 +21,7 @@
         </activity>
         <activity
             android:name=".SignUpActivity"
-            android:theme="@style/SignUpActivityTheme" >
+            android:theme="@style/SignUpActivityTheme">
 
         </activity>
         <activity
@@ -33,7 +33,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileActivity">
+        <activity android:name=".ProfileActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
 
         </activity>
         <activity android:name=".NewCategoryActivity" />
