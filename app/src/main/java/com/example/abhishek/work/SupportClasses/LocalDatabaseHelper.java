@@ -123,9 +123,12 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ItemData.COLUMN_PRICE, itemData.getPrice());
         values.put(ItemData.COLUMN_STAR, itemData.getStar());
+        values.put(ItemData.COLUMN_NAME, itemData.getName());
+        values.put(ItemData.COLUMN_SELLING_PRICE, itemData.getSellingPrice());
         values.put(ItemData.COLUMN_AVAILABILITY, itemData.getAvailability());
         values.put(ItemData.COLUMN_DESCRIPTION, itemData.getDescription());
         values.put(ItemData.COLUMN_PHOTO, itemData.getPhoto());
+        values.put(ItemData.COLUMN_COMMENT, itemData.getComment());
 
         int i = db.update(ItemData.TABLE_NAME, values, ItemData.COLUMN_PRODUCT_ID + " = ? "
                 , new String[]{String.valueOf(itemData.getProductID())});

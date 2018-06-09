@@ -32,7 +32,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private ServerResponse serverResponse;
 
     private String name,photo;
-    private double price;
+    private double price,selling_price;
     private int attribute_set_id,productID,retailerID;
 
     private SharedPreferences sharedPreferences;
@@ -57,7 +57,7 @@ public class ProductEditActivity extends AppCompatActivity {
         productID = intent.getIntExtra("productID",-1);
         photo = intent.getStringExtra("photo");
 
-        Log.e("productID",String.valueOf(productID));
+        Log.e("productEdit name",name);
 
         priceEdittext = (EditText) findViewById(R.id.product_edit_activity_selling_price_edittext_id);
         commentEdittext = (EditText) findViewById(R.id.product_edit_activity_comment_edittext_id);
@@ -70,6 +70,11 @@ public class ProductEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 priceTxt = priceEdittext.getText().toString();
+                if (priceTxt.isEmpty()){
+                    selling_price = price;
+                }else {
+                    selling_price = Double.parseDouble(priceTxt);
+                }
                 commentTxt = commentEdittext.getText().toString();
                 descriptionTxt = descriptionEdittext.getText().toString();
                 if (star.isChecked()){
