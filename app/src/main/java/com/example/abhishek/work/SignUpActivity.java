@@ -94,6 +94,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         }
                     }
 
+                    //response : sign_up
+                    if (responseFrom.equals("sign_up")){
+                        boolean signUpSuccessStatus = responseJSONObject.getBoolean("signUpSuccessStatus");
+                        boolean mailSent = responseJSONObject.getBoolean("mailSent");
+
+                        if (signUpSuccessStatus){
+                            //signup successfull
+                            startActivity(new Intent(SignUpActivity.this,VerificationActivity.class));
+                            finish();
+                        }else {
+                            Toast.makeText(SignUpActivity.this, "Error in Signing Up !\nTry again later.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -213,7 +226,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                 if (TextUtils.equals(password, confirmPassword)) {
 
-                    authentication.signUpNew(email,password);
+                    authentication.signUpNew(email, password);
 
                     //check in permanent
                     //authentication.checkInPermanent(email, password);
@@ -233,12 +246,5 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }

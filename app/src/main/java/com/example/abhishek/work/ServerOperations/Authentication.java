@@ -75,6 +75,18 @@ public class Authentication {
         sendRequestNew(url,headers);
     }
 
+    public void signInFromThisDevice(int retailerId){
+        headers = new HashMap<>();
+        headers.put("retailerId",String.valueOf(retailerId));
+        String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        headers.put("deviceId",deviceId);
+
+        //TODO complete url
+        String url = serverUrl + "/";
+        sendRequestNew(url,headers);
+
+    }
+
     private void sendRequestNew(String url, Map<String, String> headers) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
