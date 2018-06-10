@@ -31,7 +31,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Authentication authentication;
     private ServerResponse serverResponse;
 
-    private String email, password;
+    private String email = "", password = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +44,34 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         signUpBtn = (Button) findViewById(R.id.sign_up_btn_id);
         signInLinkBtn = (Button) findViewById(R.id.sign_in_link_btn);
 
+        signUpBtn.setClickable(false);
         signUpBtn.setOnClickListener(this);
         signInLinkBtn.setOnClickListener(this);
 
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+
+        //email focus listener
+        email_edittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    email = email_edittext.getText().toString();
+                    if (email.isEmpty()) {
+                        if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                            authentication.checkEmailExists(email);
+                        } else {
+                            Toast.makeText(SignUpActivity.this, "Please enter correct email !", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(SignUpActivity.this, "Enter email !", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    signUpBtn.setClickable(false);
+                }
+            }
+        });
 
         //server response listener
         authentication = new Authentication(SignUpActivity.this);
@@ -57,6 +80,26 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
 
+                try {
+                    String responseFrom = responseJSONObject.getString("responseFrom");
+
+                    //response : check_mail_exist
+                    if (responseFrom.equals("check_mail_exist")) {
+                        boolean mailExist = responseJSONObject.getBoolean("mailExist");
+                        if (mailExist) {
+                            Toast.makeText(SignUpActivity.this, "Account already exists !" +
+                                    "\n Please Sign In.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            signUpBtn.setClickable(true);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                /*
                 try {
                     Log.e("signUp response", responseJSONObject.toString());
                     String response_from = responseJSONObject.getString("response_from");
@@ -126,7 +169,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                */
 
                 // Deprecated
                                 /*
@@ -155,6 +198,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     e.printStackTrace();
                                 }
                                 */
+
             }
         });
     }
@@ -162,30 +206,26 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.sign_up_btn_id) {
-
-            email = "" + email_edittext.getText().toString();
             password = "" + password_edittext.getText().toString();
             String confirmPassword = "" + confirm_password_edittext.getText().toString();
 
-            if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword)) {
+            if (!TextUtils.isEmpty(password) || !TextUtils.isEmpty(confirmPassword)) {
 
-                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (TextUtils.equals(password, confirmPassword)) {
 
-                    if (TextUtils.equals(password, confirmPassword)) {
+                    authentication.signUpNew(email,password);
 
-                        //check in permanent
-                        authentication.checkInPermanent(email, password);
-
-                    } else {
-                        Toast.makeText(this, "passwords are not correct !", Toast.LENGTH_SHORT).show();
-                    }
+                    //check in permanent
+                    //authentication.checkInPermanent(email, password);
 
                 } else {
-                    Toast.makeText(this, "check your email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "passwords are not correct !", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Enter password", Toast.LENGTH_SHORT).show();
             }
+
+
         }
 
         if (view.getId() == R.id.sign_in_link_btn) {

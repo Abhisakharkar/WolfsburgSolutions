@@ -2,6 +2,7 @@ package com.example.abhishek.work.ServerOperations;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,35 +14,102 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
+import com.google.android.gms.auth.api.Auth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Authentication {
+
+    private Context context;
+    private String serverUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868";
+    public ServerResponse serverResponse;
+    private Map<String, String> headers;
+
+    public Authentication(Context context) {
+        this.context = context;
+        serverResponse = new ServerResponse();
+    }
+
+    public ServerResponse getServerResponseInstance() {
+        return serverResponse;
+    }
+
+    public void checkEmailExists(String mail){
+        headers = new HashMap<>();
+        headers.put("mail",mail);
+        String url = serverUrl + "/check_mail_exist";
+        sendRequestNew(url,headers);
+    }
+
+    public void signUpNew(String mail,String password){
+        //subSciptionDateTime (current date and time)
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String dateTime = simpleDateFormat.format(Calendar.getInstance().getTime());
+
+        //device ID
+        String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        headers = new HashMap<>();
+        headers.put("mail",mail);
+        headers.put("password",password);
+        headers.put("subscriptionDateTime",dateTime);
+        headers.put("deviceId",deviceId);
+
+        String url = serverUrl + "/sign_up";
+        sendRequestNew(url,headers);
+    }
+
+    public void signIn(String mail,String password){
+        headers = new HashMap<>();
+        headers.put("mail",mail);
+        headers.put("password",password);
+
+        String url = serverUrl + "/sign_in";
+        sendRequestNew(url,headers);
+    }
+
+    private void sendRequestNew(String url, Map<String, String> headers) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(headers)
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("sendRequest Response", response.toString());
+                try {
+                    //responseJSONObject = new JSONObject(response);
+                    serverResponse.saveResponse(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VolleyResponseError", error.toString());
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+
+    //old code
 
     //Database URLs
     private String databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
 
     //Request Objects
-    private Context context;
     private String reqBody = "";
-    private HashMap<String, String> headers;
 
     private JSONObject jsonObject, responseJSONObject;
-
-    //Custom Response receive listener
-    public ServerResponse serverResponse = new ServerResponse();
-
-    //constructor
-    public Authentication(Context context) {
-        this.context = context;
-    }
-
-    public ServerResponse getServerResponseInstance(){
-        return serverResponse;
-    }
 
     //send profile data to server
     public void sendUserProfile(int retailerID, String proprietor, String shopName, String mobileNo
@@ -96,17 +164,6 @@ public class Authentication {
             jsonObject.put("shopActLicense", "");
             jsonObject.put("currentState", "0");
             reqBody = jsonObject.toString();
-            /*
-            jsonObject = new JSONObject();
-            jsonObject.put("proprietor", proprietor);
-            jsonObject.put("enterpriseName", shopName);
-            jsonObject.put("contactNo", mobileNo);
-            jsonObject.put("city", cityName);
-            jsonObject.put("state", stateName);
-            jsonObject.put("country", countryName);
-            jsonObject.put("longitude", longitude);
-            jsonObject.put("latitude", latitude);
-            */
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/update_retailer";
             sendRequest(databaseURL);
         } catch (Exception e) {
@@ -249,11 +306,6 @@ public class Authentication {
         headers.put("password",password);
         headers.put("Content-Type", "application/json");
         try {
-            /*
-            jsonObject = new JSONObject();
-            jsonObject.put("code", code);
-            reqBody = jsonObject.toString();
-            */
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/verifiication_complete";
             sendRequest(databaseURL);
         } catch (Exception e) {
@@ -266,10 +318,6 @@ public class Authentication {
         headers.put("mail", mail);
         headers.put("Content-Type", "application/json");
         try {
-            /*
-            jsonObject = new JSONObject();
-            jsonObject.put("mail", mail);
-            */
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/is_data_filled";
             sendRequest(databaseURL);
 
@@ -308,4 +356,6 @@ public class Authentication {
 
         requestQueue.add(jsonObjectRequest);
     }
+
+
 }
