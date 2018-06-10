@@ -93,7 +93,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             signUpBtn.setClickable(true);
                         }
                     }
-
+                    else
                     //response : sign_up
                     if (responseFrom.equals("sign_up")){
                         boolean signUpSuccessStatus = responseJSONObject.getBoolean("signUpSuccessStatus");
@@ -111,107 +111,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                /*
-                try {
-                    Log.e("signUp response", responseJSONObject.toString());
-                    String response_from = responseJSONObject.getString("response_from");
-                    if (response_from.equals("check_in")) {
-                        Log.e("response_signupActivity", "check_in : true");
-                        boolean result = responseJSONObject.getBoolean("result");
-                        if (result) {
-                            //email exists
-                            //tell user that his email exists and go to login
-                            Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
-                        } else {
-                            //email does not exist
-                            //it checks in temp database and sends result
-                            //process result of temporary database
-
-                            boolean tempResult = responseJSONObject.getBoolean("temp_result");
-                            if (tempResult) {
-                                //email exist in temp database
-                                //tell user to go to login
-                                Toast.makeText(SignUpActivity.this, "Email Already Registered !", Toast.LENGTH_SHORT).show();
-                            } else {
-                                //email does not exits
-                                //this is new user
-                                //sign up this new account
-                                authentication.signUp(email, password);
-                            }
-                        }
-                    } else if (response_from.equals("signup")) {
-                        boolean result = responseJSONObject.getBoolean("result");
-                        if (result) {
-                            //signup successfull
-                            //call to verification script
-                            //tell user to verify
-                            //send user to verification activity
-
-
-                            //calling to verification script
-                            authentication.verifyEmail(email);
-
-                            editor.putString("mail", email);
-                            editor.putString("password", password);
-                            Log.e("email : password",email + " : "+ password);
-                            int retailerID = responseJSONObject.getInt("retailerID");
-                            editor.putInt("retailerID",retailerID);
-                            editor.commit();
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
-                            builder.setMessage("Verification code is sent to email.\nPlease verify your account.");
-                            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(SignUpActivity.this, VerificationActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
-                            });
-                            builder.setCancelable(false);
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-
-                        } else {
-                            //signup failed
-                            Toast.makeText(SignUpActivity.this, "Error in Sign Up ! try again later.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                */
-
-                // Deprecated
-                                /*
-                                try {
-                                    boolean result = responseJSONObject.getBoolean("result");
-                                    if (result) {
-                                        //sign up successfull
-
-                                        //save data to SharedPref
-                                        editor.putString("email",email);
-                                        editor.putString("password",password);
-                                        editor.commit();
-
-
-
-                                        //go to profile activity
-                                        Intent intent = new Intent(SignUpActivity.this,ProfileActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                    } else {
-                                        //some error occured
-                                        //try again to sign up
-                                        Toast.makeText(SignUpActivity.this, "Please try again !", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                */
-
             }
         });
     }

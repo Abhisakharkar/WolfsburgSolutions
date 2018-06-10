@@ -36,7 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    
+
     private EditText mail_edittext, password_edittext;
     private Button signin_btn, signUp_link_btn;
     private SignInButton googleSignIn_btn;
