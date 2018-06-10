@@ -37,10 +37,14 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ItemData.COLUMN_PRODUCT_ID, itemData.getProductID());
         values.put(ItemData.COLUMN_PRICE, itemData.getPrice());
-        values.put(ItemData.COLUMN_DESCRIPTION, itemData.getDescription());
-        values.put(ItemData.COLUMN_PHOTO, itemData.getPhoto());
-        values.put(ItemData.COLUMN_AVAILABILITY, itemData.getAvailability());
         values.put(ItemData.COLUMN_STAR, itemData.getStar());
+        values.put(ItemData.COLUMN_NAME, itemData.getName());
+        values.put(ItemData.COLUMN_SELLING_PRICE, itemData.getSellingPrice());
+        values.put(ItemData.COLUMN_AVAILABILITY, itemData.getAvailability());
+        values.put(ItemData.COLUMN_DESCRIPTION, itemData.getDescription());
+        values.put(ItemData.COLUMN_ATTRIBUTE_SET_ID, itemData.getAttribute_set_id());
+        values.put(ItemData.COLUMN_PHOTO, itemData.getPhoto());
+        values.put(ItemData.COLUMN_COMMENT, itemData.getComment());
 
         long id = db.insert(ItemData.TABLE_NAME, null, values);
         db.close();
@@ -130,6 +134,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         values.put(ItemData.COLUMN_SELLING_PRICE, itemData.getSellingPrice());
         values.put(ItemData.COLUMN_AVAILABILITY, itemData.getAvailability());
         values.put(ItemData.COLUMN_DESCRIPTION, itemData.getDescription());
+        values.put(ItemData.COLUMN_ATTRIBUTE_SET_ID, itemData.getAttribute_set_id());
         values.put(ItemData.COLUMN_PHOTO, itemData.getPhoto());
         values.put(ItemData.COLUMN_COMMENT, itemData.getComment());
 

@@ -48,7 +48,7 @@ public class ProductEditActivity extends AppCompatActivity {
         serverResponse = sendData.getServerResponseInstance();
 
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
-        retailerID = sharedPreferences.getInt("retailerID",1);
+        retailerID = sharedPreferences.getInt("retailerId",0);
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
