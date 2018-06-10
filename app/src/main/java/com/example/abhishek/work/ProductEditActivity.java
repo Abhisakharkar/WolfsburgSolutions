@@ -66,6 +66,8 @@ public class ProductEditActivity extends AppCompatActivity {
         availability = (Switch) findViewById(R.id.product_edit_activity_availability_swict_id);
         addBtn = (Button) findViewById(R.id.product_edit_activity_add_btn_id);
 
+        priceEdittext.setText(String.valueOf(price));
+
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +102,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 //chech if input fields are not blank then add following
                 itemData.setComment(commentTxt);
                 itemData.setDescription(descriptionTxt);
-                itemData.setSellingPrice(Double.parseDouble(priceTxt));
+                itemData.setSellingPrice(selling_price);
                 itemData.setStar(isStar);
                 itemData.setAvailability(isAvailable);
 

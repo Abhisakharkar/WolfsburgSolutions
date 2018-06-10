@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.abhishek.work.Model.ItemData;
 
@@ -59,8 +60,10 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
                 , null
                 , null);
 
-        if (cursor != null) {
+        if (cursor != null && cursor.moveToFirst()) {
             cursor.moveToFirst();
+
+            Log.e("DBhelper get_products",cursor.toString());
 
             ItemData itemData = new ItemData();
             itemData.setProductID(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRODUCT_ID)));

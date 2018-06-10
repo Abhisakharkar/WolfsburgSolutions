@@ -73,6 +73,12 @@ public class HomeActivity extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         authentication = new Authentication(context);
 
+
+        //TODO check if database is present in phone
+        //TODO if not already present then fetch retailer's products database
+        //TODO if present
+
+
         //TODO    IMPORTANT
         //every time homeActivity starts, check if profile is complete and is verified
         //if both is done then give access to home
