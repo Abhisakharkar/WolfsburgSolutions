@@ -97,10 +97,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     //response : sign_up
                     if (responseFrom.equals("sign_up")){
                         boolean signUpSuccessStatus = responseJSONObject.getBoolean("signUpSuccessStatus");
-                        boolean mailSent = responseJSONObject.getBoolean("mailSent");
-
                         if (signUpSuccessStatus){
                             //signup successfull
+                            editor.putBoolean("isDataFilled",false);
+                            editor.putString("mail",email);
+                            editor.putString("password",password);
+                            editor.commit();
                             startActivity(new Intent(SignUpActivity.this,VerificationActivity.class));
                             finish();
                         }else {

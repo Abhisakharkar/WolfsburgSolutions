@@ -126,20 +126,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 if (isVerified == 1) {
                                     int isDataFilled = retailerAuthTableJson.getInt("mandatoryData");
                                     if (isDataFilled == 1) {
+                                        editor.putBoolean("isDataFilled",true);
+                                        editor.putString("mail",mail);
+                                        editor.putString("password",password);
+                                        editor.commit();
                                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                         finish();
                                     } else if (isDataFilled == 0) {
+                                        editor.putBoolean("isDataFilled",false);
+                                        editor.putString("mail",mail);
+                                        editor.putString("password",password);
+                                        editor.commit();
                                         startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
                                         finish();
                                     }
 
                                 } else if (isVerified == 0) {
+                                    editor.putBoolean("isDataFilled",false);
+                                    editor.putString("mail",mail);
+                                    editor.putString("password",password);
+                                    editor.commit();
                                     startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
                                     finish();
                                 }
                             } else {
-                                //TODO ask user if he wants to sign out from other device and sign in from this device
-
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                 builder.setMessage("Another phone has logged in into this account." +
                                         "\nDo you want to logout from other device and login from this device ?");
