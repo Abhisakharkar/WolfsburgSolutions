@@ -24,10 +24,17 @@ import android.widget.Toast;
 
 import com.example.abhishek.work.ServerOperations.ImageUpload;
 import com.example.abhishek.work.ServerOperations.SendData;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ImageUploadResponseListener.ImageUploadResponse;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ImageUploadResponseListener.OnImageUploadResponseReceiveListener;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
+import okhttp3.Response;
 
 import static com.example.abhishek.work.ProfileActivity.CAMERA_REQ_CODE;
 import static com.example.abhishek.work.ProfileActivity.GALLERY_REQ_CODE;
@@ -43,6 +50,8 @@ public class LicensePhotoActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
 
     private ImageUpload imageUpload;
+    private ImageUploadResponse imageUploadResponse;
+    private Bitmap photoBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
         context = this;
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         imageUpload = new ImageUpload(this);
+        imageUploadResponse = imageUpload.getImageUploadResponseInstance();
 
         licenseImageview = (ImageView) findViewById(R.id.license_photo_activity_imageview_id);
         saveImageBtn = (Button) findViewById(R.id.license_photo_activity_save_btn_id);
@@ -60,31 +70,46 @@ public class LicensePhotoActivity extends AppCompatActivity {
         editImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                    if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                        String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-                        requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
-                    } else if (ActivityCompat.checkSelfPermission(context, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                        String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-                        requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
-                    } else {
-                        showImageSelectDialog();
-                    }
-
-                } else {
-                    showImageSelectDialog();
-                }
+                checkPermissionsAndGetImage();
             }
         });
 
         saveImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // not implemented
-                Log.e("UploadImage", "not implemented");
+                saveImage();
             }
         });
+
+        imageUploadResponse.setOnImageUploadResponseReceiveListener(new OnImageUploadResponseReceiveListener() {
+            @Override
+            public void onImageUploadResponseReceive(Response response) {
+                String msg = response.message();
+                if (msg.equals("Ok")){
+                    Toast.makeText(context, "Image saved successfully !", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LicensePhotoActivity.this,ProfileActivity.class));
+                    finish();
+                }
+            }
+        });
+    }
+
+    private void checkPermissionsAndGetImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
+                String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+                requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
+            } else if (ActivityCompat.checkSelfPermission(context, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
+                String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+                requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
+            } else {
+                showImageSelectDialog();
+            }
+
+        } else {
+            showImageSelectDialog();
+        }
     }
 
     private void showImageSelectDialog() {
@@ -203,92 +228,69 @@ public class LicensePhotoActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQ_CODE) {
 
             if (resultCode == RESULT_OK) {
-                Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
+                photoBitmap = (Bitmap) data.getExtras().get("data");
 
                 //set bitmap image to imageView
                 licenseImageview.setImageBitmap(photoBitmap);
-                //save to file
-                FileOutputStream fileOutputStream = null;
-                try {
-                    if (!(new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images").exists())) {
-                        File file = new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images");
-                        file.mkdir();
-                    }
-                    //set photo name
-                    int retailerId = sharedPreferences.getInt("retailerId", 0);
-                    if (retailerId == 0) {
-                        Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LicensePhotoActivity.this, LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    } else {
-                        photoName = "lp" + "." + retailerId + ".jpeg";
-                    }
-
-                    //save photo to memory
-                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName);
-                    fileOutputStream = new FileOutputStream(photoFile);
-                    photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                    fileOutputStream.close();
-
-                    //send image to server
-                    imageUpload.uploadImage(photoName,photoFile.getAbsolutePath().toString());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
 
-        }
+            if (requestCode == GALLERY_REQ_CODE) {
 
-        if (requestCode == GALLERY_REQ_CODE) {
+                if (resultCode == RESULT_OK) {
+                    //get bitmap image
+                    Uri selectedImage = data.getData();
+                    String[] filePath = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePath[0]);
+                    String picturePath = cursor.getString(columnIndex);
+                    cursor.close();
+                    photoBitmap = (BitmapFactory.decodeFile(picturePath));
 
-            if (resultCode == RESULT_OK) {
-                //get bitmap image
-                Uri selectedImage = data.getData();
-                String[] filePath = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePath[0]);
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-                Bitmap photoBitmap = (BitmapFactory.decodeFile(picturePath));
-
-                //set photo to imageView
-                licenseImageview.setImageBitmap(photoBitmap);
-
-                //store bitmap image in app internal memory
-                FileOutputStream fileOutputStream;
-                try {
-                    if (!(new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images").exists())) {
-                        File file = new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images");
-                        file.mkdir();
-                    }
-
-                    //set name
-                    int retailerId = sharedPreferences.getInt("retailerId", 0);
-                    if (retailerId == 0) {
-                        Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LicensePhotoActivity.this, LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    } else {
-                        photoName = "lp" + "." + retailerId + ".jpeg";
-                    }
-
-                    //save photo to memory
-                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName);
-                    fileOutputStream = new FileOutputStream(photoFile);
-                    photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                    fileOutputStream.close();
-
-                    //send photo to server
-                    imageUpload.uploadImage(photoName, photoFile.getAbsolutePath().toString());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    //set photo to imageView
+                    licenseImageview.setImageBitmap(photoBitmap);
                 }
             }
         }
     }
+
+    private void saveImage() {
+        if (photoBitmap == null) {
+            checkPermissionsAndGetImage();
+        } else {
+
+            //save image to local private file
+            FileOutputStream fileOutputStream;
+            try {
+                if (!(new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images").exists())) {
+                    File file = new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images");
+                    file.mkdir();
+                }
+
+                //set name
+                int retailerId = sharedPreferences.getInt("retailerId", 0);
+                if (retailerId == 0) {
+                    Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LicensePhotoActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    photoName = "lp" + "." + retailerId + ".jpeg";
+                }
+
+                //save photo to memory
+                File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName);
+                fileOutputStream = new FileOutputStream(photoFile);
+                photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                fileOutputStream.close();
+
+                //send photo to server
+                imageUpload.uploadImage(photoName, photoFile.getAbsolutePath().toString());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

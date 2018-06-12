@@ -81,8 +81,7 @@ public class Authentication {
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         headers.put("deviceId",deviceId);
 
-        //TODO complete url
-        String url = serverUrl + "/";
+        String url = serverUrl + "/update_device_id";
         sendRequestNew(url,headers);
 
     }

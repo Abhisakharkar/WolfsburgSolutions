@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ImageUploadResponseListener.ImageUploadResponse;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 import com.example.abhishek.work.SupportClasses.MultipartRequest;
 
@@ -35,17 +36,17 @@ import okhttp3.internal.http2.Header;
 
 public class ImageUpload {
 
-    private ServerResponse serverResponse;
+    private ImageUploadResponse imageUploadResponse;
     private Request request;
     private Context context;
 
     public ImageUpload(Context context) {
-        serverResponse = new ServerResponse();
+        this.imageUploadResponse = new ImageUploadResponse();
         this.context = context;
     }
 
-    public ServerResponse getServerResponseInstance() {
-        return serverResponse;
+    public ImageUploadResponse getImageUploadResponseInstance(){
+        return imageUploadResponse;
     }
 
     public void uploadImage2(String photoName, String photoPath) {
@@ -104,7 +105,7 @@ public class ImageUpload {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.e("imageUpload Response", response.message().toString());
+                imageUploadResponse.saveImageUploadResponse(response);
             }
         });
 
