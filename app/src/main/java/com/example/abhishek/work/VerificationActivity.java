@@ -31,6 +31,7 @@ public class VerificationActivity extends AppCompatActivity {
     private Authentication authentication;
 
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class VerificationActivity extends AppCompatActivity {
 
         context = this;
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         authentication = new Authentication(context);
 
         Toast.makeText(context, "Please verify your email !", Toast.LENGTH_SHORT).show();
@@ -57,7 +59,7 @@ public class VerificationActivity extends AppCompatActivity {
                 code = Integer.parseInt(codeEdittext.getText().toString());
                 if ( code != 0 ) {
                     if (!mail.isEmpty() && !password.isEmpty()) {
-                        authentication.sendVerificationCode(code, mail, password);
+                        authentication.sendVerificationCode(String.valueOf(code) , mail, password);
                         Log.e("code sent to server","");
                     }else {
                         Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
@@ -73,16 +75,30 @@ public class VerificationActivity extends AppCompatActivity {
             public void onResponseReceive(JSONObject responseJSONObject) {
                 //process the response
                 try {
-                    boolean result = responseJSONObject.getBoolean("result");
-                    if (result){
-                        Intent intent = new Intent(VerificationActivity.this,HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }else {
-                        Toast.makeText(context, "Wrong Code !\nTry Again.", Toast.LENGTH_SHORT).show();
+
+                    JSONObject retailerData = responseJSONObject.getJSONObject("retailerAuthTable");
+                    int isDataFilled = retailerData.getInt("mandatoryData");
+
+                    editor.putInt("retailerId",retailerData.getInt("retailerId"));
+                    editor.putString("mail",retailerData.getString("mail"));
+                    editor.putString("password",retailerData.getString("password"));
+                    boolean isVerified = retailerData.getInt("codeVerified") == 1 ? true : false;
+                    editor.putBoolean("isVerified",isVerified);
+                    editor.commit();
+
+                    if (isDataFilled == 0){
+                        editor.putBoolean("isDataFilled",false);
+                        editor.commit();
+                        startActivity(new Intent(VerificationActivity.this,ProfileActivity.class));
+                        finish();
+                    }else if (isDataFilled == 1){
+                        editor.putBoolean("isDataFilled",true);
+                        editor.commit();
+                        startActivity(new Intent(VerificationActivity.this,HomeActivity.class));
+                        finish();
                     }
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

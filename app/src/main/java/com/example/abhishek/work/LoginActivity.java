@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
                     mail = mail_edittext.getText().toString();
-                    if (mail.isEmpty()) {
+                    if (!mail.isEmpty()) {
                         if (Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
                             authentication.checkEmailExists(mail);
                         } else {

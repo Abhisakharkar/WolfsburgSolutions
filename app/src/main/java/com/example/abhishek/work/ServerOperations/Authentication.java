@@ -83,7 +83,16 @@ public class Authentication {
 
         String url = serverUrl + "/update_device_id";
         sendRequestNew(url,headers);
+    }
 
+    public void sendVerificationCode(String code,String mail,String password){
+        headers = new HashMap<>();
+        headers.put("mail",mail);
+        headers.put("password",password);
+        headers.put("code",code);
+
+        String url = serverUrl + "/verify_mail";
+        sendRequestNew(url,headers);
     }
 
     private void sendRequestNew(String url, Map<String, String> headers) {

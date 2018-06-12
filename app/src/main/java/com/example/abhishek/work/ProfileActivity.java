@@ -124,97 +124,53 @@ public class ProfileActivity extends AppCompatActivity implements
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
+        //check if data is saved previously
+        boolean isDataFilled = sharedPreferences.getBoolean("isDataFilled",false);
+        if (isDataFilled){
 
-        //get data if previously filled
-        proprietor = sharedPreferences.getString("proprietor", "");
-        if (!proprietor.isEmpty()) {
-            mobileNo = sharedPreferences.getString("mobileNo", "");
-            shopName = sharedPreferences.getString("shopName", "");
-            address = sharedPreferences.getString("shopAddress", "");
-            cityName = sharedPreferences.getString("city", "");
-            stateName = sharedPreferences.getString("state", "");
-            countryName = sharedPreferences.getString("country", "");
+            proprietor = sharedPreferences.getString("proprietor","");
+            if (!proprietor.isEmpty()){
+                mobileNo = sharedPreferences.getString("mobileNo", "");
+                shopName = sharedPreferences.getString("shopName", "");
+                address = sharedPreferences.getString("shopAddress", "");
+                cityName = sharedPreferences.getString("city", "");
+                stateName = sharedPreferences.getString("state", "");
+                countryName = sharedPreferences.getString("country", "");
+                latitude = Double.parseDouble(sharedPreferences.getString("latitude",""));
+                longitude = Double.parseDouble(sharedPreferences.getString("longitude",""));
 
-            proprieter_edit.setText(proprietor);
-            mob_no_edit.setText(mobileNo);
-            shop_name_edit.setText(shopName);
-            address_edit.setText(address);
-        } else {
-            String mail = sharedPreferences.getString("mail", "");
-            if (mail.isEmpty()) {
-                Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            } else {
-                authentication.isProfileDataComplete(mail);
+                proprieter_edit.setText(proprietor);
+                mob_no_edit.setText(mobileNo);
+                shop_name_edit.setText(shopName);
+                address_edit.setText(address);
+            }else {
+                String mail = sharedPreferences.getString("mail","");
+                if (mail.isEmpty()){
+                    Toast.makeText(context, "Sign In !", Toast.LENGTH_SHORT).show();
+                    Intent newIntent = new Intent(ProfileActivity.this,LoginActivity.class);
+                    newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(newIntent);
+                }
             }
+        }else {
+            //TODO Do nothing
+            //TODO get data for first time
         }
+
 
         //server response
         authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
-                    String response_from = responseJSONObject.getString("response_from");
-                    if (response_from.equals("is_data_filled")) {
 
-                        boolean isDataFilled = responseJSONObject.getBoolean("isDataFilled");
-                        if (isDataFilled) {
-                            String mail = sharedPreferences.getString("mail", "");
-                            String password = sharedPreferences.getString("password", "");
-                            if (!mail.isEmpty()) {
-                                authentication.checkInPermanent(mail, password);
-                            } else {
-                                Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        }
-
-                    } else if (response_from.equals("check_in")) {
-
-                        JSONArray jsonArray = responseJSONObject.getJSONArray("data");
-                        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
-                        shopName = jsonObject.getString("EnterpriseName");
-                        proprietor = jsonObject.getString("Propritor");
-                        mobileNo = String.valueOf(jsonObject.getInt("ContactNo"));
-                        cityName = jsonObject.getString("City");
-                        stateName = jsonObject.getString("State");
-                        countryName = jsonObject.getString("Country");
-                        longitude = jsonObject.getDouble("LongitudeLocation");
-                        latitude = jsonObject.getDouble("LatitudeLocation");
-
-                        //save data to sharedpreferences
-                        editor.putString("proprietor", proprietor);
-                        editor.putString("shopName", shopName);
-                        editor.putString("mobileNo", mobileNo);
-                        editor.putString("city", cityName);
-                        editor.putString("state", stateName);
-                        editor.putString("country", countryName);
-                        editor.putString("longitude", String.valueOf(longitude));
-                        editor.putString("latitude", String.valueOf(latitude));
-                        editor.commit();
-
-                        //set edittext
-                        proprieter_edit.setText(proprietor);
-                        mob_no_edit.setText(mobileNo);
-                        shop_name_edit.setText(shopName);
-                        address_edit.setText(address);
-
-                    } else if (response_from.equals("add_retailer_into_perm")) {
-
-                        boolean result = responseJSONObject.getBoolean("result");
-                        if (result) {
-                            //saved successfully
-                            Toast.makeText(context, "Profile saved successfully !", Toast.LENGTH_SHORT).show();
-                        } else {
-                            //error ....
-                            Toast.makeText(context, "Please try again !", Toast.LENGTH_SHORT).show();
-                        }
+                    String responseFrom = responseJSONObject.getString("responseFrom");
+                    if (responseFrom.equals("profile_update")){
+                        //TODO process response
                     }
-                } catch (JSONException e) {
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -274,8 +230,9 @@ public class ProfileActivity extends AppCompatActivity implements
                                 editor.commit();
 
                                 //send data to server
-                                int retailerID = sharedPreferences.getInt("retailerID", 0);
+                                int retailerID = sharedPreferences.getInt("retailerId", 0);
                                 authentication.sendUserProfile(retailerID, proprietor, shopName, mobileNo, longitude, latitude, cityName, stateName, countryName);
+
                             } else {
                                 Toast.makeText(context, "Please set Location !", Toast.LENGTH_SHORT).show();
                             }
@@ -312,119 +269,16 @@ public class ProfileActivity extends AppCompatActivity implements
             case R.id.profile_activity_shop_license_photo_textview_id:
 
                 startActivity(new Intent(ProfileActivity.this, LicensePhotoActivity.class));
-                /*
-                isShopLicensePic = true;
-                isShopPic = false;
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                    if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                        String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-                        requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
-                    } else if (ActivityCompat.checkSelfPermission(context, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                        String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-                        requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
-                    } else {
-                        showImageSelectDialog();
-                    }
-
-                } else {
-                    showImageSelectDialog();
-                }
-                */
-
                 break;
 
             case R.id.profile_activity_shop_photo_textview_id:
 
                 startActivity(new Intent(ProfileActivity.this, ShopPhotoActivity.class));
-                /*
-                isShopLicensePic = false;
-                isShopPic = true;
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                    if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                        String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-                        requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
-                    } else if (ActivityCompat.checkSelfPermission(context, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                        String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-                        requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
-                    } else {
-                        showImageSelectDialog();
-                    }
-
-                } else {
-                    showImageSelectDialog();
-                }
-                */
                 break;
         }
     }
 
-    /*
-    private void showImageSelectDialog() {
 
-        final String[] options = {"Camera", "Gallery"};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
-        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (item == 0) {
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (ActivityCompat.checkSelfPermission(context, "android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED) {
-                            getImage(0);
-                        } else {
-                            String[] cameraPermission = {"android.permission.CAMERA"};
-                            requestPermissions(cameraPermission, CAMERA_REQ_CODE);
-                        }
-                    } else {
-                        getImage(0);
-                    }
-
-                } else if (item == 1) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (ActivityCompat.checkSelfPermission(context, "android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED
-                                && ActivityCompat.checkSelfPermission(context, "android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED) {
-                            getImage(1);
-                        } else {
-                            //show storage permissions request dialog
-                        }
-                    } else {
-                        getImage(1);
-                    }
-                }
-            }
-        });
-        builder.show();
-    }
-
-
-    private void getImage(int option) {
-        if (option == 0) {
-            Intent captureImageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-            //make sure there is camera activity to capture image
-            if (captureImageIntent.resolveActivity(getPackageManager()) != null) {
-
-                startActivityForResult(captureImageIntent, CAMERA_REQ_CODE);
-            }
-        } else if (option == 1) {
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, GALLERY_REQ_CODE);
-        }
-    }
-*/
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -532,50 +386,6 @@ public class ProfileActivity extends AppCompatActivity implements
                 locationDialog.show();
             }
         }
-/*
-        if (requestCode == STOARAGE_PERM_REQ_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                //storage permissions granted
-                showImageSelectDialog();
-            } else {
-                //storage permission not granted
-                AlertDialog.Builder storageDialog = new AlertDialog.Builder(ProfileActivity.this);
-                storageDialog.setMessage("Please give Storage Permission !");
-                storageDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            String[] permissions = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-                            requestPermissions(permissions, STOARAGE_PERM_REQ_CODE);
-                        }
-                    }
-                });
-                storageDialog.create();
-                storageDialog.show();
-            }
-        }
-
-        //camera permissions
-        if (requestCode == CAMERA_REQ_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getImage(0);
-            } else {
-                AlertDialog.Builder cameraDialog = new AlertDialog.Builder(ProfileActivity.this);
-                cameraDialog.setMessage("Please give Camera Permission !");
-                cameraDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            String[] permissions = {"android.permission.CAMERA"};
-                            requestPermissions(permissions, CAMERA_REQ_CODE);
-                        }
-                    }
-                });
-                cameraDialog.create();
-                cameraDialog.show();
-            }
-        }
-*/
     }
 
     @Override
@@ -601,93 +411,6 @@ public class ProfileActivity extends AppCompatActivity implements
                 gpsDalog.show();
             }
         }
-
-/*
-        if (requestCode == CAMERA_REQ_CODE) {
-
-            if (resultCode == RESULT_OK) {
-                Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
-
-                //set bitmap image to imageView
-                if (isShopPic == true && isShopLicensePic == false) {
-                    shop_pic_imageview.setImageBitmap(photoBitmap);
-                } else if (isShopPic == false && isShopLicensePic == true) {
-                    shop_license_imageview.setImageBitmap(photoBitmap);
-                }
-                shop_pic_imageview.setImageBitmap(photoBitmap);
-                shop_pic_imageview.setVisibility(View.VISIBLE);
-                //save to file
-                FileOutputStream fileOutputStream = null;
-                try {
-                    if (!(new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images").exists())) {
-                        File file = new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images");
-                        file.mkdir();
-                    }
-                    //set photo name
-                    String photoName = "";
-                    if (isShopPic == true && isShopLicensePic == false) {
-                        photoName = "shop_photo";
-                    } else if (isShopPic == false && isShopLicensePic == true) {
-                        photoName = "shop_license_photo";
-                    }
-                    //save photo to memory
-                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName + ".jpeg");
-                    fileOutputStream = new FileOutputStream(photoFile);
-                    photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                    fileOutputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-        if (requestCode == GALLERY_REQ_CODE) {
-
-            if (resultCode == RESULT_OK) {
-                //get bitmap image
-                Uri selectedImage = data.getData();
-                String[] filePath = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePath[0]);
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-                Bitmap photoBitmap = (BitmapFactory.decodeFile(picturePath));
-
-                //set photo to imageView
-                if (isShopPic == false && isShopLicensePic == true) {
-                    shop_pic_imageview.setImageBitmap(photoBitmap);
-                } else if (isShopPic == true && isShopLicensePic == false) {
-                    shop_license_imageview.setImageBitmap(photoBitmap);
-                }
-
-                //store bitmap image in app internal memory
-                FileOutputStream fileOutputStream;
-                try {
-                    if (!(new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images").exists())) {
-                        File file = new File(getApplicationContext().getFilesDir().getAbsolutePath().toString() + "/images");
-                        file.mkdir();
-                    }
-
-                    String photoName = "";
-                    if (isShopPic == true && isShopLicensePic == false) {
-                        photoName = "shop_photo";
-                    } else if (isShopPic == false && isShopLicensePic == true) {
-                        photoName = "shop_license_photo";
-                    }
-                    //save photo to memory
-                    File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName + ".jpeg");
-                    fileOutputStream = new FileOutputStream(photoFile);
-                    photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                    fileOutputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        */
-
     }
 
 }
