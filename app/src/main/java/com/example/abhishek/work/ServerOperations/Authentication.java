@@ -123,6 +123,8 @@ public class Authentication {
         headers.put("shopActLicense", "");
         headers.put("currentState", "0");
 
+        String url = serverUrl + "/update_retailer_data";
+        sendRequestNew(url,headers);
     }
 
     private void sendRequestNew(String url, Map<String, String> headers) {
