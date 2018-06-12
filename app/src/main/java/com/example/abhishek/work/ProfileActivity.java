@@ -125,35 +125,35 @@ public class ProfileActivity extends AppCompatActivity implements
         editor = sharedPreferences.edit();
 
         //check if data is saved previously
-        boolean isDataFilled = sharedPreferences.getBoolean("isDataFilled",false);
-        if (isDataFilled){
+        boolean isDataFilled = sharedPreferences.getBoolean("isDataFilled", false);
+        if (isDataFilled) {
 
-            proprietor = sharedPreferences.getString("proprietor","");
-            if (!proprietor.isEmpty()){
+            proprietor = sharedPreferences.getString("proprietor", "");
+            if (!proprietor.isEmpty()) {
                 mobileNo = sharedPreferences.getString("mobileNo", "");
                 shopName = sharedPreferences.getString("shopName", "");
                 address = sharedPreferences.getString("shopAddress", "");
                 cityName = sharedPreferences.getString("city", "");
                 stateName = sharedPreferences.getString("state", "");
                 countryName = sharedPreferences.getString("country", "");
-                latitude = Double.parseDouble(sharedPreferences.getString("latitude",""));
-                longitude = Double.parseDouble(sharedPreferences.getString("longitude",""));
+                latitude = Double.parseDouble(sharedPreferences.getString("latitude", ""));
+                longitude = Double.parseDouble(sharedPreferences.getString("longitude", ""));
 
                 proprieter_edit.setText(proprietor);
                 mob_no_edit.setText(mobileNo);
                 shop_name_edit.setText(shopName);
                 address_edit.setText(address);
-            }else {
-                String mail = sharedPreferences.getString("mail","");
-                if (mail.isEmpty()){
+            } else {
+                String mail = sharedPreferences.getString("mail", "");
+                if (mail.isEmpty()) {
                     Toast.makeText(context, "Sign In !", Toast.LENGTH_SHORT).show();
-                    Intent newIntent = new Intent(ProfileActivity.this,LoginActivity.class);
+                    Intent newIntent = new Intent(ProfileActivity.this, LoginActivity.class);
                     newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(newIntent);
                 }
             }
-        }else {
+        } else {
             //TODO Do nothing
             //TODO get data for first time
         }
@@ -166,9 +166,9 @@ public class ProfileActivity extends AppCompatActivity implements
                 try {
 
                     String responseFrom = responseJSONObject.getString("responseFrom");
-                    if (responseFrom.equals("profile_update")){
+                    if (responseFrom.equals("profile_update")) {
                         //TODO process response
-                        
+
                     }
 
                 } catch (Exception e) {
@@ -232,7 +232,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
                                 //send data to server
                                 int retailerID = sharedPreferences.getInt("retailerId", 0);
-                                authentication.sendUserProfile(retailerID, proprietor, shopName, mobileNo, longitude, latitude, cityName, stateName, countryName);
+                                authentication.updateProfile(retailerID, proprietor, shopName, mobileNo, longitude, latitude, address, cityName, stateName, countryName);
 
                             } else {
                                 Toast.makeText(context, "Please set Location !", Toast.LENGTH_SHORT).show();

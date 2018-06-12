@@ -95,6 +95,36 @@ public class Authentication {
         sendRequestNew(url,headers);
     }
 
+    public void updateProfile(int retailerID, String proprietor, String shopName, String mobileNo
+            , double longitude, double latitude,String address
+            , String cityName, String stateName, String countryName) {
+
+        headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("retailerId",String.valueOf(retailerID));
+        headers.put("enterpriseName", shopName);
+        headers.put("propritor", proprietor);
+        headers.put("contactNo", mobileNo);
+        headers.put("profilePhoto", "");
+        headers.put("latLoc", String.valueOf(latitude));
+        headers.put("longLoc", String.valueOf(longitude));
+        headers.put("address", address);
+        headers.put("city", cityName);
+        headers.put("state", stateName);
+        headers.put("country", countryName);
+        headers.put("membership", "0");
+        headers.put("subDate", "2010-01-01");
+        headers.put("openCloseIsManual", "0");
+        headers.put("shopOpenTime", "00:00:00");
+        headers.put("shopCloseTime", "00:00:00");
+        headers.put("shopOpenTime2", "00:00:00");
+        headers.put("shopCloseTime2", "00:00:00");
+        headers.put("shopPhoto", "");
+        headers.put("shopActLicense", "");
+        headers.put("currentState", "0");
+
+    }
+
     private void sendRequestNew(String url, Map<String, String> headers) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
