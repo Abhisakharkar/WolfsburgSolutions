@@ -42,7 +42,7 @@ public class NewCategoryActivity extends AppCompatActivity {
 
         fetchData = new FetchData(NewCategoryActivity.this);
         serverResponse = fetchData.getServerResponseInstance();
-        fetchData.getCategories();
+
         serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
@@ -62,5 +62,13 @@ public class NewCategoryActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        arrayList.clear();
+        fetchData.getCategories();
+        adapter.notifyDataSetChanged();
     }
 }

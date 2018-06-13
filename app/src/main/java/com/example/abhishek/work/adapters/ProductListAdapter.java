@@ -8,13 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.abhishek.work.Model.ProductData;
 import com.example.abhishek.work.NewProductActivity;
 import com.example.abhishek.work.ProductEditActivity;
 import com.example.abhishek.work.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductViewHolder> {
@@ -36,13 +39,21 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public void onBindViewHolder(ProductViewHolder holder, final int position) {
         holder.nameTextView.setText(arrayList.get(position).getName());
+        holder.priceTextView.setText("Rs. " + String.valueOf(arrayList.get(position).getPrice()));
+        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product/" + arrayList.get(position).getPhoto();
+        if (!url.equals("0") && !url.isEmpty()){
+            Glide.with(context)
+                    .load(url)
+                    .into(holder.productImageView);
+        }
+
         holder.nameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO send request to magento_get_attribute_group with attribute_set_id
+
             }
         });
-
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,14 +86,17 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView nameTextView;
+        private TextView nameTextView,priceTextView;
         private Button addBtn;
+        private ImageView productImageView;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.product_list_row_name_textview_id);
+            priceTextView = (TextView) itemView.findViewById(R.id.product_list_row_price_textview_id);
             addBtn = (Button) itemView.findViewById(R.id.product_list_row_add_btn_id);
+            productImageView = (ImageView) itemView.findViewById(R.id.products_list_row_imageview_id);
         }
     }
 }

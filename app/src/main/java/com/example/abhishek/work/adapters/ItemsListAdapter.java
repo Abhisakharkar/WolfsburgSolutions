@@ -1,5 +1,6 @@
 package com.example.abhishek.work.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.abhishek.work.Model.ItemData;
 import com.example.abhishek.work.R;
 
@@ -21,9 +23,11 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
 
     private List<ItemData> itemList = new ArrayList<ItemData>();
     private int position;
+    private Context context;
 
-    public ItemsListAdapter(List<ItemData> itemList){
+    public ItemsListAdapter(Context context, List<ItemData> itemList){
         this.itemList = itemList;
+        this.context = context;
     }
 
     @Override
@@ -40,6 +44,17 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
     public void onBindViewHolder(ItemsListViewHolder holder, int position) {
 
         this.position = position;
+
+        holder.itemNameTextView.setText(itemList.get(position).getName());
+        holder.itemMRPTextView.setText(String.valueOf(itemList.get(position).getPrice()));
+        holder.itemSellingPriceEditText.setText(String.valueOf(itemList.get(position).getSellingPrice()));
+        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product/" + itemList.get(position).getPhoto();
+        if (!url.equals("0") && !url.isEmpty()){
+            Glide.with(context)
+                    .load(url)
+                    .into(holder.itemImageView);
+        }
+
 /*
         //radio button set
         if(itemList.get(position).isAvailable()){

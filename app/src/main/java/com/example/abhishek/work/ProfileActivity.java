@@ -166,9 +166,30 @@ public class ProfileActivity extends AppCompatActivity implements
                 try {
 
                     String responseFrom = responseJSONObject.getString("responseFrom");
-                    if (responseFrom.equals("profile_update")) {
-                        //TODO process response
+                    if (responseFrom.equals("update_retailer_profile_data")) {
+                        boolean update = responseJSONObject.getBoolean("update");
+                        if (update){
 
+                            editor.putString("proprietor",proprietor);
+                            editor.putString("mobileNo",mobileNo);
+                            editor.putString("shopName",shopName);
+                            editor.putString("shopAdress",address);
+                            editor.putString("city",cityName);
+                            editor.putString("state",stateName);
+                            editor.putString("country",countryName);
+                            editor.putString("longitude",String.valueOf(longitude));
+                            editor.putString("latitude",String.valueOf(latitude));
+                            editor.putBoolean("isDataFilled",true);
+                            editor.commit();
+
+                            Toast.makeText(context, "Profile Saved Successfully !", Toast.LENGTH_SHORT).show();
+                            Intent newIntent = new Intent(ProfileActivity.this, HomeActivity.class);
+                            newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(newIntent);
+                        }else {
+                            Toast.makeText(context, "Problem in saving profile !\nTry again later.", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                 } catch (Exception e) {
@@ -231,8 +252,15 @@ public class ProfileActivity extends AppCompatActivity implements
                                 editor.commit();
 
                                 //send data to server
-                                int retailerID = sharedPreferences.getInt("retailerId", 0);
-                                authentication.updateProfile(retailerID, proprietor, shopName, mobileNo, longitude, latitude, address, cityName, stateName, countryName);
+                                String mail = sharedPreferences.getString("mail", "");
+                                String password = sharedPreferences.getString("password","");
+                                if (!mail.isEmpty() && !password.isEmpty()) {
+                                    authentication.updateProfile(mail, password, proprietor, shopName, mobileNo, longitude, latitude, address, cityName, stateName, countryName);
+                                }else {
+                                    Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ProfileActivity.this,LoginActivity.class));
+                                    finish();
+                                }
 
                             } else {
                                 Toast.makeText(context, "Please set Location !", Toast.LENGTH_SHORT).show();

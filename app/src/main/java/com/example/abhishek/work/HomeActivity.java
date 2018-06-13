@@ -76,7 +76,8 @@ public class HomeActivity extends AppCompatActivity {
 
         //TODO check if database is present in phone
         //TODO if not already present then fetch retailer's products database
-        //TODO if present
+        //TODO if present put all in recyclerview
+
 
 
         //TODO    IMPORTANT
@@ -137,9 +138,12 @@ public class HomeActivity extends AppCompatActivity {
         arrayList = new ArrayList<ItemData>();
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        myListAdapter = new ItemsListAdapter(arrayList);
+        myListAdapter = new ItemsListAdapter(context,arrayList);
         recyclerView.setAdapter(myListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //show database data to recycler view
+
 
         //navigation draver implementation
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -249,6 +253,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         */
 
+        arrayList.clear();
         int productsCount = databaseHelper.getProductesCount();
         if (productsCount > 0) {
             arrayList.addAll(databaseHelper.getAllProducts());

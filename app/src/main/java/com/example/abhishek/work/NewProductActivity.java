@@ -67,7 +67,6 @@ public class NewProductActivity extends AppCompatActivity {
                         ProductData productData = new ProductData();
                         productData.setName(jsonObject.getString("name"));
                         productData.setProductID(jsonObject.getInt("id"));
-                        Log.e("id",String.valueOf(id));
                         productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
                         productData.setPrice(jsonObject.getDouble("price"));
                         productData.setPhoto(jsonObject.getString("image-url"));
@@ -84,6 +83,7 @@ public class NewProductActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        arrayList.clear();
         if (id > 0) {
             fetchData.getProducts(name, id);
         }
