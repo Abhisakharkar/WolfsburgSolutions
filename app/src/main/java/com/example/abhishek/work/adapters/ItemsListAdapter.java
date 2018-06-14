@@ -2,6 +2,7 @@ package com.example.abhishek.work.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
         this.position = position;
 
         holder.itemNameTextView.setText(itemList.get(position).getName());
+        Log.e("name  ...|",itemList.get(position).getName() + "| ... ");
         holder.itemMRPTextView.setText(String.valueOf(itemList.get(position).getPrice()));
         holder.itemSellingPriceEditText.setText(String.valueOf(itemList.get(position).getSellingPrice()));
         String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product/" + itemList.get(position).getPhoto();
@@ -117,6 +119,9 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
             itemAvailabilityBtn.setOnClickListener(this);
             itemStarImageBtn.setOnClickListener(this);
             promoteItemBtn.setOnClickListener(this);
+
+            itemAvailabilityBtn.setSelected(true);
+            itemAvailabilityBtn.setChecked(true);
         }
 
         @Override

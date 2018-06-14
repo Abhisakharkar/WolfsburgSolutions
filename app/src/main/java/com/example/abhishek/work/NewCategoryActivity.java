@@ -1,5 +1,6 @@
 package com.example.abhishek.work;
 
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -71,4 +72,6 @@ public class NewCategoryActivity extends AppCompatActivity {
         fetchData.getCategories();
         adapter.notifyDataSetChanged();
     }
+
+
 }

@@ -32,10 +32,10 @@
 
             <ImageView
                 android:id="@+id/itemslist_row_image_id"
-                android:layout_marginLeft="8dp"
-                android:layout_width="wrap_content"
+                android:layout_width="112dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/temp_item_image" />
 
             <LinearLayout
@@ -63,7 +63,7 @@
 
                 <TextView
                     android:id="@+id/item_mrp_textview_id"
-                    android:layout_width="wrap_content"
+                    android:layout_width="112dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/mrp_strike_effect_vector"
@@ -84,13 +84,13 @@
 
             <Button
                 android:id="@+id/item_selling_price_textview_id"
-                android:layout_width="wrap_content"
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/promote_product_btn_id"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="8dp"
-                android:elevation="4dp"
                 android:backgroundTint="#fff"
+                android:elevation="4dp"
                 android:text="Rs.800"
                 android:textColor="#000"
                 android:textSize="24sp"

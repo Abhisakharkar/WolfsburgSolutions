@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class SendData {
 
-    private String serverURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
+    private String serverURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868";
     private Context context;
     //private ServerResponse serverResponse = new ServerResponse();
     private ServerResponse serverResponse;
@@ -40,26 +40,16 @@ public class SendData {
 
         try{
             header.put("Content-Type","application/json");
-            //send all this info
             header.put("retailerID",retailerID);
             header.put("productID",productID);
             header.put("price",price);
             header.put("photo","0");
-            header.put("desc",desc);
-            header.put("avail",String.valueOf(avail));
+            header.put("description",desc);
+            header.put("availability",String.valueOf(avail));
             header.put("star",String.valueOf(star));
-            header.put("comment",comment);
+            header.put("textField",comment);
 
-            reqBody.put("retailerID",retailerID);
-            reqBody.put("productID",productID);
-            reqBody.put("price",price);
-            reqBody.put("desc",desc);
-            reqBody.put("photo","0");
-            reqBody.put("avail",String.valueOf(avail));
-            reqBody.put("star",String.valueOf(star));
-            reqBody.put("comment",comment);
-
-            String url = serverURL+"add_product";
+            String url = serverURL+"/add_retailer_product";
             sendRequest(url);
 
         }catch (Exception e){
@@ -73,26 +63,15 @@ public class SendData {
 
         try{
             header.put("Content-Type","application/json");
-            //send all this info
             header.put("retailerID",retailerID);
             header.put("productID",productID);
             header.put("price",price);
-            header.put("photo","0");
-            header.put("desc",desc);
-            header.put("avail",String.valueOf(avail));
+            header.put("description",desc);
+            header.put("availability",String.valueOf(avail));
             header.put("star",String.valueOf(star));
-            header.put("comment",comment);
+            header.put("textField",comment);
 
-            reqBody.put("retailerID",retailerID);
-            reqBody.put("productID",productID);
-            reqBody.put("price",price);
-            reqBody.put("desc",desc);
-            reqBody.put("photo","0");
-            reqBody.put("avail",String.valueOf(avail));
-            reqBody.put("star",String.valueOf(star));
-            reqBody.put("comment",comment);
-
-            String url = serverURL+"update_product";
+            String url = serverURL+"/update_retailer_product";
             sendRequest(url);
 
         }catch (Exception e){

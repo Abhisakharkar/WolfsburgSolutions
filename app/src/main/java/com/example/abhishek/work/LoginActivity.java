@@ -119,6 +119,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         boolean signIn = responseJSONObject.getBoolean("signIn");
                         if (signIn) {
                             JSONObject retailerAuthTableJson = responseJSONObject.getJSONObject("retailerAuthTable");
+                            JSONObject retailerDataTableJson = responseJSONObject.getJSONObject("retailerDataTable");
 
                             String deviceId = retailerAuthTableJson.getString("deviceId");
                             if (deviceId.equals(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))) {
@@ -129,18 +130,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putBoolean("isDataFilled",true);
                                         editor.putString("mail",mail);
                                         editor.putString("password",password);
-                                        editor.putString("shopName",retailerAuthTableJson.getString("enterpriseName"));
-                                        editor.putString("proprietor",retailerAuthTableJson.getString("proprietor"));
-                                        editor.putString("mobileNo",retailerAuthTableJson.getString("mobileNo"));
-                                        editor.putInt("retailerId",retailerAuthTableJson.getInt("retailerId"));
-                                        editor.putString("addLine1",retailerAuthTableJson.getString("addLine1"));
-                                        editor.putString("addLine2",retailerAuthTableJson.getString("addLine2"));
-                                        editor.putString("city",retailerAuthTableJson.getString("city"));
-                                        editor.putString("state",retailerAuthTableJson.getString("state"));
-                                        editor.putString("country",retailerAuthTableJson.getString("country"));
-                                        editor.putString("profilePhoto",retailerAuthTableJson.getString("profilePhoto"));
-                                        editor.putString("longitude",String.valueOf(retailerAuthTableJson.getDouble("longLoc")));
-                                        editor.putString("latitude",String.valueOf(retailerAuthTableJson.getDouble("latLoc")));
+                                        editor.putString("shopName",retailerDataTableJson.getString("enterpriseName"));
+                                        editor.putString("proprietor",retailerDataTableJson.getString("proprietor"));
+                                        editor.putString("mobileNo",retailerDataTableJson.getString("mobileNo"));
+                                        editor.putInt("retailerId",retailerDataTableJson.getInt("retailerId"));
+                                        editor.putString("addLine1",retailerDataTableJson.getString("addLine1"));
+                                        editor.putString("addLine2",retailerDataTableJson.getString("addLine2"));
+                                        editor.putString("city",retailerDataTableJson.getString("city"));
+                                        editor.putString("state",retailerDataTableJson.getString("state"));
+                                        editor.putString("country",retailerDataTableJson.getString("country"));
+                                        editor.putString("profilePhoto",retailerDataTableJson.getString("profilePhoto"));
+                                        editor.putString("longitude",String.valueOf(retailerDataTableJson.getDouble("longLoc")));
+                                        editor.putString("latitude",String.valueOf(retailerDataTableJson.getDouble("latLoc")));
                                         editor.commit();
                                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                         finish();
@@ -149,6 +150,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putBoolean("isDataFilled",false);
                                         editor.putString("mail",mail);
                                         editor.putString("password",password);
+                                        editor.putInt("retailerId",retailerAuthTableJson.getInt("retailerId"));
+                                        if (!retailerAuthTableJson.getString("mobileNo").isEmpty()){
+                                            editor.putString("shopName",retailerDataTableJson.getString("enterpriseName"));
+                                            editor.putString("proprietor",retailerDataTableJson.getString("proprietor"));
+                                            editor.putString("mobileNo",retailerDataTableJson.getString("mobileNo"));
+                                            editor.putString("addLine1",retailerDataTableJson.getString("addLine1"));
+                                            editor.putString("addLine2",retailerDataTableJson.getString("addLine2"));
+                                            editor.putString("city",retailerDataTableJson.getString("city"));
+                                            editor.putString("state",retailerDataTableJson.getString("state"));
+                                            editor.putString("country",retailerDataTableJson.getString("country"));
+                                            editor.putString("longitude",String.valueOf(retailerDataTableJson.getDouble("longLoc")));
+                                            editor.putString("latitude",String.valueOf(retailerDataTableJson.getDouble("latLoc")));
+                                        }
                                         editor.commit();
                                         startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
                                         finish();

@@ -54,7 +54,8 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(ItemData.TABLE_NAME
-                , new String[]{ItemData.COLUMN_PRODUCT_ID
+                , new String[]{ItemData.COLUMN_PRODUCT_ID, ItemData.COLUMN_NAME
+                        , ItemData.COLUMN_SELLING_PRICE, ItemData.COLUMN_COMMENT
                         , ItemData.COLUMN_PRICE, ItemData.COLUMN_DESCRIPTION, ItemData.COLUMN_PHOTO
                         , ItemData.COLUMN_AVAILABILITY, ItemData.COLUMN_STAR}
                 , ItemData.COLUMN_PRODUCT_ID + "=?"
@@ -67,9 +68,12 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             cursor.moveToFirst();
 
-            Log.e("DBhelper get_products",cursor.toString());
+            Log.e("DBhelper get_products", cursor.toString());
 
             ItemData itemData = new ItemData();
+            itemData.setName(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_NAME)));
+            itemData.setSellingPrice(cursor.getDouble(cursor.getColumnIndex(ItemData.COLUMN_SELLING_PRICE)));
+            itemData.setComment(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_COMMENT)));
             itemData.setProductID(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRODUCT_ID)));
             itemData.setPrice(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRICE)));
             itemData.setDescription(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_DESCRIPTION)));
@@ -79,7 +83,7 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
 
             return itemData;
-        }else {
+        } else {
             ItemData itemData = new ItemData();
             itemData.setProductID(-1);
             return itemData;
@@ -97,6 +101,9 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 ItemData itemData = new ItemData();
+                itemData.setName(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_NAME)));
+                itemData.setSellingPrice(cursor.getDouble(cursor.getColumnIndex(ItemData.COLUMN_SELLING_PRICE)));
+                itemData.setComment(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_COMMENT)));
                 itemData.setProductID(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRODUCT_ID)));
                 itemData.setPrice(cursor.getInt(cursor.getColumnIndex(ItemData.COLUMN_PRICE)));
                 itemData.setDescription(cursor.getString(cursor.getColumnIndex(ItemData.COLUMN_DESCRIPTION)));
@@ -144,10 +151,10 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         return i;
     }
 
-    public void deleteProduct(ItemData itemData){
+    public void deleteProduct(ItemData itemData) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(ItemData.TABLE_NAME,ItemData.COLUMN_PRODUCT_ID + " = ?"
-                ,new String[]{String.valueOf(itemData.getProductID())});
+        db.delete(ItemData.TABLE_NAME, ItemData.COLUMN_PRODUCT_ID + " = ?"
+                , new String[]{String.valueOf(itemData.getProductID())});
         db.close();
     }
 }

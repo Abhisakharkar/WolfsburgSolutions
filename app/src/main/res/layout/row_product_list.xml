@@ -32,7 +32,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="Product Name"
-            android:textSize="16dp" />
+            android:textSize="24dp" />
 
         <TextView
             android:id="@+id/product_list_row_price_textview_id"

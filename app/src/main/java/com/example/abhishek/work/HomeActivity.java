@@ -3,6 +3,7 @@ package com.example.abhishek.work;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -256,10 +258,12 @@ public class HomeActivity extends AppCompatActivity {
         arrayList.clear();
         int productsCount = databaseHelper.getProductesCount();
         if (productsCount > 0) {
+            Log.e("all products ...|" , databaseHelper.getAllProducts().get(0).getName() + "| ... " );
             arrayList.addAll(databaseHelper.getAllProducts());
             myListAdapter.notifyDataSetChanged();
         }
     }
+
 
 }
 

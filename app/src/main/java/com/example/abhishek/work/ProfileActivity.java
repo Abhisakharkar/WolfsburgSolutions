@@ -77,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity implements
     private Authentication authentication = new Authentication(ProfileActivity.this);
 
     //location
-    private String cityName, countryName, stateName;
+    private String cityName = "", countryName = "", stateName = "";
     private double longitude = 0, latitude = 0;
     private LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationProviderClient;

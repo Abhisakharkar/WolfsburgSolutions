@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class FetchData {
 
-    private String URL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/";
+    private String serverURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868";
     private Context context;
     private ServerResponse serverResponse = new ServerResponse();
     private JSONObject reqBody = new JSONObject();
@@ -29,12 +29,14 @@ public class FetchData {
     }
 
     public void getCategories(){
-        URL = URL+"magento_get_category";
-        sendRequest();
+        String url = serverURL + "/magento_get_category";
+        sendRequest(url);
     }
 
     public void getProducts(String name,int id){
-        URL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/magento_product_display";
+
+        String url = serverURL + "/magento_product_display";
+
         try {
             reqBody.put("name", name);
             reqBody.put("id_category",id);
@@ -42,24 +44,25 @@ public class FetchData {
             header.put("Content-Type","application/json");
             header.put("name",name);
             header.put("id_category",String.valueOf(id));
-            sendRequest();
+            sendRequest(url);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
     public void getProductDetails(String product_SKU){
-        URL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/magento_info_product";
+
+        String url = serverURL + "/magento_info_product";
 
         //send only this
     }
 
-    private void sendRequest(){
+    private void sendRequest(String url){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST
-                , URL
+                , url
                 , new JSONObject(header)
                 , new Response.Listener<JSONObject>() {
             @Override

@@ -10,11 +10,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.abhishek.work.Model.ItemData;
 import com.example.abhishek.work.ServerOperations.SendData;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 import com.example.abhishek.work.SupportClasses.LocalDatabaseHelper;
+
+import org.json.JSONObject;
 
 public class ProductEditActivity extends AppCompatActivity {
 
@@ -67,6 +71,22 @@ public class ProductEditActivity extends AppCompatActivity {
         addBtn = (Button) findViewById(R.id.product_edit_activity_add_btn_id);
 
         priceEdittext.setText(String.valueOf(price));
+
+        serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+            @Override
+            public void onResponseReceive(JSONObject responseJSONObject) {
+                Log.e("product add response",responseJSONObject.toString());
+                try {
+                    if (responseJSONObject.getBoolean("insertSuccess")){
+                        finish();
+                    }else {
+                        Toast.makeText(context, "Problem in adding product to shop !", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -221,7 +221,7 @@ public class ShopPhotoActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQ_CODE) {
 
             if (resultCode == RESULT_OK) {
-                Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
+                photoBitmap = (Bitmap) data.getExtras().get("data");
 
                 //set bitmap image to imageView
                 shopPhotoImageview.setImageBitmap(photoBitmap);
@@ -241,10 +241,11 @@ public class ShopPhotoActivity extends AppCompatActivity {
                 int columnIndex = cursor.getColumnIndex(filePath[0]);
                 String picturePath = cursor.getString(columnIndex);
                 cursor.close();
-                Bitmap photoBitmap = (BitmapFactory.decodeFile(picturePath));
+                photoBitmap = (BitmapFactory.decodeFile(picturePath));
 
                 //set photo to imageView
                 shopPhotoImageview.setImageBitmap(photoBitmap);
+
 
             }
         }
