@@ -115,6 +115,7 @@ public class Authentication {
 
         String url = serverUrl + "/update_retailer_profile_data";
         sendRequestNew(url,headers);
+        
     }
 
     private void sendRequestNew(String url, Map<String, String> headers) {
