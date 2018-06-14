@@ -28,6 +28,8 @@ public class NewCategoryActivity extends AppCompatActivity {
 
     private ArrayList<CategoryData> arrayList;
 
+    private JSONArray jsonArray;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +45,38 @@ public class NewCategoryActivity extends AppCompatActivity {
 
         fetchData = new FetchData(NewCategoryActivity.this);
         serverResponse = fetchData.getServerResponseInstance();
-        fetchData.getCategories();
+
+        if (savedInstanceState == null){
+            fetchData.getCategories();
+            Log.e("if called","hvkhv");
+        }else {
+            Log.e("else called","jhgvjhgv");
+            try {
+
+                if (jsonArray != null) {
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject j = (JSONObject) jsonArray.get(i);
+                        CategoryData categoryData = new CategoryData();
+                        categoryData.setName(j.getString("name"));
+                        categoryData.setId(j.getInt("id"));
+                        arrayList.add(categoryData);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+                Log.e("array is null","sdjhbds");
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
         serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
                     Log.e("get_category Response",responseJSONObject.toString());
-                    JSONArray jsonArray = responseJSONObject.getJSONArray("items");
+                    jsonArray = responseJSONObject.getJSONArray("items");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject j = (JSONObject) jsonArray.get(i);
                         CategoryData categoryData = new CategoryData();

@@ -102,8 +102,8 @@ public class Authentication {
         headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("enterpriseName", shopName);
-        headers.put("propritor", proprietor);
-        headers.put("mobileNo", "+91" + mobileNo);
+        headers.put("proprietor", proprietor);
+        headers.put("mobileNo", mobileNo);
         headers.put("mail",mail);
         headers.put("password",password);
         headers.put("latLoc", String.valueOf(latitude));

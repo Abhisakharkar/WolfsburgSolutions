@@ -201,10 +201,9 @@ public class ProfileActivity extends AppCompatActivity implements
                             editor.commit();
 
                             Toast.makeText(context, "Profile Saved Successfully !", Toast.LENGTH_SHORT).show();
-                            Intent newIntent = new Intent(ProfileActivity.this, HomeActivity.class);
-                            newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(newIntent);
+                            startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
+                            finish();
+
                         }else {
                             Toast.makeText(context, "Problem in saving profile !\nTry again later.", Toast.LENGTH_SHORT).show();
                         }
