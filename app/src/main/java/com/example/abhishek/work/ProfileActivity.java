@@ -154,6 +154,24 @@ public class ProfileActivity extends AppCompatActivity implements
                 }
             }
         } else {
+
+            proprietor = sharedPreferences.getString("proprietor", "");
+            if (!proprietor.isEmpty()) {
+                mobileNo = sharedPreferences.getString("mobileNo", "");
+                shopName = sharedPreferences.getString("shopName", "");
+                address = sharedPreferences.getString("shopAddress", "");
+                cityName = sharedPreferences.getString("city", "");
+                stateName = sharedPreferences.getString("state", "");
+                countryName = sharedPreferences.getString("country", "");
+                latitude = Double.parseDouble(sharedPreferences.getString("latitude", ""));
+                longitude = Double.parseDouble(sharedPreferences.getString("longitude", ""));
+
+                proprieter_edit.setText(proprietor);
+                mob_no_edit.setText(mobileNo);
+                shop_name_edit.setText(shopName);
+                address_edit.setText(address);
+            }
+
             //TODO Do nothing
             //TODO get data for first time
         }

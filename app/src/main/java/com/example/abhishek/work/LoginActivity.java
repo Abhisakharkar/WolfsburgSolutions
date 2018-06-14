@@ -151,7 +151,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putString("mail",mail);
                                         editor.putString("password",password);
                                         editor.putInt("retailerId",retailerAuthTableJson.getInt("retailerId"));
-                                        if (!retailerAuthTableJson.getString("mobileNo").isEmpty()){
+                                        if (!retailerDataTableJson.getString("mobileNo").isEmpty()){
                                             editor.putString("shopName",retailerDataTableJson.getString("enterpriseName"));
                                             editor.putString("proprietor",retailerDataTableJson.getString("proprietor"));
                                             editor.putString("mobileNo",retailerDataTableJson.getString("mobileNo"));

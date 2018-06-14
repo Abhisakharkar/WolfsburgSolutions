@@ -32,14 +32,18 @@ public class NewProductActivity extends AppCompatActivity {
     private ProductListAdapter adapter;
     private ArrayList<ProductData> arrayList;
 
+    private JSONArray jsonArray;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_product);
 
+        Log.e("onCreate", "newProduct");
+
         recyclerView = (RecyclerView) findViewById(R.id.new_product_activity_recyclerview_id);
         arrayList = new ArrayList<>();
-        adapter = new ProductListAdapter(NewProductActivity.this,arrayList);
+        adapter = new ProductListAdapter(NewProductActivity.this, arrayList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -55,14 +59,15 @@ public class NewProductActivity extends AppCompatActivity {
         }
 
         fetchData = new FetchData(NewProductActivity.this);
+        fetchData.getProducts(name,id);
         serverResponse = fetchData.getServerResponseInstance();
         serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
-                    Log.e("get_Product response",responseJSONObject.toString());
-                    JSONArray jsonArray = responseJSONObject.getJSONArray("items");
-                    for(int i=0;i<jsonArray.length();i++){
+                    Log.e("get_Product response", responseJSONObject.toString());
+                    jsonArray = responseJSONObject.getJSONArray("items");
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                         ProductData productData = new ProductData();
                         productData.setName(jsonObject.getString("name"));
@@ -73,7 +78,7 @@ public class NewProductActivity extends AppCompatActivity {
                         arrayList.add(productData);
                         adapter.notifyDataSetChanged();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -83,9 +88,63 @@ public class NewProductActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.e("onStart", "newProduct");
+        /*
         arrayList.clear();
         if (id > 0) {
             fetchData.getProducts(name, id);
         }
+        */
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("OnResume", "newProduct");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("OnPause", "newProduct");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("onStop", "newProduct");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("OnDestroy", "newProduct");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("onReCreate", "newProduct");
+        /*
+        try {
+            if (jsonArray != null) {
+                arrayList.clear();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    ProductData productData = new ProductData();
+                    productData.setName(jsonObject.getString("name"));
+                    productData.setProductID(jsonObject.getInt("id"));
+                    productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
+                    productData.setPrice(jsonObject.getDouble("price"));
+                    productData.setPhoto(jsonObject.getString("image-url"));
+                    arrayList.add(productData);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+    }
+
 }
