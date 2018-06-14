@@ -46,6 +46,8 @@ public class ProductEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_edit);
 
+        Log.e("onCreate", "editProduct");
+
         context = this;
         databaseHelper = new LocalDatabaseHelper(context);
         sendData = new SendData(context);
@@ -146,5 +148,41 @@ public class ProductEditActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("onStart", "editProduct");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("OnResume", "editProduct");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("OnPause", "editProduct");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("onStop", "editProduct");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("OnDestroy", "editProduct");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("onReCreate", "editProduct");
     }
 }
