@@ -196,6 +196,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
                 });
                 storageDialog.create();
                 storageDialog.show();
+                
             }
         }
 
