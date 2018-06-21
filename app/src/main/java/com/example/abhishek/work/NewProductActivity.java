@@ -1,6 +1,9 @@
 package com.example.abhishek.work;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,6 +16,7 @@ import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.Model.ProductData;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
+import com.example.abhishek.work.ViewModels.ProductsViewModel;
 import com.example.abhishek.work.adapters.ProductListAdapter;
 
 import org.json.JSONArray;
@@ -31,8 +35,9 @@ public class NewProductActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProductListAdapter adapter;
     private ArrayList<ProductData> arrayList;
-
     private JSONArray jsonArray;
+
+    private ProductsViewModel productsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +63,23 @@ public class NewProductActivity extends AppCompatActivity {
             finishActivity(2205);
         }
 
-        fetchData = new FetchData(NewProductActivity.this);
-        fetchData.getProducts(name,id);
+        fetchData = new FetchData(getApplication());
+
+        productsViewModel = ViewModelProviders.of(this).get(ProductsViewModel.class);
+        productsViewModel.getProductsList(fetchData,name,id).observe(this, new Observer<ArrayList<ProductData>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<ProductData> productData) {
+                arrayList.addAll(productData);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
         serverResponse = fetchData.getServerResponseInstance();
         serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
-                    Log.e("get_Product response", responseJSONObject.toString());
+                    ArrayList<ProductData> list = new ArrayList<>();
                     jsonArray = responseJSONObject.getJSONArray("items");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(i);
@@ -75,9 +89,9 @@ public class NewProductActivity extends AppCompatActivity {
                         productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
                         productData.setPrice(jsonObject.getDouble("price"));
                         productData.setPhoto(jsonObject.getString("image-url"));
-                        arrayList.add(productData);
-                        adapter.notifyDataSetChanged();
+                        list.add(productData);
                     }
+                    productsViewModel.setProductsList(list);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
