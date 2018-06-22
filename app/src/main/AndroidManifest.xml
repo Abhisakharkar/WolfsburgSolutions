@@ -22,7 +22,8 @@
             android:theme="@style/SignUpActivityTheme" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/SignInActivityTheme">
+            android:theme="@style/SignInActivityTheme"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity
@@ -36,7 +37,8 @@
         <activity android:name=".ShopPhotoActivity" />
         <activity android:name=".LicensePhotoActivity" />
         <activity android:name=".SplashActivity"
-            android:theme="@style/AppTheme.launcher">
+            android:theme="@style/AppTheme.launcher"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

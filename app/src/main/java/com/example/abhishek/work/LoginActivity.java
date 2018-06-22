@@ -53,16 +53,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.SignInActivityTheme);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         context = LoginActivity.this;
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         authentication = new Authentication(context);
         serverResponse = authentication.getServerResponseInstance();
-
-        setContentView(R.layout.activity_login);
 
         Log.e("mail_edittext", (mail_edittext == null ? "null" : "not null"));
         mail_edittext = (EditText) findViewById(R.id.email_edittext_login_id);
@@ -131,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putBoolean("isDataFilled",true);
                                         editor.putString("mail",mail);
                                         editor.putString("password",password);
+                                        editor.putBoolean("isVerified",true);
                                         editor.putString("shopName",retailerDataTableJson.getString("enterpriseName"));
                                         editor.putString("proprietor",retailerDataTableJson.getString("proprietor"));
                                         editor.putString("mobileNo",retailerDataTableJson.getString("mobileNo"));
@@ -143,6 +142,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putString("profilePhoto",retailerDataTableJson.getString("profilePhoto"));
                                         editor.putString("longitude",String.valueOf(retailerDataTableJson.getDouble("longLoc")));
                                         editor.putString("latitude",String.valueOf(retailerDataTableJson.getDouble("latLoc")));
+                                        editor.putBoolean("isSignedIn",true);
                                         editor.commit();
                                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                         finish();
@@ -150,6 +150,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     } else if (isDataFilled == 0) {
                                         editor.putBoolean("isDataFilled",false);
                                         editor.putString("mail",mail);
+                                        editor.putBoolean("isVerified",true);
                                         editor.putString("password",password);
                                         editor.putInt("retailerId",retailerAuthTableJson.getInt("retailerId"));
                                         if (!retailerDataTableJson.getString("mobileNo").isEmpty()){
@@ -164,6 +165,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             editor.putString("longitude",String.valueOf(retailerDataTableJson.getDouble("longLoc")));
                                             editor.putString("latitude",String.valueOf(retailerDataTableJson.getDouble("latLoc")));
                                         }
+                                        editor.putBoolean("isSignedIn",true);
                                         editor.commit();
                                         startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
                                         finish();
@@ -173,6 +175,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     editor.putBoolean("isDataFilled",false);
                                     editor.putString("mail",mail);
                                     editor.putString("password",password);
+                                    editor.putBoolean("isVerified",false);
+                                    editor.putBoolean("isSignedIn",true);
                                     editor.commit();
                                     startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
                                     finish();

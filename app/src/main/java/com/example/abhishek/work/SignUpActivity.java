@@ -58,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
                     email = email_edittext.getText().toString();
-                    if (email.isEmpty()) {
+                    if (!email.isEmpty()) {
                         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                             authentication.checkEmailExists(email);
                         } else {
@@ -67,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     } else {
                         Toast.makeText(SignUpActivity.this, "Enter email !", Toast.LENGTH_SHORT).show();
                     }
-                }else {
+                } else {
                     signUpBtn.setClickable(false);
                 }
             }
@@ -92,23 +92,24 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         } else {
                             signUpBtn.setClickable(true);
                         }
-                    }
-                    else
-                    //response : sign_up
-                    if (responseFrom.equals("sign_up")){
-                        boolean signUpSuccessStatus = responseJSONObject.getBoolean("signUpSuccessStatus");
-                        if (signUpSuccessStatus){
-                            //signup successfull
-                            editor.putBoolean("isDataFilled",false);
-                            editor.putString("mail",email);
-                            editor.putString("password",password);
-                            editor.commit();
-                            startActivity(new Intent(SignUpActivity.this,VerificationActivity.class));
-                            finish();
-                        }else {
-                            Toast.makeText(SignUpActivity.this, "Error in Signing Up !\nTry again later.", Toast.LENGTH_SHORT).show();
+                    } else
+                        //response : sign_up
+                        if (responseFrom.equals("sign_up")) {
+                            boolean signUpSuccessStatus = responseJSONObject.getBoolean("signUpSuccessStatus");
+                            if (signUpSuccessStatus) {
+                                //signup successfull
+                                editor.putBoolean("isDataFilled", false);
+                                editor.putString("mail", email);
+                                editor.putBoolean("isVerified", false);
+                                editor.putBoolean("isSignedIn", true);
+                                editor.putString("password", password);
+                                editor.commit();
+                                startActivity(new Intent(SignUpActivity.this, VerificationActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(SignUpActivity.this, "Error in Signing Up !\nTry again later.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
