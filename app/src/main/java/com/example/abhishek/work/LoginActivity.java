@@ -1,5 +1,6 @@
 package com.example.abhishek.work;
 
+import android.animation.Animator;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -10,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +20,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.abhishek.work.ServerOperations.Authentication;
@@ -43,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText mail_edittext, password_edittext;
     private Button signin_btn, signUp_link_btn;
+    private ImageView doneImageView;
     private SignInButton googleSignIn_btn;
     private ProgressDialog progressDialog;
 
@@ -74,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signUp_link_btn = (Button) findViewById(R.id.sign_up_link_btn_id);
         googleSignIn_btn = (SignInButton) findViewById(R.id.google_signIn_btn_id);
         googleSignIn_btn.setSize(SignInButton.SIZE_STANDARD);
+        doneImageView = (ImageView) findViewById(R.id.login_activity_done_imageview_id);
 
         signin_btn.setClickable(false);
         signin_btn.setOnClickListener(this);
@@ -98,6 +108,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 } else {
                     signin_btn.setClickable(false);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        int cx = doneImageView.getMeasuredWidth() / 2;
+                        int cy = doneImageView.getMeasuredHeight() / 2;
+                        int finalRadius = Math.max(doneImageView.getWidth(), doneImageView.getHeight()) / 2;
+                        Animator anim =
+                                ViewAnimationUtils.createCircularReveal(doneImageView, cx, cy, finalRadius, 0);
+                        anim.start();
+                        doneImageView.setVisibility(View.GONE);
+                    } else {
+                        doneImageView.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -114,6 +135,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         boolean mailExist = responseJSONObject.getBoolean("mailExist");
                         if (mailExist) {
                             signin_btn.setClickable(true);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                int cx = doneImageView.getMeasuredWidth() / 2;
+                                int cy = doneImageView.getMeasuredHeight() / 2;
+                                int finalRadius = Math.max(doneImageView.getWidth(), doneImageView.getHeight()) / 2;
+                                Animator anim = ViewAnimationUtils
+                                        .createCircularReveal(doneImageView, cx, cy, 0, finalRadius);
+                                doneImageView.setVisibility(View.VISIBLE);
+                                anim.start();
+                            } else {
+                                doneImageView.setVisibility(View.VISIBLE);
+                            }
                         } else {
                             Toast.makeText(context, "Email not registered !", Toast.LENGTH_SHORT).show();
                         }
@@ -130,57 +162,57 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 if (isVerified == 1) {
                                     int isDataFilled = retailerAuthTableJson.getInt("mandatoryData");
                                     if (isDataFilled == 1) {
-                                        editor.putBoolean("isDataFilled",true);
-                                        editor.putString("mail",mail);
-                                        editor.putString("password",password);
-                                        editor.putBoolean("isVerified",true);
-                                        editor.putString("shopName",retailerDataTableJson.getString("enterpriseName"));
-                                        editor.putString("proprietor",retailerDataTableJson.getString("proprietor"));
-                                        editor.putString("mobileNo",retailerDataTableJson.getString("mobileNo"));
-                                        editor.putInt("retailerId",retailerDataTableJson.getInt("retailerId"));
-                                        editor.putString("addLine1",retailerDataTableJson.getString("addLine1"));
-                                        editor.putString("addLine2",retailerDataTableJson.getString("addLine2"));
-                                        editor.putString("city",retailerDataTableJson.getString("city"));
-                                        editor.putString("state",retailerDataTableJson.getString("state"));
-                                        editor.putString("country",retailerDataTableJson.getString("country"));
-                                        editor.putString("profilePhoto",retailerDataTableJson.getString("profilePhoto"));
-                                        editor.putString("longitude",String.valueOf(retailerDataTableJson.getDouble("longLoc")));
-                                        editor.putString("latitude",String.valueOf(retailerDataTableJson.getDouble("latLoc")));
-                                        editor.putBoolean("isSignedIn",true);
+                                        editor.putBoolean("isDataFilled", true);
+                                        editor.putString("mail", mail);
+                                        editor.putString("password", password);
+                                        editor.putBoolean("isVerified", true);
+                                        editor.putString("shopName", retailerDataTableJson.getString("enterpriseName"));
+                                        editor.putString("proprietor", retailerDataTableJson.getString("proprietor"));
+                                        editor.putString("mobileNo", retailerDataTableJson.getString("mobileNo"));
+                                        editor.putInt("retailerId", retailerDataTableJson.getInt("retailerId"));
+                                        editor.putString("addLine1", retailerDataTableJson.getString("addLine1"));
+                                        editor.putString("addLine2", retailerDataTableJson.getString("addLine2"));
+                                        editor.putString("city", retailerDataTableJson.getString("city"));
+                                        editor.putString("state", retailerDataTableJson.getString("state"));
+                                        editor.putString("country", retailerDataTableJson.getString("country"));
+                                        editor.putString("profilePhoto", retailerDataTableJson.getString("profilePhoto"));
+                                        editor.putString("longitude", String.valueOf(retailerDataTableJson.getDouble("longLoc")));
+                                        editor.putString("latitude", String.valueOf(retailerDataTableJson.getDouble("latLoc")));
+                                        editor.putBoolean("isSignedIn", true);
                                         editor.commit();
                                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                         finish();
 
                                     } else if (isDataFilled == 0) {
-                                        editor.putBoolean("isDataFilled",false);
-                                        editor.putString("mail",mail);
-                                        editor.putBoolean("isVerified",true);
-                                        editor.putString("password",password);
-                                        editor.putInt("retailerId",retailerAuthTableJson.getInt("retailerId"));
-                                        if (!retailerDataTableJson.getString("mobileNo").isEmpty()){
-                                            editor.putString("shopName",retailerDataTableJson.getString("enterpriseName"));
-                                            editor.putString("proprietor",retailerDataTableJson.getString("proprietor"));
-                                            editor.putString("mobileNo",retailerDataTableJson.getString("mobileNo"));
-                                            editor.putString("addLine1",retailerDataTableJson.getString("addLine1"));
-                                            editor.putString("addLine2",retailerDataTableJson.getString("addLine2"));
-                                            editor.putString("city",retailerDataTableJson.getString("city"));
-                                            editor.putString("state",retailerDataTableJson.getString("state"));
-                                            editor.putString("country",retailerDataTableJson.getString("country"));
-                                            editor.putString("longitude",String.valueOf(retailerDataTableJson.getDouble("longLoc")));
-                                            editor.putString("latitude",String.valueOf(retailerDataTableJson.getDouble("latLoc")));
+                                        editor.putBoolean("isDataFilled", false);
+                                        editor.putString("mail", mail);
+                                        editor.putBoolean("isVerified", true);
+                                        editor.putString("password", password);
+                                        editor.putInt("retailerId", retailerAuthTableJson.getInt("retailerId"));
+                                        if (!retailerDataTableJson.getString("mobileNo").isEmpty()) {
+                                            editor.putString("shopName", retailerDataTableJson.getString("enterpriseName"));
+                                            editor.putString("proprietor", retailerDataTableJson.getString("proprietor"));
+                                            editor.putString("mobileNo", retailerDataTableJson.getString("mobileNo"));
+                                            editor.putString("addLine1", retailerDataTableJson.getString("addLine1"));
+                                            editor.putString("addLine2", retailerDataTableJson.getString("addLine2"));
+                                            editor.putString("city", retailerDataTableJson.getString("city"));
+                                            editor.putString("state", retailerDataTableJson.getString("state"));
+                                            editor.putString("country", retailerDataTableJson.getString("country"));
+                                            editor.putString("longitude", String.valueOf(retailerDataTableJson.getDouble("longLoc")));
+                                            editor.putString("latitude", String.valueOf(retailerDataTableJson.getDouble("latLoc")));
                                         }
-                                        editor.putBoolean("isSignedIn",true);
+                                        editor.putBoolean("isSignedIn", true);
                                         editor.commit();
                                         startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
                                         finish();
                                     }
 
                                 } else if (isVerified == 0) {
-                                    editor.putBoolean("isDataFilled",false);
-                                    editor.putString("mail",mail);
-                                    editor.putString("password",password);
-                                    editor.putBoolean("isVerified",false);
-                                    editor.putBoolean("isSignedIn",true);
+                                    editor.putBoolean("isDataFilled", false);
+                                    editor.putString("mail", mail);
+                                    editor.putString("password", password);
+                                    editor.putBoolean("isVerified", false);
+                                    editor.putBoolean("isSignedIn", true);
                                     editor.commit();
                                     startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
                                     finish();
@@ -280,10 +312,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         unregisterReceiver(networkStateReceiver);
     }
 
-    private void updateUI(boolean isNetworkAbailable){
-        if (!isNetworkAbailable){
+    private void updateUI(boolean isNetworkAbailable) {
+        if (!isNetworkAbailable) {
             Toast.makeText(context, "no internet connection", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(context, "connected to internet", Toast.LENGTH_SHORT).show();
         }
     }
@@ -295,10 +327,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
                     //connected
                     updateUI(true);
-                }else {
+                } else {
                     //not connected
                     updateUI(false);
                 }

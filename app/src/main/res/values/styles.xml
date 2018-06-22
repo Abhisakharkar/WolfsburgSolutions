@@ -11,7 +11,72 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="windowNoTitle">true</item>
     </style>
+
+    <!-- login and sign up Button Style -->
+    <style name="AuthButtonStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/background_btn</item>
+    </style>
+
+    <!-- Login and SignUp edittext style -->
+    <style name="AuthEdittextStyle">
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // OLD Styles
 
     // Custom Theme for Sign Up Activity
     <style name="SignUpActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">

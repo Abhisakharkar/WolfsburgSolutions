@@ -24,7 +24,7 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SignInActivityTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".ProfileActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
