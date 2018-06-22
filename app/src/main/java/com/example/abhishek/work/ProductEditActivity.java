@@ -1,8 +1,12 @@
 package com.example.abhishek.work;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,8 +49,6 @@ public class ProductEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_edit);
-
-        Log.e("onCreate", "editProduct");
 
         context = this;
         databaseHelper = new LocalDatabaseHelper(context);
@@ -151,38 +153,41 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.e("onStart", "editProduct");
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        Log.e("OnResume", "editProduct");
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkStateReceiver, intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("OnPause", "editProduct");
+        unregisterReceiver(networkStateReceiver);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e("onStop", "editProduct");
+    private void updateUI(boolean isNetworkAbailable){
+        if (!isNetworkAbailable){
+            Toast.makeText(this, "no internet connection", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "connected to internet", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e("OnDestroy", "editProduct");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("onReCreate", "editProduct");
-    }
+    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+                    //connected
+                    updateUI(true);
+                }else {
+                    //not connected
+                    updateUI(false);
+                }
+            }
+        }
+    };
 }

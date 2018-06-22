@@ -2,7 +2,12 @@ package com.example.abhishek.work;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -99,66 +104,43 @@ public class NewProductActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.e("onStart", "newProduct");
-        /*
-        arrayList.clear();
-        if (id > 0) {
-            fetchData.getProducts(name, id);
-        }
-        */
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("OnResume", "newProduct");
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkStateReceiver, intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("OnPause", "newProduct");
+        unregisterReceiver(networkStateReceiver);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e("onStop", "newProduct");
+    private void updateUI(boolean isNetworkAbailable){
+        if (!isNetworkAbailable){
+            Toast.makeText(this, "no internet connection", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "connected to internet", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e("OnDestroy", "newProduct");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("onReCreate", "newProduct");
-        /*
-        try {
-            if (jsonArray != null) {
-                arrayList.clear();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                    ProductData productData = new ProductData();
-                    productData.setName(jsonObject.getString("name"));
-                    productData.setProductID(jsonObject.getInt("id"));
-                    productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
-                    productData.setPrice(jsonObject.getDouble("price"));
-                    productData.setPhoto(jsonObject.getString("image-url"));
-                    arrayList.add(productData);
-                    adapter.notifyDataSetChanged();
+    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+                    //connected
+                    updateUI(true);
+                }else {
+                    //not connected
+                    updateUI(false);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        */
-    }
-
+    };
 }

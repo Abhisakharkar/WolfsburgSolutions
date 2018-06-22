@@ -3,7 +3,13 @@ package com.example.abhishek.work;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +17,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.abhishek.work.Model.ProductData;
 import com.example.abhishek.work.ServerOperations.FetchData;
@@ -82,6 +89,45 @@ public class NewCategoryActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkStateReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(networkStateReceiver);
+    }
+
+    private void updateUI(boolean isNetworkAbailable){
+        if (!isNetworkAbailable){
+            Toast.makeText(this, "no internet connection", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "connected to internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+                    //connected
+                    updateUI(true);
+                }else {
+                    //not connected
+                    updateUI(false);
+                }
+            }
+        }
+    };
 }
