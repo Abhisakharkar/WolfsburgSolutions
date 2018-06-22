@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         googleSignIn_btn = (SignInButton) findViewById(R.id.google_signIn_btn_id);
         googleSignIn_btn.setSize(SignInButton.SIZE_STANDARD);
         doneImageView = (ImageView) findViewById(R.id.login_activity_done_imageview_id);
+        doneImageView.setVisibility(View.INVISIBLE);
 
         signin_btn.setClickable(false);
         signin_btn.setOnClickListener(this);
@@ -211,6 +212,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     editor.putBoolean("isDataFilled", false);
                                     editor.putString("mail", mail);
                                     editor.putString("password", password);
+                                    editor.putInt("retailerId",retailerAuthTableJson.getInt("retailerId"));
                                     editor.putBoolean("isVerified", false);
                                     editor.putBoolean("isSignedIn", true);
                                     editor.commit();
