@@ -1,5 +1,10 @@
 <resources>
 
+    <!--  The launcher splash screen theme  -->
+    <style name="AppTheme.launcher">
+        <item name="android:windowBackground">@drawable/spash_screen</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -14,9 +19,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <!--
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">#ddd</item>
         <item name="android:windowLightStatusBar">true</item>
+        -->
     </style>
 
     // Custom Theme for Sign In Activity
@@ -25,7 +32,9 @@
         <item name="colorPrimaryDark">@color/colorWhite</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <!--
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">#ddd</item>
+        -->
     </style>
 </resources>

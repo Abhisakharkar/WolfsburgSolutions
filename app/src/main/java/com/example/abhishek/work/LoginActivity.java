@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.SignInActivityTheme);
         super.onCreate(savedInstanceState);
 
         context = LoginActivity.this;
@@ -236,6 +237,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
         }
     }
+
 
     @Override
     public void onBackPressed() {
