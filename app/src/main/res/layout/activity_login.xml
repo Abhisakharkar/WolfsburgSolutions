@@ -21,6 +21,7 @@
         style="@style/AuthEdittextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
         android:layout_below="@id/signIn_textview_id"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
