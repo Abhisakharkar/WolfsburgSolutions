@@ -26,6 +26,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -53,7 +54,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button signin_btn, signUp_link_btn;
     private ImageView doneImageView;
     private SignInButton googleSignIn_btn;
-    private ProgressDialog progressDialog;
+    private FrameLayout mailCheckLayout;
+    private ProgressBar mailCHeckProgressBar;
 
     private String mail = "";
     private String password = "";
@@ -83,6 +85,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signUp_link_btn = (Button) findViewById(R.id.sign_up_link_btn_id);
         googleSignIn_btn = (SignInButton) findViewById(R.id.google_signIn_btn_id);
         googleSignIn_btn.setSize(SignInButton.SIZE_STANDARD);
+        mailCheckLayout = (FrameLayout) findViewById(R.id.login_activity_mail_check_framelayout_id);
+        mailCheckLayout.setVisibility(View.INVISIBLE);
+        mailCHeckProgressBar = (ProgressBar) findViewById(R.id.login_activity_mail_check_progress_bar_id);
+        mailCHeckProgressBar.setVisibility(View.INVISIBLE);
         doneImageView = (ImageView) findViewById(R.id.login_activity_done_imageview_id);
         doneImageView.setVisibility(View.INVISIBLE);
 
@@ -100,6 +106,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     mail = mail_edittext.getText().toString();
                     if (!mail.isEmpty()) {
                         if (Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
+                            mailCheckLayout.setVisibility(View.VISIBLE);
+                            mailCHeckProgressBar.setVisibility(View.VISIBLE);
                             authentication.checkEmailExists(mail);
                         } else {
                             Toast.makeText(LoginActivity.this, "Please enter correct email !", Toast.LENGTH_SHORT).show();
@@ -110,15 +118,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     signin_btn.setClickable(false);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        int cx = doneImageView.getMeasuredWidth() / 2;
-                        int cy = doneImageView.getMeasuredHeight() / 2;
-                        int finalRadius = Math.max(doneImageView.getWidth(), doneImageView.getHeight()) / 2;
-                        Animator anim =
-                                ViewAnimationUtils.createCircularReveal(doneImageView, cx, cy, finalRadius, 0);
-                        anim.start();
+
                         doneImageView.setVisibility(View.GONE);
+                        mailCHeckProgressBar.setVisibility(View.GONE);
+                        mailCheckLayout.setVisibility(View.GONE);
                     } else {
                         doneImageView.setVisibility(View.GONE);
+                        mailCHeckProgressBar.setVisibility(View.GONE);
+                        mailCheckLayout.setVisibility(View.GONE);
                     }
                 }
             }
@@ -137,15 +144,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (mailExist) {
                             signin_btn.setClickable(true);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                int cx = doneImageView.getMeasuredWidth() / 2;
-                                int cy = doneImageView.getMeasuredHeight() / 2;
-                                int finalRadius = Math.max(doneImageView.getWidth(), doneImageView.getHeight()) / 2;
-                                Animator anim = ViewAnimationUtils
-                                        .createCircularReveal(doneImageView, cx, cy, 0, finalRadius);
+                                mailCheckLayout.setVisibility(View.VISIBLE);
+                                //set progress bar invisible
+                                int px = mailCHeckProgressBar.getMeasuredWidth() / 2;
+                                int py = mailCHeckProgressBar.getMeasuredHeight() / 2;
+                                int finalRadiusProgressBar = Math.max(mailCHeckProgressBar.getWidth(), mailCHeckProgressBar.getHeight()) / 2;
+                                Animator animProgressBar = ViewAnimationUtils
+                                        .createCircularReveal(mailCHeckProgressBar, px, py, finalRadiusProgressBar, 0);
+                                mailCHeckProgressBar.setVisibility(View.INVISIBLE);
+
+
+                                //set done view visible
+                                int dx = doneImageView.getMeasuredWidth() / 2;
+                                int dy = doneImageView.getMeasuredHeight() / 2;
+                                int finalRadiusDoneView = Math.max(doneImageView.getWidth(), doneImageView.getHeight()) / 2;
+                                Animator animDoneView = ViewAnimationUtils
+                                        .createCircularReveal(doneImageView, dx, dy, 0, finalRadiusDoneView);
                                 doneImageView.setVisibility(View.VISIBLE);
-                                anim.start();
+
+
                             } else {
+                                mailCheckLayout.setVisibility(View.VISIBLE);
                                 doneImageView.setVisibility(View.VISIBLE);
+                                mailCHeckProgressBar.setVisibility(View.INVISIBLE);
                             }
                         } else {
                             Toast.makeText(context, "Email not registered !", Toast.LENGTH_SHORT).show();
@@ -212,7 +233,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     editor.putBoolean("isDataFilled", false);
                                     editor.putString("mail", mail);
                                     editor.putString("password", password);
-                                    editor.putInt("retailerId",retailerAuthTableJson.getInt("retailerId"));
+                                    editor.putInt("retailerId", retailerAuthTableJson.getInt("retailerId"));
                                     editor.putBoolean("isVerified", false);
                                     editor.putBoolean("isSignedIn", true);
                                     editor.commit();

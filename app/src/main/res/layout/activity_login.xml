@@ -21,35 +21,40 @@
         style="@style/AuthEdittextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:singleLine="true"
         android:layout_below="@id/signIn_textview_id"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="40dp"
-        android:layout_toLeftOf="@id/login_activity_done_imageview_id"
+        android:layout_toLeftOf="@id/login_activity_mail_check_framelayout_id"
         android:drawableLeft="@drawable/vector_mail"
         android:drawablePadding="8dp"
-        android:hint="Email" />
+        android:hint="Email"
+        android:singleLine="true" />
 
-    <ProgressBar
-        android:id="@+id/login_activity_mail_check_progress_bar_id"
-        android:layout_width="32dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/signIn_textview_id"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="40dp"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/login_activity_done_imageview_id"
+    <FrameLayout
+        android:id="@+id/login_activity_mail_check_framelayout_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/signIn_textview_id"
         android:layout_marginRight="16dp"
         android:layout_marginTop="40dp"
-        android:src="@drawable/vector_circular_done" />
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/login_activity_mail_check_progress_bar_id"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/login_activity_done_imageview_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/vector_circular_done" />
+
+    </FrameLayout>
+
 
     <EditText
         android:id="@+id/password_edittext_login_id"
