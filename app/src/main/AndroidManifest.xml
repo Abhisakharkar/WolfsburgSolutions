@@ -22,10 +22,8 @@
             android:theme="@style/SignUpActivityTheme" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/SignInActivityTheme"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/SignInActivityTheme" />
         <activity
             android:name=".ProfileActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -36,15 +34,18 @@
         <activity android:name=".VerificationActivity" />
         <activity android:name=".ShopPhotoActivity" />
         <activity android:name=".LicensePhotoActivity" />
-        <activity android:name=".SplashActivity"
-            android:theme="@style/AppTheme.launcher"
-            android:screenOrientation="portrait">
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".OrdersActivity" />
+        <activity android:name=".ContactUsActivity"></activity>
     </application>
 
 </manifest>

@@ -81,7 +81,6 @@ public class HomeActivity extends AppCompatActivity {
         //TODO if present put all in recyclerview
 
 
-
         //TODO    IMPORTANT
         //every time homeActivity starts, check if profile is complete and is verified
         //if both is done then give access to home
@@ -140,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
         arrayList = new ArrayList<ItemData>();
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        myListAdapter = new ItemsListAdapter(context,arrayList);
+        myListAdapter = new ItemsListAdapter(context, arrayList);
         recyclerView.setAdapter(myListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -164,11 +163,15 @@ public class HomeActivity extends AppCompatActivity {
 
                 } else if (itemId == R.id.home_nav_menu_orders_id) {
 
+                    startActivity(new Intent(HomeActivity.this, OrdersActivity.class));
+
                 } else if (itemId == R.id.home_nav_menu_membership_id) {
 
                 } else if (itemId == R.id.home_nav_menu_advertise_id) {
 
                 } else if (itemId == R.id.home_nav_menu_contact_id) {
+
+                    startActivity(new Intent(HomeActivity.this, ContactUsActivity.class));
 
                 }
 
@@ -258,7 +261,7 @@ public class HomeActivity extends AppCompatActivity {
         arrayList.clear();
         int productsCount = databaseHelper.getProductesCount();
         if (productsCount > 0) {
-            Log.e("all products ...|" , databaseHelper.getAllProducts().get(0).getName() + "| ... " );
+            Log.e("all products ...|", databaseHelper.getAllProducts().get(0).getName() + "| ... ");
             arrayList.addAll(databaseHelper.getAllProducts());
             myListAdapter.notifyDataSetChanged();
         }
