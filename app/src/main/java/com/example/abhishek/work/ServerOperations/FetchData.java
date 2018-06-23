@@ -1,6 +1,7 @@
 package com.example.abhishek.work.ServerOperations;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -22,48 +23,51 @@ public class FetchData {
     private Context context;
     private ServerResponse serverResponse = new ServerResponse();
     private JSONObject reqBody = new JSONObject();
-    private HashMap<String,String> header = new HashMap<>();
+    private HashMap<String, String> header;
 
-    public FetchData(Context context){
+    public FetchData(Context context) {
         this.context = context;
     }
 
-    public void getCategories(){
+    public void getCategories() {
         String url = serverURL + "/magento_get_category";
-        sendRequest(url);
+        header = new HashMap<>();
+        sendRequest(url,header);
     }
 
-    public void getProducts(String name,int id){
+    public void getProducts(String name, int id) {
 
         String url = serverURL + "/magento_product_display";
+        header = new HashMap<>();
+        header.put("Content-Type", "application/json");
+        header.put("name", name);
+        header.put("id_category", String.valueOf(id));
+        sendRequest(url,header);
 
-        try {
-            reqBody.put("name", name);
-            reqBody.put("id_category",id);
-
-            header.put("Content-Type","application/json");
-            header.put("name",name);
-            header.put("id_category",String.valueOf(id));
-            sendRequest(url);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
-    public void getProductDetails(String product_SKU){
+    public void searchProduct(String searchTerm) {
+        String url = serverURL + "/magento_search_product";
+        header = new HashMap<>();
+        header.put("Content-Type", "application/json");
+        header.put("searchTerm",searchTerm);
+        sendRequest(url,header);
+    }
+
+    public void getProductDetails(String product_SKU) {
 
         String url = serverURL + "/magento_info_product";
 
-        //send only this
+        //TODO implement
     }
 
-    private void sendRequest(String url){
+    private void sendRequest(String url,Map<String,String> headers) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST
                 , url
-                , new JSONObject(header)
+                , new JSONObject(headers)
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -73,29 +77,14 @@ public class FetchData {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("VolleyError",error.getMessage().toString());
             }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = header;
-                return params;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "text/plain; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                return reqBody.toString().getBytes();
-            }
-        };
+        });
         requestQueue.add(jsonObjectRequest);
     }
 
 
-    public ServerResponse getServerResponseInstance(){
+    public ServerResponse getServerResponseInstance() {
         return this.serverResponse;
     }
 }

@@ -16,7 +16,9 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -44,6 +46,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ImageView doneImageView;
     private SignInButton googleSignIn_btn;
     private FrameLayout mailCheckLayout;
+    private View loadingLayout;
     private ProgressBar mailCHeckProgressBar;
 
     private String mail = "";
@@ -91,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mailCHeckProgressBar.setVisibility(View.INVISIBLE);
         doneImageView = (ImageView) findViewById(R.id.login_activity_done_imageview_id);
         doneImageView.setVisibility(View.INVISIBLE);
+        loadingLayout = (View) findViewById(R.id.login_activity_loading_layout);
 
         signin_btn.setClickable(false);
         signin_btn.setOnClickListener(this);
@@ -151,8 +156,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 int finalRadiusProgressBar = Math.max(mailCHeckProgressBar.getWidth(), mailCHeckProgressBar.getHeight()) / 2;
                                 Animator animProgressBar = ViewAnimationUtils
                                         .createCircularReveal(mailCHeckProgressBar, px, py, finalRadiusProgressBar, 0);
+                                animProgressBar.setDuration(500);
+                                animProgressBar.start();
                                 mailCHeckProgressBar.setVisibility(View.INVISIBLE);
-
 
                                 //set done view visible
                                 int dx = doneImageView.getMeasuredWidth() / 2;
@@ -160,6 +166,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 int finalRadiusDoneView = Math.max(doneImageView.getWidth(), doneImageView.getHeight()) / 2;
                                 Animator animDoneView = ViewAnimationUtils
                                         .createCircularReveal(doneImageView, dx, dy, 0, finalRadiusDoneView);
+                                animDoneView.setDuration(500);
+                                animDoneView.start();
                                 doneImageView.setVisibility(View.VISIBLE);
 
 
@@ -202,6 +210,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putString("latitude", String.valueOf(retailerDataTableJson.getDouble("latLoc")));
                                         editor.putBoolean("isSignedIn", true);
                                         editor.commit();
+                                        hideLoadingProgressbar();
                                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                         finish();
 
@@ -225,6 +234,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         }
                                         editor.putBoolean("isSignedIn", true);
                                         editor.commit();
+                                        hideLoadingProgressbar();
                                         startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
                                         finish();
                                     }
@@ -237,6 +247,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     editor.putBoolean("isVerified", false);
                                     editor.putBoolean("isSignedIn", true);
                                     editor.commit();
+                                    hideLoadingProgressbar();
                                     startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
                                     finish();
                                 }
@@ -250,6 +261,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         try {
                                             JSONObject tempJsonObject = responseJSONObject.getJSONObject("retailerAuthTable");
                                             int retailerId = tempJsonObject.getInt("retailerId");
+                                            showLoadingProgressbar();
                                             authentication.signInFromThisDevice(retailerId);
                                             dialogInterface.dismiss();
                                         } catch (Exception e) {
@@ -267,11 +279,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                 });
                                 Dialog dialog = builder.create();
+                                hideLoadingProgressbar();
                                 dialog.show();
 
                             }
                         } else {
-                            Toast.makeText(context, "Error in Signing In ! \nTry again later.", Toast.LENGTH_SHORT).show();
+                            hideLoadingProgressbar();
+                            Toast.makeText(context, "Wrong Password !", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -281,7 +295,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
+    }
 
+    private void showLoadingProgressbar() {
+        View btn = signin_btn;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            int btnX = (btn.getLeft() + btn.getRight()) / 2;
+            int btnY = (btn.getTop() + btn.getBottom()) / 2;
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+            int width = displayMetrics.widthPixels;
+
+            int finalRadius = Math.max(height, width);
+
+            Animator animator = ViewAnimationUtils.createCircularReveal(loadingLayout, btnX, btnY, 0, finalRadius);
+            animator.setDuration(300);
+            loadingLayout.setVisibility(View.VISIBLE);
+            animator.start();
+        } else {
+            loadingLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoadingProgressbar() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+            int width = displayMetrics.widthPixels;
+
+            int finalRadius = Math.max(height, width);
+
+            Animator animator = ViewAnimationUtils.createCircularReveal(loadingLayout, (width / 2), (height / 2), finalRadius, 0);
+            animator.setDuration(1000);
+            animator.start();
+            loadingLayout.setVisibility(View.INVISIBLE);
+        } else {
+            loadingLayout.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -291,6 +344,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             password = password_edittext.getText().toString();
             if (!TextUtils.isEmpty(password)) {
                 authentication.signIn(mail, password);
+                showLoadingProgressbar();
             } else {
                 Toast.makeText(this, "Enter password", Toast.LENGTH_SHORT).show();
             }
@@ -304,22 +358,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-        builder.setTitle("Do you want to Exit ?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.create();
-        builder.show();
+        if (loadingLayout.getVisibility() == View.INVISIBLE) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setTitle("Do you want to Exit ?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.create();
+            builder.show();
+        } else if (loadingLayout.getVisibility() == View.VISIBLE) {
+            hideLoadingProgressbar();
+        }
     }
 
     @Override
