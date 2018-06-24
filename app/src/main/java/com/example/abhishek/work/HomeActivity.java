@@ -22,6 +22,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -42,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.ProcessingInstruction;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,18 +80,6 @@ public class HomeActivity extends AppCompatActivity {
         context = HomeActivity.this;
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         authentication = new Authentication(context);
-
-
-        //TODO check if database is present in phone
-        //TODO if not already present then fetch retailer's products database
-        //TODO if present put all in recyclerview
-
-
-        //TODO    IMPORTANT
-        //every time homeActivity starts, check if profile is complete and is verified
-        //if both is done then give access to home
-        //else make user complete profile and verification both
-
 
         //initialize ui components
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayoutId);
@@ -147,9 +137,6 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setAdapter(myListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        //show database data to recycler view
-
-
         //navigation draver implementation
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -176,70 +163,18 @@ public class HomeActivity extends AppCompatActivity {
                 } else if (itemId == R.id.home_nav_menu_contact_id) {
 
                     startActivity(new Intent(HomeActivity.this, ContactUsActivity.class));
-
+                }else if (itemId == R.id.home_nav_menu_logout_id){
+                    clearAppData();
+                    Intent intent = new Intent(HomeActivity.this,LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 }
 
                 return false;
             }
         });
-
-        /*
-        //server response listener
-        authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
-            @Override
-            public void onResponseReceive(JSONObject responseJSONObject) {
-                try {
-                    String response_from = "";
-                    response_from = responseJSONObject.getString("response_from");
-                    if (response_from.equals("check_in")) {
-                        boolean result = responseJSONObject.getBoolean("result");
-                        if (result) {
-                            //account in permanent
-                            //account is verified
-
-                            //now check id profile is complete or not
-                            String email = sharedPreferences.getString("mail", "");
-                            if (!email.isEmpty()) {
-                                authentication.isProfileDataComplete(email);
-                            } else {
-                                Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-
-                        } else {
-                            boolean temp_result = responseJSONObject.getBoolean("temp_result");
-                            if (temp_result) {
-                                //account not verified
-                                //send user to verification activity
-                                Toast.makeText(context, "Please verify your email !", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(HomeActivity.this, VerificationActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        }
-                    } else if (response_from.equals("is_data_filled")) {
-
-                        boolean isDataFilled = responseJSONObject.getBoolean("isDataFilled");
-                        if (isDataFilled) {
-                            //profile is complete
-                        } else {
-                            //profile is not complete
-                            //send user to profile activity
-                            Toast.makeText(context, "Complete your profile !", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        */
 
         //local database
         databaseHelper = new LocalDatabaseHelper(context);
@@ -248,19 +183,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        /*
-        //check if email is verified
-        String mail = sharedPreferences.getString("mail", "");
-        String password = sharedPreferences.getString("password", "");
-        if (!mail.isEmpty() && !password.isEmpty()) {
-            authentication.checkInPermanent(mail, password);
-        } else {
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-        */
 
         arrayList.clear();
         int productsCount = databaseHelper.getProductesCount();
@@ -271,6 +193,39 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    private void clearAppData(){
+        //clearing shared pref data
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        sharedPreferences.edit().clear().commit();
+
+        //clear databases
+        getApplicationContext().deleteDatabase("ProductsData");
+
+        //clear cashe data
+        File cashe = getApplicationContext().getCacheDir();
+        File appDir = new File(cashe.getParent());
+        if (appDir.exists()){
+            String[] appDirChildren = appDir.list();
+            for (String s : appDirChildren){
+                if (!s.equals("lib")){
+                    deleteDir(new File(appDir,s));
+                }
+            }
+        }
+    }
+
+    private boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
 
     @Override
     protected void onResume() {

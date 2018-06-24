@@ -77,7 +77,7 @@ public class FetchData {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("VolleyError",error.getMessage().toString());
+                Log.e("VolleyError",error.getMessage().toString()+"...");
                 serverResponse.saveResponseError(error.getMessage().toString());
             }
         });

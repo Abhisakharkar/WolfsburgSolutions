@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,10 +21,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -42,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,8 +122,8 @@ public class NewCategoryActivity extends AppCompatActivity {
                         }
                         categoriesViewModel.setCategoriesList(list);
                     } else if (responseFrom.equals("magento_search_product")) {
-                        
                         //TODO parse response and make arraylist
+
                         recyclerView.setAdapter(productListAdapter);
                     }
                 } catch (Exception e) {
@@ -173,6 +179,7 @@ public class NewCategoryActivity extends AppCompatActivity {
             searchEdittext.setVisibility(View.VISIBLE);
             searchBtn.setVisibility(View.INVISIBLE);
             showAnimator.start();
+            searchEdittext.requestFocus();
             titleTextView.setVisibility(View.INVISIBLE);
             arrayList.clear();
             adapter.notifyDataSetChanged();
