@@ -20,11 +20,11 @@
         <activity android:name=".HomeActivity" />
         <activity
             android:name=".SignUpActivity"
-            android:theme="@style/SignUpActivityTheme" />
+            android:theme="@style/AppTheme.AuthActivityStyle" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme.AuthActivityStyle"/>
         <activity
             android:name=".ProfileActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />

@@ -30,7 +30,7 @@ public class FetchData {
     }
 
     public void getCategories() {
-        String url = serverURL + "/magento_get_category";
+        String url = serverURL + "/magento_get_categories";
         header = new HashMap<>();
         sendRequest(url,header);
     }
@@ -78,6 +78,7 @@ public class FetchData {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("VolleyError",error.getMessage().toString());
+                serverResponse.saveResponseError(error.getMessage().toString());
             }
         });
         requestQueue.add(jsonObjectRequest);

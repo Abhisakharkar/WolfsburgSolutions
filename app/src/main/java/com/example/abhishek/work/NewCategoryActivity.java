@@ -104,7 +104,7 @@ public class NewCategoryActivity extends AppCompatActivity {
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
                     String responseFrom = responseJSONObject.getString("responseFrom");
-                    if (responseFrom.equals("agento_get_category")) {
+                    if (responseFrom.equals("magento_get_categories")) {
                         ArrayList<CategoryData> list = new ArrayList<>();
                         JSONArray jsonArray = responseJSONObject.getJSONArray("items");
                         for (int i = 0; i < jsonArray.length(); i++) {
@@ -116,12 +116,18 @@ public class NewCategoryActivity extends AppCompatActivity {
                         }
                         categoriesViewModel.setCategoriesList(list);
                     } else if (responseFrom.equals("magento_search_product")) {
+                        
                         //TODO parse response and make arraylist
                         recyclerView.setAdapter(productListAdapter);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
             }
         });
 

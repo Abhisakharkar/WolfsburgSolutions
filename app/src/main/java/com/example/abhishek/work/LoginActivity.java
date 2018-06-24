@@ -122,16 +122,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 } else {
                     signin_btn.setClickable(false);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-                        doneImageView.setVisibility(View.GONE);
-                        mailCHeckProgressBar.setVisibility(View.GONE);
-                        mailCheckLayout.setVisibility(View.GONE);
-                    } else {
-                        doneImageView.setVisibility(View.GONE);
-                        mailCHeckProgressBar.setVisibility(View.GONE);
-                        mailCheckLayout.setVisibility(View.GONE);
-                    }
+                    doneImageView.setVisibility(View.GONE);
+                    mailCHeckProgressBar.setVisibility(View.GONE);
+                    mailCheckLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -178,6 +172,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             }
                         } else {
                             Toast.makeText(context, "Email not registered !", Toast.LENGTH_SHORT).show();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                //set progress bar invisible
+                                int px = mailCHeckProgressBar.getMeasuredWidth() / 2;
+                                int py = mailCHeckProgressBar.getMeasuredHeight() / 2;
+                                int finalRadiusProgressBar = Math.max(mailCHeckProgressBar.getWidth(), mailCHeckProgressBar.getHeight()) / 2;
+                                Animator animProgressBar = ViewAnimationUtils
+                                        .createCircularReveal(mailCHeckProgressBar, px, py, finalRadiusProgressBar, 0);
+                                animProgressBar.setDuration(500);
+                                animProgressBar.start();
+                                mailCHeckProgressBar.setVisibility(View.INVISIBLE);
+                                doneImageView.setVisibility(View.INVISIBLE);
+                                mailCheckLayout.setVisibility(View.GONE);
+                            } else {
+                                doneImageView.setVisibility(View.INVISIBLE);
+                                mailCHeckProgressBar.setVisibility(View.INVISIBLE);
+                                mailCheckLayout.setVisibility(View.GONE);
+                            }
                         }
 
                     } else if (responseFrom.equals("sign_in")) {
@@ -261,9 +272,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         try {
                                             JSONObject tempJsonObject = responseJSONObject.getJSONObject("retailerAuthTable");
                                             int retailerId = tempJsonObject.getInt("retailerId");
-                                            showLoadingProgressbar();
                                             authentication.signInFromThisDevice(retailerId);
                                             dialogInterface.dismiss();
+                                            showLoadingProgressbar();
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -294,8 +305,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+                if (loadingLayout.getVisibility() == View.VISIBLE) {
+                    hideLoadingProgressbar();
+                }
+                //hide mail check progress bar
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    //set progress bar invisible
+                    int px = mailCHeckProgressBar.getMeasuredWidth() / 2;
+                    int py = mailCHeckProgressBar.getMeasuredHeight() / 2;
+                    int finalRadiusProgressBar = Math.max(mailCHeckProgressBar.getWidth(), mailCHeckProgressBar.getHeight()) / 2;
+                    Animator animProgressBar = ViewAnimationUtils
+                            .createCircularReveal(mailCHeckProgressBar, px, py, finalRadiusProgressBar, 0);
+                    animProgressBar.setDuration(500);
+                    animProgressBar.start();
+                    mailCHeckProgressBar.setVisibility(View.INVISIBLE);
+                    mailCheckLayout.setVisibility(View.GONE);
+                } else {
+                    mailCheckLayout.setVisibility(View.GONE);
+                    doneImageView.setVisibility(View.INVISIBLE);
+                    mailCHeckProgressBar.setVisibility(View.INVISIBLE);
+                }
+
+                Toast.makeText(context, "Some Technical Error Occured ! \n Try again later !", Toast.LENGTH_SHORT).show();
+            }
         });
     }
+
 
     private void showLoadingProgressbar() {
         View btn = signin_btn;

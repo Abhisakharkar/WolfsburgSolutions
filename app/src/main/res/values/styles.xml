@@ -15,6 +15,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.AuthActivityStyle">
+        <item name="colorPrimaryDark">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
     <!-- login and sign up Button Style -->
     <style name="AuthButtonStyle">
         <item name="android:gravity">center</item>
@@ -26,59 +31,19 @@
     <style name="AuthEdittextStyle">
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColorHint">@color/colorWhite</item>
     </style>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <style name="AuthButtonStyle.LinkButtonStyle">
+        <item name="android:background">@drawable/background_btn_accent</item>
+    </style>
 
 
     // OLD Styles
 
     // Custom Theme for Sign Up Activity
+
     <style name="SignUpActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -92,6 +57,7 @@
     </style>
 
     // Custom Theme for Sign In Activity
+
     <style name="SignInActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorWhite</item>

@@ -106,6 +106,11 @@ public class VerificationActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
+            }
         });
     }
 

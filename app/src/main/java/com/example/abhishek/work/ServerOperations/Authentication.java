@@ -136,6 +136,7 @@ public class Authentication {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("VolleyResponseError", error.toString());
+                serverResponse.saveResponseError(error.getMessage().toString());
             }
         });
 

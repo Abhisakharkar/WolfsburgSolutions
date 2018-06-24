@@ -101,6 +101,11 @@ public class NewProductActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
+            }
         });
     }
 

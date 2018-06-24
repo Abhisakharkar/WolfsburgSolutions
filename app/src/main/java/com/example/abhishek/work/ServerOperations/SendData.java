@@ -142,6 +142,7 @@ public class SendData {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Response_Error",error.toString());
+                serverResponse.saveResponseError(error.getMessage().toString());
             }
         }){
             @Override

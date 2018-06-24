@@ -217,6 +217,11 @@ public class ProfileActivity extends AppCompatActivity implements
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
+            }
         });
 
 

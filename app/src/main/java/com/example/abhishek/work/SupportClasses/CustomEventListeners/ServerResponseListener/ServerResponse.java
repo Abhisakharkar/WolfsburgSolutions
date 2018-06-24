@@ -16,4 +16,10 @@ public class ServerResponse {
             mOnResponseReceiveListener.onResponseReceive(responseJsonObject);
         }
     }
+
+    public void saveResponseError(String msg){
+        if (mOnResponseReceiveListener != null){
+            mOnResponseReceiveListener.onResponseErrorReceive(msg);
+        }
+    }
 }
