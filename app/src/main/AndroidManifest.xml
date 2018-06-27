@@ -17,7 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".HomeActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".SignUpActivity"
             android:theme="@style/AppTheme.AuthActivityStyle" />
@@ -28,7 +34,8 @@
         <activity
             android:name=".ProfileActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".NewCategoryActivity" />
+        <activity android:name=".NewCategoryActivity" >
+        </activity>
         <activity android:name=".NewProductActivity" />
         <activity android:name=".AddNewProductActivity" />
         <activity android:name=".ProductEditActivity" />
@@ -39,11 +46,7 @@
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".OrdersActivity" />
         <activity android:name=".ContactUsActivity" />

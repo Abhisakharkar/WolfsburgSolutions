@@ -34,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.abhishek.work.Model.CategoriesArraylists;
 import com.example.abhishek.work.Model.ProductData;
 import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.Model.CategoryData;
@@ -51,7 +52,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.abhishek.work.adapters.CategoryListAdapter.CATEGORY_ACTIVITY_CODE;
+
 public class NewCategoryActivity extends AppCompatActivity {
+
+    private int level, parent_id;
 
     private ImageButton searchBtn;
     private EditText searchEdittext;
@@ -69,6 +74,8 @@ public class NewCategoryActivity extends AppCompatActivity {
     private ArrayList<CategoryData> arrayList;
     private JSONArray jsonArray;
 
+    private CategoriesArraylists categoriesArraylists;
+    private String activityCalledFrom = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +95,26 @@ public class NewCategoryActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
+        Intent intent = getIntent();
+        activityCalledFrom = intent.getStringExtra("activityCalledFrom");
+        if (activityCalledFrom != null) {
+            if (activityCalledFrom.equals("categories")) {
+
+                categoriesArraylists = CategoriesArraylists.getInstance();
+                level = intent.getIntExtra("level", 1);
+                parent_id = intent.getIntExtra("parent_id", 0);
+                Log.e("intent data","level "+String.valueOf(level)+" ||| parent "+String.valueOf(parent_id));
+                showListOnUI(level);
+            }else {
+                level = intent.getIntExtra("level", 1);
+                parent_id = intent.getIntExtra("parent_id", 0);
+            }
+        } else {
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        }
+
+
         //For products
         productsList = new ArrayList<>();
         productListAdapter = new ProductListAdapter(NewCategoryActivity.this, productsList);
@@ -98,8 +125,33 @@ public class NewCategoryActivity extends AppCompatActivity {
         categoriesViewModel.getCategories(fetchData).observe(this, new Observer<ArrayList<CategoryData>>() {
             @Override
             public void onChanged(@Nullable ArrayList<CategoryData> categoryData) {
-                arrayList.addAll(categoryData);
-                adapter.notifyDataSetChanged();
+                //arrayList.addAll(categoryData);
+                categoriesArraylists = CategoriesArraylists.getInstance();
+                ArrayList<CategoryData> level1List = new ArrayList<>();
+                ArrayList<CategoryData> level2List = new ArrayList<>();
+                ArrayList<CategoryData> level3List = new ArrayList<>();
+                for (int i = 0; i < categoryData.size(); i++) {
+                    switch (categoryData.get(i).getLevel()) {
+                        case 1:
+                            level1List.add(categoryData.get(i));
+                            break;
+                        case 2:
+                            level2List.add(categoryData.get(i));
+                            break;
+                        case 3:
+                            level3List.add(categoryData.get(i));
+                            break;
+                    }
+                }
+
+                for (int s = 0;s< level1List.size();s++ ){
+                    Log.e("level1 "+String.valueOf(s),level1List.get(s).getName().toString()+"|...");
+                }
+
+                categoriesArraylists.setCategoriesLevel1ArrayList(level1List);
+                categoriesArraylists.setCategoriesLevel2ArrayList(level2List);
+                categoriesArraylists.setCategoriesLevel3ArrayList(level3List);
+                showListOnUI(level);
             }
         });
 
@@ -118,6 +170,25 @@ public class NewCategoryActivity extends AppCompatActivity {
                             CategoryData categoryData = new CategoryData();
                             categoryData.setName(j.getString("name"));
                             categoryData.setId(j.getInt("id"));
+
+
+                            String children = j.getString("children");
+                            if (!children.isEmpty()) {
+                                String[] tokens = children.split(",");
+                                int[] numbers = new int[tokens.length];
+                                for (int k = 0; k < tokens.length; k++) {
+                                    numbers[k] = Integer.parseInt(tokens[k]);
+                                }
+                                categoryData.setChildren(numbers);
+                            }else {
+                                categoryData.setChildren(null);
+                            }
+
+
+
+                            categoryData.setLevel(j.getInt("level"));
+                            categoryData.setParent_id(j.getInt("parent_id"));
+
                             list.add(categoryData);
                         }
                         categoriesViewModel.setCategoriesList(list);
@@ -157,6 +228,45 @@ public class NewCategoryActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CATEGORY_ACTIVITY_CODE){
+            Log.e("called 1","");
+        }
+        Log.e("Called 2","");
+    }
+
+    private void showListOnUI(int level){
+        switch (level) {
+            case 1:
+                arrayList.removeAll(arrayList);
+                arrayList.addAll(categoriesArraylists.getCategoriesLevel1ArrayList());
+                adapter.notifyDataSetChanged();
+                break;
+            case 2:
+                arrayList.removeAll(arrayList);
+                ArrayList<CategoryData> tempArrayList = categoriesArraylists.getCategoriesLevel2ArrayList();
+                for (int i = 0; i < tempArrayList.size(); i++) {
+                    if (parent_id == tempArrayList.get(i).getParent_id()) {
+                        arrayList.add(tempArrayList.get(i));
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                break;
+            case 3:
+                arrayList.removeAll(arrayList);
+                ArrayList<CategoryData> tempArrayList2 = categoriesArraylists.getCategoriesLevel3ArrayList();
+                for (int i = 0; i < tempArrayList2.size(); i++) {
+                    if (parent_id == tempArrayList2.get(i).getParent_id()) {
+                        arrayList.add(tempArrayList2.get(i));
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                break;
+        }
     }
 
     private void performSearch() {
@@ -235,7 +345,30 @@ public class NewCategoryActivity extends AppCompatActivity {
             productListAdapter.notifyDataSetChanged();
             recyclerView.setAdapter(adapter);
         } else {
-            super.onBackPressed();
+            if (activityCalledFrom != null) {
+                if (activityCalledFrom.equals("categories")) {
+                    Intent returnIntent = new Intent();
+                    setResult(RESULT_OK);
+                    finish();
+                    /*
+                    CategoriesArraylists tempListObj = CategoriesArraylists.getInstance();
+                    if (level == 2){
+                        returnIntent.putExtra("activityCalledFrom","categories");
+                        returnIntent.putExtra("parent_id",0);
+                        returnIntent.putExtra("level",1);
+                        setResult(RESULT_OK,returnIntent);
+                        finish();
+                    }else if (level == 3){
+                        returnIntent.putExtra("activityCalledFrom","categories");
+                        returnIntent.putExtra("parent_id",0);
+                        returnIntent.putExtra("level",1);
+                        setResult(RESULT_OK,returnIntent);
+                    }
+                    */
+                } else {
+                    super.onBackPressed();
+                }
+            }
         }
     }
 

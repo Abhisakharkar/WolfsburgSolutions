@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -77,10 +78,38 @@ public class FetchData {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("VolleyError",error.getMessage().toString()+"...");
-                serverResponse.saveResponseError(error.getMessage().toString());
+                //Log.e("VolleyError",error.getMessage().toString()+"...");
+                error.printStackTrace();
+                //serverResponse.saveResponseError(error.getMessage().toString() + "|...");
             }
-        });
+        })
+        /*
+        {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+
+                String SET_COOKIE_KEY = "Set-Cookie";
+                String SESSION_COOKIE = "sessionid";
+
+                Map<String,String> headers = response.headers;
+
+                if (headers.containsKey(SET_COOKIE_KEY)
+                        && headers.get(SET_COOKIE_KEY).startsWith(SESSION_COOKIE)) {
+                    String cookie = headers.get(SET_COOKIE_KEY);
+                    if (cookie.length() > 0) {
+                        String[] splitCookie = cookie.split(";");
+                        String[] splitSessionId = splitCookie[0].split("=");
+                        cookie = splitSessionId[1];
+
+                        Log.e("Session Cookie", cookie);
+                    }
+                }
+
+                return super.parseNetworkResponse(response);
+            }
+        }
+        */
+        ;
         requestQueue.add(jsonObjectRequest);
     }
 

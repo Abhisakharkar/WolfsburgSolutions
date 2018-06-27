@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -41,14 +42,14 @@ public class Authentication {
         return serverResponse;
     }
 
-    public void checkEmailExists(String mail){
+    public void checkEmailExists(String mail) {
         headers = new HashMap<>();
-        headers.put("mail",mail);
+        headers.put("mail", mail);
         String url = serverUrl + "/check_mail_exist";
-        sendRequestNew(url,headers);
+        sendRequestNew(url, headers);
     }
 
-    public void signUpNew(String mail,String password){
+    public void signUpNew(String mail, String password) {
         //subSciptionDateTime (current date and time)
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String dateTime = simpleDateFormat.format(Calendar.getInstance().getTime());
@@ -57,46 +58,46 @@ public class Authentication {
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         headers = new HashMap<>();
-        headers.put("mail",mail);
-        headers.put("password",password);
-        headers.put("subscriptionDateTime",dateTime);
-        headers.put("deviceId",deviceId);
+        headers.put("mail", mail);
+        headers.put("password", password);
+        headers.put("subscriptionDateTime", dateTime);
+        headers.put("deviceId", deviceId);
 
         String url = serverUrl + "/sign_up";
-        sendRequestNew(url,headers);
+        sendRequestNew(url, headers);
     }
 
-    public void signIn(String mail,String password){
+    public void signIn(String mail, String password) {
         headers = new HashMap<>();
-        headers.put("mail",mail);
-        headers.put("password",password);
+        headers.put("mail", mail);
+        headers.put("password", password);
 
         String url = serverUrl + "/sign_in";
-        sendRequestNew(url,headers);
+        sendRequestNew(url, headers);
     }
 
-    public void signInFromThisDevice(int retailerId){
+    public void signInFromThisDevice(int retailerId) {
         headers = new HashMap<>();
-        headers.put("retailerId",String.valueOf(retailerId));
+        headers.put("retailerId", String.valueOf(retailerId));
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        headers.put("deviceId",deviceId);
+        headers.put("deviceId", deviceId);
 
         String url = serverUrl + "/update_device_id";
-        sendRequestNew(url,headers);
+        sendRequestNew(url, headers);
     }
 
-    public void sendVerificationCode(String code,String mail,String password){
+    public void sendVerificationCode(String code, String mail, String password) {
         headers = new HashMap<>();
-        headers.put("mail",mail);
-        headers.put("password",password);
-        headers.put("code",code);
+        headers.put("mail", mail);
+        headers.put("password", password);
+        headers.put("code", code);
 
         String url = serverUrl + "/verify_mail";
-        sendRequestNew(url,headers);
+        sendRequestNew(url, headers);
     }
 
     public void updateProfile(String mail, String password, String proprietor, String shopName, String mobileNo
-            , double longitude, double latitude,String address
+            , double longitude, double latitude, String address
             , String cityName, String stateName, String countryName) {
 
         headers = new HashMap<>();
@@ -104,17 +105,17 @@ public class Authentication {
         headers.put("enterpriseName", shopName);
         headers.put("proprietor", proprietor);
         headers.put("mobileNo", mobileNo);
-        headers.put("mail",mail);
-        headers.put("password",password);
+        headers.put("mail", mail);
+        headers.put("password", password);
         headers.put("latLoc", String.valueOf(latitude));
         headers.put("longLoc", String.valueOf(longitude));
-        headers.put("address", address);    
+        headers.put("address", address);
         headers.put("city", cityName);
         headers.put("state", stateName);
         headers.put("country", countryName);
 
         String url = serverUrl + "/update_retailer_profile_data";
-        sendRequestNew(url,headers);
+        sendRequestNew(url, headers);
     }
 
     private void sendRequestNew(String url, Map<String, String> headers) {
@@ -127,7 +128,9 @@ public class Authentication {
                 Log.e("sendRequest Response", response.toString());
                 try {
                     //responseJSONObject = new JSONObject(response);
-                    serverResponse.saveResponse(response);
+
+
+                    //serverResponse.saveResponse(response);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -161,7 +164,7 @@ public class Authentication {
 
         headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
-        headers.put("retailerId",String.valueOf(retailerID));
+        headers.put("retailerId", String.valueOf(retailerID));
         headers.put("enterpriseName", shopName);
         headers.put("propritor", proprietor);
         headers.put("contactNo", mobileNo);
@@ -187,7 +190,7 @@ public class Authentication {
             jsonObject = new JSONObject();
             jsonObject.put("enterpriseName", shopName);
             jsonObject.put("propritor", proprietor);
-            jsonObject.put("retailerId",retailerID);
+            jsonObject.put("retailerId", retailerID);
             jsonObject.put("contactNo", mobileNo);
             jsonObject.put("profilePhoto", "");
             jsonObject.put("latLocation", String.valueOf(latitude));
@@ -246,7 +249,7 @@ public class Authentication {
         headers.put("propritor", "");
         headers.put("contactNo", "0");
         headers.put("profilePhoto", "");
-        headers.put("retailerId","1675");
+        headers.put("retailerId", "1675");
         headers.put("latLocation", "0.0");
         headers.put("longLocation", "0.0");
         headers.put("address", "");
@@ -273,7 +276,7 @@ public class Authentication {
             jsonObject.put("password", password.toString());
             jsonObject.put("enterpriseName", "");
             jsonObject.put("propritor", "");
-            jsonObject.put("retailerId","1001");
+            jsonObject.put("retailerId", "1001");
             jsonObject.put("contactNo", "0");
             jsonObject.put("profilePhoto", "");
             jsonObject.put("latLocation", "0.0");
@@ -341,12 +344,12 @@ public class Authentication {
     }
 
     //send verification code from email to server to complete verification
-    public void sendVerificationCode(int code,String mail,String password) {
+    public void sendVerificationCode(int code, String mail, String password) {
 
         headers = new HashMap<>();
         headers.put("code", String.valueOf(code));
-        headers.put("mail",mail);
-        headers.put("password",password);
+        headers.put("mail", mail);
+        headers.put("password", password);
         headers.put("Content-Type", "application/json");
         try {
             databaseURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/verifiication_complete";
@@ -382,7 +385,7 @@ public class Authentication {
                     //temp
                     JSONObject j = new JSONObject();
                     j = response;
-                    Log.e("j",j.toString());
+                    Log.e("j", j.toString());
 
                     //responseJSONObject = new JSONObject(response);
                     serverResponse.saveResponse(response);
@@ -393,7 +396,7 @@ public class Authentication {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Response_Error",databaseURL + " : " + error.toString());
+                Log.e("Response_Error", databaseURL + " : " + error.toString());
             }
         });
 

@@ -1,243 +1,416 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context="com.example.abhishek.work.ProfileActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.abhishek.work.ProfileActivity">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_id"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentTop="true"
-            android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:id="@+id/profile_activity_shop_imageview_id"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/colorGreen"
+                app:layout_constraintDimensionRatio="H,16:9"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_activity_dp_imageview_id"
+                android:layout_width="144dp"
+                android:layout_height="144dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/temp_img"
+                app:civ_border_color="@color/colorWhite"
+                app:civ_border_width="2dp"
+                app:layout_constraintBottom_toBottomOf="@id/profile_activity_shop_imageview_id"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_shop_imageview_id" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/profile_activity_proprietor_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_dp_imageview_id">
+
+                <EditText
+                    android:id="@+id/profile_activity_proprietor_edittext_id"
+                    style="@style/ProfileEdittextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="proprietor" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/profile_activity_mobile_no_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_proprietor_layout_id">
+
+                <EditText
+                    android:id="@+id/profile_activity_mobile_no_edittext_id"
+                    style="@style/ProfileEdittextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="mobile no" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/profile_activity_shop_name_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_mobile_no_layout_id">
+
+                <EditText
+                    android:id="@+id/profile_activity_shop_name_edittext_id"
+                    style="@style/ProfileEdittextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Shop Name" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/profile_activity_addline_1_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_shop_name_layout_id">
+
+                <EditText
+                    android:id="@+id/profile_activity_addline_1_edittext_id"
+                    style="@style/ProfileEdittextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Address Line 1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/profile_activity_addline_2_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_addline_1_layout_id">
+
+                <EditText
+                    android:id="@+id/profile_activity_addline_2_edittext_id"
+                    style="@style/ProfileEdittextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Address Line 2" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <!--
+            <EditText
+                android:id="@+id/profile_activity_proprietor_edittext_id"
+                style="@style/ProfileEdittextStyle"
+                android:hint="Proprietor"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_dp_imageview_id" />
+
+            <EditText
+                android:id="@+id/profile_activity_mobile_no_edittext_id"
+                style="@style/ProfileEdittextStyle"
+                android:hint="Mobile No"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_proprietor_edittext_id" />
+
+            <EditText
+                android:id="@+id/profile_activity_shop_name_edittext_id"
+                style="@style/ProfileEdittextStyle"
+                android:hint="Shop Name"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_mobile_no_edittext_id" />
+
+            <EditText
+                android:id="@+id/profile_activity_add_line_1_id"
+                style="@style/ProfileEdittextStyle"
+                android:hint="Address Line 1"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_shop_name_edittext_id" />
+
+            <EditText
+                android:id="@+id/profile_activity_address_line_2_id"
+                style="@style/ProfileEdittextStyle"
+                android:hint="Address Line 2"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_add_line_1_id" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/profile_activity_license_photo_imageview_id"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorBlack"
+                app:layout_constraintDimensionRatio="H,9:16"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profile_activity_address_line_2_id"
+                app:riv_corner_radius="30dp" />
+-->
+        </android.support.constraint.ConstraintLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/constraint_layout"
+            android:visibility="invisible">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_id"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="32sp" />
+
+            </android.support.v7.widget.Toolbar>
+
+            <ImageButton
+                android:id="@+id/pro_pic_btn_id"
+                android:layout_width="144dp"
+                android:layout_height="144dp"
+                android:layout_below="@id/toolbar_id"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#888"
+                android:src="@drawable/nav_header_pro_pic" />
+
+            <EditText
+                android:id="@+id/proprieter_edittext_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pro_pic_btn_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:hint="Proprieter"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
+
+            <EditText
+                android:id="@+id/mob_no_edittext_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/proprieter_edittext_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:hint="Mobile Number"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/shop_details_textview_id"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Profile"
-                android:textColor="@color/colorWhite"
+                android:layout_below="@id/mob_no_edittext_id"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="Shop Details"
                 android:textSize="32sp" />
 
-        </android.support.v7.widget.Toolbar>
+            <EditText
+                android:id="@+id/shop_name_edittext_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shop_details_textview_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:hint="Enterprise Name"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
 
-        <ImageButton
-            android:id="@+id/pro_pic_btn_id"
-            android:layout_width="144dp"
-            android:layout_height="144dp"
-            android:layout_below="@id/toolbar_id"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#888"
-            android:src="@drawable/nav_header_pro_pic" />
+            <Spinner
+                android:id="@+id/shop_category_spinner_id"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_below="@id/shop_name_edittext_id"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:entries="@array/shop_category" />
 
-        <EditText
-            android:id="@+id/proprieter_edittext_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pro_pic_btn_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Proprieter"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
+            <EditText
+                android:id="@+id/shop_address_edittext_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shop_category_spinner_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:hint="Shop Address"
+                android:inputType="textMultiLine"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
 
-        <EditText
-            android:id="@+id/mob_no_edittext_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/proprieter_edittext_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Mobile Number"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <TextView
-            android:id="@+id/shop_details_textview_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mob_no_edittext_id"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:text="Shop Details"
-            android:textSize="32sp" />
-
-        <EditText
-            android:id="@+id/shop_name_edittext_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/shop_details_textview_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Enterprise Name"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <Spinner
-            android:id="@+id/shop_category_spinner_id"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_below="@id/shop_name_edittext_id"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:entries="@array/shop_category" />
-
-        <EditText
-            android:id="@+id/shop_address_edittext_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/shop_category_spinner_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:hint="Shop Address"
-            android:inputType="textMultiLine"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp" />
-
-        <Button
-            android:id="@+id/shop_location_btn_id"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_below="@id/shop_address_edittext_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorWhite"
-            android:elevation="5dp"
-            android:text="Set Shop Location" />
+            <Button
+                android:id="@+id/shop_location_btn_id"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_below="@id/shop_address_edittext_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorWhite"
+                android:elevation="5dp"
+                android:text="Set Shop Location" />
 
 
-        <View
-            android:id="@+id/profile_activity_divider_line_1_id"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@id/shop_location_btn_id"
-            android:layout_marginTop="16dp"
-            android:background="#dfdfdf" />
+            <View
+                android:id="@+id/profile_activity_divider_line_1_id"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/shop_location_btn_id"
+                android:layout_marginTop="16dp"
+                android:background="#dfdfdf" />
 
-        <TextView
-            android:id="@+id/profile_activity_shop_photo_textview_id"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_below="@id/profile_activity_divider_line_1_id"
-            android:gravity="center"
-            android:text="Save Shop Photo"
-            android:textSize="24dp" />
+            <TextView
+                android:id="@+id/profile_activity_shoplicensephoto_title_textview_id"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_below="@id/profile_activity_divider_line_1_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:gravity="center"
+                android:text="Shop License Photo"
+                android:textSize="24dp" />
 
-        <View
-            android:id="@+id/profile_activity_divider_line_2_id"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@id/profile_activity_shop_photo_textview_id"
-            android:background="#dfdfdf" />
+            <TextView
+                android:id="@+id/profile_activity_shop_photo_textview_id"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_below="@id/profile_activity_shoplicensephoto_title_textview_id"
+                android:gravity="center"
+                android:text="Save Shop Photo"
+                android:textSize="24dp" />
 
-        <TextView
-            android:id="@+id/profile_activity_shop_license_photo_textview_id"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_below="@id/profile_activity_divider_line_2_id"
-            android:gravity="center"
-            android:text="Save Shop License Photo"
-            android:textSize="24dp" />
+            <View
+                android:id="@+id/profile_activity_divider_line_2_id"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/profile_activity_shop_photo_textview_id"
+                android:background="#dfdfdf" />
 
-        <View
-            android:id="@+id/profile_activity_divider_line_3_id"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@id/profile_activity_shop_license_photo_textview_id"
-            android:background="#dfdfdf" />
+            <TextView
+                android:id="@+id/profile_activity_shop_license_photo_textview_id"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_below="@id/profile_activity_divider_line_2_id"
+                android:gravity="center"
+                android:text="Save Shop License Photo"
+                android:textSize="24dp" />
 
-        <Button
-            android:id="@+id/save_profile_btn_id"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_below="@id/profile_activity_divider_line_3_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:elevation="5dp"
-            android:text="Save Profile"
-            android:textColor="@color/colorWhite" />
+            <View
+                android:id="@+id/profile_activity_divider_line_3_id"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/profile_activity_shop_license_photo_textview_id"
+                android:background="#dfdfdf" />
 
-        <!--
+            <Button
+                android:id="@+id/save_profile_btn_id"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_below="@id/profile_activity_divider_line_3_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:text="Save Profile"
+                android:textColor="@color/colorWhite" />
 
-        <ImageView
-            android:id="@+id/shop_pic_view_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/shop_location_btn_id"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#888"
-            android:src="@drawable/nav_header_pro_pic"
-            android:visibility="gone" />
+            <!--
 
-        <Button
-            android:id="@+id/shop_photo_btn_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/shop_pic_view_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorWhite"
-            android:elevation="5dp"
-            android:text="Save Shop Photo" />
+            <ImageView
+                android:id="@+id/shop_pic_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shop_location_btn_id"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#888"
+                android:src="@drawable/nav_header_pro_pic"
+                android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/shop_license_pic_view_id"
-            android:layout_width="wrap_content"
-            android:layout_height="144dp"
-            android:layout_below="@id/shop_photo_btn_id"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#888"
-            android:scaleType="center"
-            android:src="@drawable/nav_header_pro_pic" />
+            <Button
+                android:id="@+id/shop_photo_btn_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shop_pic_view_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorWhite"
+                android:elevation="5dp"
+                android:text="Save Shop Photo" />
 
-        <Button
-            android:id="@+id/shop_license_photo_btn_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/shop_license_pic_view_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorWhite"
-            android:elevation="5dp"
-            android:text="Save Shop Act License Photo" />
+            <ImageView
+                android:id="@+id/shop_license_pic_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="144dp"
+                android:layout_below="@id/shop_photo_btn_id"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#888"
+                android:scaleType="center"
+                android:src="@drawable/nav_header_pro_pic" />
 
-        <Button
-            android:id="@+id/save_profile_btn_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/shop_license_photo_btn_id"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:elevation="5dp"
-            android:text="Save Profile"
-            android:textColor="@color/colorWhite" />
-            -->
+            <Button
+                android:id="@+id/shop_license_photo_btn_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shop_license_pic_view_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorWhite"
+                android:elevation="5dp"
+                android:text="Save Shop Act License Photo" />
+
+            <Button
+                android:id="@+id/save_profile_btn_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shop_license_photo_btn_id"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="5dp"
+                android:text="Save Profile"
+                android:textColor="@color/colorWhite" />
+                -->
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

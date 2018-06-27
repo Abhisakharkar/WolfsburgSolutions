@@ -1,5 +1,6 @@
 package com.example.abhishek.work.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.abhishek.work.Model.CategoryData;
+import com.example.abhishek.work.NewCategoryActivity;
 import com.example.abhishek.work.NewProductActivity;
 import com.example.abhishek.work.R;
 
@@ -18,6 +20,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     private Context context;
     private ArrayList<CategoryData> arrayList = new ArrayList<>();
+    public static final int CATEGORY_ACTIVITY_CODE = 102;
 
     public CategoryListAdapter(Context context,ArrayList<CategoryData> arrayList){
         this.arrayList = arrayList;
@@ -37,10 +40,32 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         holder.nameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,NewProductActivity.class);
-                intent.putExtra("name",arrayList.get(position).getName());
-                intent.putExtra("id",arrayList.get(position).getId());
-                context.startActivity(intent);
+
+                int[] children = arrayList.get(position).getChildren();
+                if (children == null){
+                    Intent intent = new Intent(context,NewProductActivity.class);
+                    intent.putExtra("name",arrayList.get(position).getName());
+                    intent.putExtra("id",arrayList.get(position).getId());
+                    context.startActivity(intent);
+                }else {
+                    int id = arrayList.get(position).getId();
+                    int level = arrayList.get(position).getLevel();
+                    if (level <= 3) {
+                        Intent intent = new Intent(context, NewCategoryActivity.class);
+                        intent.putExtra("activityCalledFrom", "categories");
+                        intent.putExtra("level", level + 1);
+                        intent.putExtra("parent_id",id);
+                        ((Activity)context).startActivityForResult(intent,CATEGORY_ACTIVITY_CODE);
+                        //context.startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(context, NewCategoryActivity.class);
+                        intent.putExtra("activityCalledFrom", "categories");
+                        intent.putExtra("level", level + 1);
+                        intent.putExtra("parent_id",id);
+                        ((Activity)context).startActivityForResult(intent,CATEGORY_ACTIVITY_CODE);
+                        //context.startActivity(intent);
+                    }
+                }
             }
         });
     }

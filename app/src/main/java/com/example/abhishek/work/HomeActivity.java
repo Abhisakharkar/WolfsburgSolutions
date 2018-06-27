@@ -126,7 +126,11 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this, NewCategoryActivity.class));
+                Intent intent = new Intent(HomeActivity.this, NewCategoryActivity.class);
+                intent.putExtra("activityCalledFrom","home");
+                intent.putExtra("level",1);
+                intent.putExtra("parent_id",0);
+                startActivity(intent);
             }
         });
 

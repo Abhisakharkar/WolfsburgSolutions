@@ -35,10 +35,22 @@
         <item name="android:textColorHint">@color/colorWhite</item>
     </style>
 
+    <style name="ProfileEdittextStyle">
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24dp</item>
+    </style>
+
     <style name="AuthButtonStyle.LinkButtonStyle">
         <item name="android:background">@drawable/background_btn_accent</item>
     </style>
-
 
 
     // OLD Styles
