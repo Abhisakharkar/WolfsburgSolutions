@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.abhishek.work.Model.ProductData;
 import com.example.abhishek.work.NewProductActivity;
+import com.example.abhishek.work.ProductDetailsActivity;
 import com.example.abhishek.work.ProductEditActivity;
 import com.example.abhishek.work.R;
 
@@ -51,7 +52,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             @Override
             public void onClick(View view) {
                 //TODO send request to magento_get_attribute_group with attribute_set_id
-
+                int attributeSetId = arrayList.get(position).getAttribute_set_id();
+                Intent intent = new Intent(context, ProductDetailsActivity.class);
+                intent.putExtra("attributeSetId",attributeSetId);
+                context.startActivity(intent);
             }
         });
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
@@ -66,15 +70,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                 intent.putExtra("price", arrayList.get(position).getPrice());
                 intent.putExtra("photo",arrayList.get(position).getPhoto());
                 context.startActivity(intent);
-
-
-                //do all of this in next activity
-                //
-                //TODO add product to local database
-                //TODO add to database at server
-                //return of server
-                // --> result:boolean
-                //if false  --> retry
             }
         });
     }

@@ -63,7 +63,7 @@ public class VerificationActivity extends AppCompatActivity {
                 code = Integer.parseInt(codeEdittext.getText().toString());
                 if ( code != 0 ) {
                     if (!mail.isEmpty() && !password.isEmpty()) {
-                        authentication.sendVerificationCode(String.valueOf(code) , mail, password);
+                        authentication.sendVerificationCode(String.valueOf(code));
                         Log.e("code sent to server","");
                     }else {
                         Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
@@ -82,10 +82,7 @@ public class VerificationActivity extends AppCompatActivity {
 
                     JSONObject retailerData = responseJSONObject.getJSONObject("retailerAuthTable");
                     int isDataFilled = retailerData.getInt("mandatoryData");
-
                     editor.putInt("retailerId",retailerData.getInt("retailerId"));
-                    editor.putString("mail",retailerData.getString("mail"));
-                    editor.putString("password",retailerData.getString("password"));
                     boolean isVerified = retailerData.getInt("codeVerified") == 1 ? true : false;
                     editor.putBoolean("isVerified",isVerified);
                     editor.commit();

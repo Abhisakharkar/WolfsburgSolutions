@@ -1,6 +1,7 @@
 package com.example.abhishek.work.ServerOperations;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -101,6 +102,8 @@ public class SendData {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = header;
+                SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
+                params.put("token", sharedPreferences.getString("token", ""));
                 return params;
             }
 

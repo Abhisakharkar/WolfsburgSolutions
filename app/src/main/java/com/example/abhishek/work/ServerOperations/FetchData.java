@@ -1,6 +1,7 @@
 package com.example.abhishek.work.ServerOperations;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -55,11 +56,20 @@ public class FetchData {
         sendRequest(url,header);
     }
 
-    public void getProductDetails(String product_SKU) {
+    public void getProductDetails(int attributeSetId) {
 
-        String url = serverURL + "/magento_info_product";
+        String url = serverURL + "/magento_get_attribute_with_group";
 
-        //TODO implement
+        header.put("attributeSetId",String.valueOf(attributeSetId));
+        header.put("Content-Type", "application/json");
+
+        sendRequest(url,header);
+
+    }
+
+    public void getSubLocality(int localityId){
+        header = new HashMap<>();
+        header.put("localityId","0");
     }
 
     private void sendRequest(String url,Map<String,String> headers) {
@@ -83,6 +93,17 @@ public class FetchData {
                 //serverResponse.saveResponseError(error.getMessage().toString() + "|...");
             }
         })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                HashMap<String, String> header = new HashMap<>();
+                SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
+                header.put("token", sharedPreferences.getString("token", ""));
+
+                return header;
+            }
+        }
         /*
         {
             @Override

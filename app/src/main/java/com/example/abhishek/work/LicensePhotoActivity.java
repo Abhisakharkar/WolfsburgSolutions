@@ -1,5 +1,6 @@
 package com.example.abhishek.work;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +46,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
     private Context context;
     private ImageView licenseImageview;
     private Button saveImageBtn, editImageBtn;
+    private Uri imageUri;
 
     private String photoName;
     private SharedPreferences sharedPreferences;
@@ -160,6 +162,7 @@ public class LicensePhotoActivity extends AppCompatActivity {
 
     private void getImage(int option) {
         if (option == 0) {
+            /*
             Intent captureImageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
             //make sure there is camera activity to capture image
@@ -167,6 +170,15 @@ public class LicensePhotoActivity extends AppCompatActivity {
 
                 startActivityForResult(captureImageIntent, CAMERA_REQ_CODE);
             }
+            */
+            ContentValues cv = new ContentValues();
+            cv.put(MediaStore.Images.Media.TITLE, "My Picture");
+            cv.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+            imageUri = getContentResolver().insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            startActivityForResult(intent, 1055);
         } else if (option == 1) {
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_REQ_CODE);
@@ -229,8 +241,13 @@ public class LicensePhotoActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQ_CODE) {
 
             if (resultCode == RESULT_OK) {
-                photoBitmap = (Bitmap) data.getExtras().get("data");
-
+                //photoBitmap = (Bitmap) data.getExtras().get("data");
+                try {
+                    Bitmap thumbnail = MediaStore.Images.Media.getBitmap(
+                            getContentResolver(), imageUri);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 //set bitmap image to imageView
                 licenseImageview.setImageBitmap(photoBitmap);
             }

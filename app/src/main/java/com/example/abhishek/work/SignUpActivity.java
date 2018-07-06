@@ -161,10 +161,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             if (signUpSuccessStatus) {
                                 //signup successfull
                                 editor.putBoolean("isDataFilled", false);
-                                editor.putString("mail", email);
+                                editor.putString("token",responseJSONObject.getString("token"));
                                 editor.putBoolean("isVerified", false);
                                 editor.putBoolean("isSignedIn", true);
-                                editor.putString("password", password);
                                 editor.commit();
                                 hideLoadingProgressbar();
                                 startActivity(new Intent(SignUpActivity.this, VerificationActivity.class));

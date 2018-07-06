@@ -2,6 +2,7 @@ package com.example.abhishek.work;
 
 import android.animation.Animator;
 import android.app.Dialog;
+import android.app.IntentService;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.abhishek.work.IntentServices.ImageDownloadIntentService;
 import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 import com.example.abhishek.work.SupportClasses.NetworkStatusChecker;
@@ -50,6 +52,9 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Iterator;
+
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -194,9 +199,147 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     } else if (responseFrom.equals("sign_in")) {
                         boolean signIn = responseJSONObject.getBoolean("signIn");
                         if (signIn) {
+
+                            editor.putString("token", responseJSONObject.getString("token"));
+
                             JSONObject retailerAuthTableJson = responseJSONObject.getJSONObject("retailerAuthTable");
                             JSONObject retailerDataTableJson = responseJSONObject.getJSONObject("retailerDataTable");
 
+                            String deviceId = retailerAuthTableJson.getString("deviceId");
+                            if (deviceId.equals(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))) {
+                                int isVerified = retailerAuthTableJson.getInt("codeVerified");
+                                if (isVerified == 1) {
+                                    int isDataFilled = retailerAuthTableJson.getInt("mandatoryData");
+                                    if (isDataFilled == 1) {
+                                        editor.putBoolean("isDataFilled", true);
+                                        editor.putBoolean("isVerified", true);
+                                        //retailer auth table
+                                        editor.putInt("retailerId", retailerAuthTableJson.getInt("retailerId"));
+                                        editor.putString("shopActPhoto", retailerAuthTableJson.getString("shopActPhoto"));
+                                        editor.putString("shopActLicenseNo", retailerAuthTableJson.getString("shopActLicenseNo"));
+                                        //retailer data table
+                                        editor.putString("shopName", retailerDataTableJson.getString("enterpriseName"));
+                                        editor.putString("proprietor", retailerDataTableJson.getString("proprietor"));
+                                        editor.putString("mobileNo", retailerDataTableJson.getString("mobileNo"));
+                                        editor.putString("addLine1", retailerDataTableJson.getString("addLine1"));
+                                        editor.putInt("subLocality1Id", retailerDataTableJson.getInt("subLocality1Id"));
+                                        editor.putInt("localityId", retailerDataTableJson.getInt("localityId"));
+                                        if (!retailerDataTableJson.getBoolean("openCloseIsManual")) {
+                                            editor.putInt("deliveryStatus", retailerDataTableJson.getInt("deliveryStatus"));
+                                            editor.putInt("maxDeliveryDistanceInMeters", retailerDataTableJson.getInt("maxDeliveryDistanceInMeters"));
+                                            editor.putInt("maxFreeDeliveryDistanceInMeters", retailerDataTableJson.getInt("maxFreeDeliveryDistanceInMeters"));
+                                            editor.putInt("chargePerHalfKiloMeterForDelivery", retailerDataTableJson.getInt("chargePerHalfKiloMeterForDelivery"));
+                                            editor.putInt("minAmountForFreeDelivery", retailerDataTableJson.getInt("minAmountForFreeDelivery"));
+                                            editor.putBoolean("openCloseIsManual", retailerDataTableJson.getBoolean("openCloseIsManual"));
+                                            if (retailerDataTableJson.getString("shopOpenTime1") != null) {
+                                                editor.putString("shopOpenTime1", retailerDataTableJson.getString("shopOpenTime1"));
+                                                editor.putString("shopCloseTime1", retailerDataTableJson.getString("shopCloseTime1"));
+                                            }
+                                            if (retailerDataTableJson.getString("shopOpenTime2") != null) {
+                                                editor.putString("shopOpenTime2", retailerDataTableJson.getString("shopOpenTime2"));
+                                                editor.putString("shopCloseTime2", retailerDataTableJson.getString("shopCloseTime2"));
+                                            }
+                                            editor.putBoolean("currentState", retailerDataTableJson.getBoolean("currentState"));
+                                            if (retailerDataTableJson.getString("shopPhoto") != null) {
+                                                editor.putString("shopPhoto", retailerDataTableJson.getString("shopPhoto"));
+                                            }
+                                            editor.putInt("verifiedByTeam", retailerDataTableJson.getInt("verifiedByTeam"));
+                                            editor.putInt("locationVerified", retailerDataTableJson.getInt("locationVerified"));
+                                            editor.putInt("mobileVerified", retailerDataTableJson.getInt("mobileVerified"));
+                                            //last status update not saved in pref
+                                        }
+                                        //profile photo download intent
+                                        int retailerId = retailerAuthTableJson.getInt("retailerId");
+                                        if (retailerDataTableJson.getString("profilePhoto") != null) {
+                                            editor.putString("profilePhoto", retailerDataTableJson.getString("profilePhoto"));
+                                            Intent dpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
+                                            String dpUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/Aniket/\"New directory\"/public/" + retailerId + ".dp.jpeg";
+                                            dpDownloadIntent.putExtra("url", dpUrl);
+                                            String photoName = "";
+                                            dpDownloadIntent.putExtra("photoName", "dp.jpeg");
+                                            startActivity(dpDownloadIntent);
+                                        }
+                                        //license photo download intent
+                                        Intent lpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
+                                        String lpUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/Aniiket/\"New directory\"/private/" + retailerId + ".lp.jpeg";
+                                        lpDownloadIntent.putExtra("url", lpUrl);
+                                        String lpPhotoName = "";
+                                        lpDownloadIntent.putExtra("photoName", "lp.jpeg");
+                                        startActivity(lpDownloadIntent);
+                                        //shop photo download intent
+                                        Intent spDownloadIntent = new Intent(LoginActivity.this,ImageDownloadIntentService.class);
+                                        String spUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/Aniiket/\"New directory\"/public/" + retailerId + ".sp.jpeg";
+                                        spDownloadIntent.putExtra("url",spUrl);
+                                        String photoName = "";
+                                        spDownloadIntent.putExtra("photoName","sp.jpeg");
+                                        startActivity(spDownloadIntent);
+
+                                        editor.putString("longitude", String.valueOf(retailerDataTableJson.getDouble("longLoc")));
+                                        editor.putString("latitude", String.valueOf(retailerDataTableJson.getDouble("latLoc")));
+                                        editor.putBoolean("isSignedIn", true);
+                                        editor.commit();
+
+
+                                        hideLoadingProgressbar();
+                                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                        finish();
+
+                                    } else if (isDataFilled == 0) {
+                                        editor.putBoolean("isDataFilled", false);
+                                        editor.putBoolean("isVerified", true);
+                                        editor.putInt("retailerId", retailerAuthTableJson.getInt("retailerId"));
+                                        editor.putBoolean("isSignedIn", true);
+                                        editor.commit();
+                                        hideLoadingProgressbar();
+                                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                                        finish();
+                                    }
+
+                                } else if (isVerified == 0) {
+                                    editor.putBoolean("isDataFilled", false);
+                                    editor.putInt("retailerId", retailerAuthTableJson.getInt("retailerId"));
+                                    editor.putBoolean("isVerified", false);
+                                    editor.putBoolean("isSignedIn", true);
+                                    editor.putString("token", retailerAuthTableJson.getString("token"));
+                                    editor.commit();
+                                    hideLoadingProgressbar();
+                                    startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
+                                    finish();
+                                }
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setMessage("Another phone has logged in into this account." +
+                                        "\nDo you want to logout from other device and login from this device ?");
+                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        try {
+                                            JSONObject tempJsonObject = responseJSONObject.getJSONObject("retailerAuthTable");
+                                            int retailerId = tempJsonObject.getInt("retailerId");
+                                            authentication.signInFromThisDevice(retailerId);
+                                            dialogInterface.dismiss();
+                                            showLoadingProgressbar();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+
+                                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mail_edittext.setText("");
+                                        password_edittext.setText("");
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                                Dialog dialog = builder.create();
+                                hideLoadingProgressbar();
+                                dialog.show();
+
+                            }
+
+                            /*
                             String deviceId = retailerAuthTableJson.getString("deviceId");
                             if (deviceId.equals(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))) {
                                 int isVerified = retailerAuthTableJson.getInt("codeVerified");
@@ -294,6 +437,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 dialog.show();
 
                             }
+                            */
                         } else {
                             hideLoadingProgressbar();
                             Toast.makeText(context, "Wrong Password !", Toast.LENGTH_SHORT).show();

@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -86,33 +87,25 @@ public class Authentication {
         sendRequestNew(url, headers);
     }
 
-    public void sendVerificationCode(String code, String mail, String password) {
+    public void sendVerificationCode(String code) {
         headers = new HashMap<>();
-        headers.put("mail", mail);
-        headers.put("password", password);
         headers.put("code", code);
-
         String url = serverUrl + "/verify_mail";
         sendRequestNew(url, headers);
     }
 
-    public void updateProfile(String mail, String password, String proprietor, String shopName, String mobileNo
-            , double longitude, double latitude, String address
-            , String cityName, String stateName, String countryName) {
+    public void updateProfile(String proprietor, String shopName, String mobileNo
+            , double longitude, double latitude, String address, String licenseNo) {
 
         headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("enterpriseName", shopName);
         headers.put("proprietor", proprietor);
+        headers.put("shopActLicenseNo", licenseNo);
         headers.put("mobileNo", mobileNo);
-        headers.put("mail", mail);
-        headers.put("password", password);
         headers.put("latLoc", String.valueOf(latitude));
         headers.put("longLoc", String.valueOf(longitude));
         headers.put("address", address);
-        headers.put("city", cityName);
-        headers.put("state", stateName);
-        headers.put("country", countryName);
 
         String url = serverUrl + "/update_retailer_profile_data";
         sendRequestNew(url, headers);
@@ -128,9 +121,7 @@ public class Authentication {
                 Log.e("sendRequest Response", response.toString());
                 try {
                     //responseJSONObject = new JSONObject(response);
-
-
-                    //serverResponse.saveResponse(response);
+                    serverResponse.saveResponse(response);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -141,7 +132,17 @@ public class Authentication {
                 Log.e("VolleyResponseError", error.toString());
                 serverResponse.saveResponseError(error.getMessage().toString());
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                HashMap<String, String> header = new HashMap<>();
+                SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
+                header.put("token", sharedPreferences.getString("token", ""));
+
+                return header;
+            }
+        };
 
         requestQueue.add(jsonObjectRequest);
     }

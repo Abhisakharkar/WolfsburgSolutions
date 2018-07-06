@@ -49,7 +49,7 @@ public class NewProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_product);
 
-        Log.e("onCreate", "newProduct");
+        fetchData = new FetchData(getApplication());
 
         recyclerView = (RecyclerView) findViewById(R.id.new_product_activity_recyclerview_id);
         arrayList = new ArrayList<>();
@@ -68,8 +68,6 @@ public class NewProductActivity extends AppCompatActivity {
             finishActivity(2205);
         }
 
-        fetchData = new FetchData(getApplication());
-
         productsViewModel = ViewModelProviders.of(this).get(ProductsViewModel.class);
         productsViewModel.getProductsList(fetchData,name,id).observe(this, new Observer<ArrayList<ProductData>>() {
             @Override
@@ -84,19 +82,23 @@ public class NewProductActivity extends AppCompatActivity {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
-                    ArrayList<ProductData> list = new ArrayList<>();
-                    jsonArray = responseJSONObject.getJSONArray("items");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                        ProductData productData = new ProductData();
-                        productData.setName(jsonObject.getString("name"));
-                        productData.setProductID(jsonObject.getInt("id"));
-                        productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
-                        productData.setPrice(jsonObject.getDouble("price"));
-                        productData.setPhoto(jsonObject.getString("image-url"));
-                        list.add(productData);
+
+                    String responseFrom = responseJSONObject.getString("responseFrom");
+                    if (responseFrom.equals("magento_product_display")) {
+                        ArrayList<ProductData> list = new ArrayList<>();
+                        jsonArray = responseJSONObject.getJSONArray("items");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                            ProductData productData = new ProductData();
+                            productData.setName(jsonObject.getString("name"));
+                            productData.setProductID(jsonObject.getInt("id"));
+                            productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
+                            productData.setPrice(jsonObject.getDouble("price"));
+                            productData.setPhoto(jsonObject.getString("image-url"));
+                            list.add(productData);
+                        }
+                        productsViewModel.setProductsList(list);
                     }
-                    productsViewModel.setProductsList(list);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
