@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,12 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".HomeActivity">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SignUpActivity"
@@ -30,12 +26,19 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.AuthActivityStyle"/>
+            android:theme="@style/AppTheme.AuthActivityStyle" >
+
+        </activity>
         <activity
             android:name=".ProfileActivity"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".NewCategoryActivity" >
+            android:windowSoftInputMode="stateAlwaysHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name=".NewCategoryActivity"></activity>
         <activity android:name=".NewProductActivity" />
         <activity android:name=".AddNewProductActivity" />
         <activity android:name=".ProductEditActivity" />
@@ -45,16 +48,16 @@
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.launcher">
-
-        </activity>
+            android:theme="@style/AppTheme.launcher"></activity>
         <activity android:name=".OrdersActivity" />
         <activity android:name=".ContactUsActivity" />
 
         <receiver
             android:name=".NetworkStateReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <activity android:name=".ProductDetailsActivity"></activity>
     </application>
 
 </manifest>
