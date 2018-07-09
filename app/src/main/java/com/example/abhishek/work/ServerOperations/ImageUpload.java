@@ -51,7 +51,7 @@ public class ImageUpload {
 
     public void uploadImage2(String photoName, String photoPath) {
         String uploadId = UUID.randomUUID().toString();
-        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/upload";
+        String url = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868/upload";
 
         try {
             new MultipartUploadRequest(context, uploadId, url)
@@ -77,7 +77,7 @@ public class ImageUpload {
 
     public void uploadImage(String photoName, String photoPath) {
 
-        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/upload";
+        String url = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868/upload";
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

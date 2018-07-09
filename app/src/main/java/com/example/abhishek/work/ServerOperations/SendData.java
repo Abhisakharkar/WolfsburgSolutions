@@ -24,16 +24,66 @@ import java.util.Map;
 
 public class SendData {
 
-    private String serverURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868";
+    private String serverURL = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868";
     private Context context;
     //private ServerResponse serverResponse = new ServerResponse();
     private ServerResponse serverResponse;
     private JSONObject reqBody = new JSONObject();
-    private HashMap<String,String> header = new HashMap<>();
+    private HashMap<String,String> headers;
 
     public SendData(Context context){
         this.context = context;
     }
+
+    public void sendtime(HashMap<String,String> headers){
+        this.headers = new HashMap<>();
+        this.headers = headers;
+        String url = serverURL + "/update_full_retailer_data";
+        sendRequest(url,headers);
+    }
+
+    public void updateDeliverySettings(int maxDist,int maxFreeDist,int charge,int minAmount){
+        headers = new HashMap<>();
+        headers.put("maxDeliveryDistanceInMeters",String.valueOf(maxDist));
+        headers.put("maxFreeDeliveryDistanceInMeters",String.valueOf(maxFreeDist));
+        headers.put("chargePerHalfKiloMeterForDelivery",String.valueOf(charge));
+        headers.put("minAmountForFreeDelivery",String.valueOf(minAmount));
+
+        String url = serverURL + "/update_full_retailer_data";
+        sendRequest(url,headers);
+    }
+
+    private void sendRequest(String url,Map<String,String> headers){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST
+                , url
+                , new JSONObject(headers)
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                serverResponse.saveResponse(response);
+            }
+        }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Response Error",error.toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> header = new HashMap<>();
+                SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
+                header.put("token", sharedPreferences.getString("token", ""));
+                return header;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+    }
+
+/*
 
     public void addProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
         String image = "product_"+retailerID+".jpeg";
@@ -80,53 +130,11 @@ public class SendData {
         }
     }
 
-    private void sendRequest(String url){
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST
-                , url
-                , new JSONObject(header)
-                , new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                serverResponse.saveResponse(response);
-            }
-        }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Response Error",error.toString());
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = header;
-                SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
-                params.put("token", sharedPreferences.getString("token", ""));
-                return params;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "text/plain; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                return reqBody.toString().getBytes();
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
-    }
-
-
-
     public void sendImageUploadRequest(Bitmap photoBitmap, final String imageName, int retailerId) {
 
         String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/upload";
-        header.put("retailerId",String.valueOf(retailerId));
-        header.put("imageName",imageName);
+        headers.put("retailerId",String.valueOf(retailerId));
+        headers.put("imageName",imageName);
 
         //bitmap to byte convert
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -152,7 +160,7 @@ public class SendData {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String,String> params = new HashMap<>();
-                params = header;
+                params = headers;
                 return params;
             }
 
@@ -167,7 +175,7 @@ public class SendData {
         Volley.newRequestQueue(context).add(volleyMultipartRequest);
     }
 
-
+*/
     public ServerResponse getServerResponseInstance(){
         if (serverResponse == null){
             serverResponse = new ServerResponse();

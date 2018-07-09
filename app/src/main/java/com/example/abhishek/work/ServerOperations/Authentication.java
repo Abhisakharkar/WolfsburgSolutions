@@ -30,7 +30,7 @@ import java.util.Map;
 public class Authentication {
 
     private Context context;
-    private String serverUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868";
+    private String serverUrl = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868";
     public ServerResponse serverResponse;
     private Map<String, String> headers;
 
@@ -107,7 +107,7 @@ public class Authentication {
         headers.put("longLoc", String.valueOf(longitude));
         headers.put("address", address);
 
-        String url = serverUrl + "/update_retailer_profile_data";
+        String url = serverUrl + "/update_full_retailer_data";
         sendRequestNew(url, headers);
     }
 

@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class FetchData {
 
-    private String serverURL = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868";
+    private String serverURL = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868";
     private Context context;
     private ServerResponse serverResponse = new ServerResponse();
     private JSONObject reqBody = new JSONObject();

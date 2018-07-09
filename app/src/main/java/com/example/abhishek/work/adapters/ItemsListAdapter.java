@@ -138,6 +138,8 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     itemAvailabilityBtn.setChecked(false);
                     itemNotAvailableFrameLayout.setVisibility(View.VISIBLE);
 
+                    //TODO send request as item not available
+
                     //set other elements as disabled
                     itemImageView.setClickable(false);
                     itemNameTextView.setClickable(false);
@@ -160,6 +162,8 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     itemAvailabilityBtn.setSelected(true);
                     itemAvailabilityBtn.setChecked(true);
                     itemNotAvailableFrameLayout.setVisibility(View.INVISIBLE);
+
+                    //TODO send request as item is available
 
                     //set other elements as enabled
                     itemImageView.setClickable(true);
