@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class SendData {
 
-    private String serverURL = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868";
+    private String serverURL = "http://ec2-18-220-165-73.us-east-2.compute.amazonaws.com:6868";
     private Context context;
     //private ServerResponse serverResponse = new ServerResponse();
     private ServerResponse serverResponse;
@@ -33,6 +33,15 @@ public class SendData {
 
     public SendData(Context context){
         this.context = context;
+    }
+
+    public void sendLatLoc(double latitude,double longitude){
+        headers = new HashMap<>();
+        headers.put("latloc",String.valueOf(latitude));
+        headers.put("longloc",String.valueOf(longitude));
+
+        String url = serverURL + "/get_location_ids";
+        sendRequest(url,headers);
     }
 
     public void sendtime(HashMap<String,String> headers){
@@ -44,6 +53,7 @@ public class SendData {
 
     public void updateDeliverySettings(int maxDist,int maxFreeDist,int charge,int minAmount){
         headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
         headers.put("maxDeliveryDistanceInMeters",String.valueOf(maxDist));
         headers.put("maxFreeDeliveryDistanceInMeters",String.valueOf(maxFreeDist));
         headers.put("chargePerHalfKiloMeterForDelivery",String.valueOf(charge));
@@ -52,6 +62,61 @@ public class SendData {
         String url = serverURL + "/update_full_retailer_data";
         sendRequest(url,headers);
     }
+
+    public void updateProduct(String key,String value,int productId){
+        headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put(key,value);
+        headers.put("productId",String.valueOf(productId));
+
+        String url = serverURL + "/update";
+        sendRequest(url,headers);
+    }
+
+    public void addProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
+        String image = "product_"+retailerID+".jpeg";
+        //photo : blank
+
+        try{
+            headers = new HashMap<>();
+            headers.put("Content-Type","application/json");
+            headers.put("productID",productID);
+            headers.put("price",price);
+            headers.put("photo","0");
+            headers.put("description",desc);
+            headers.put("availability",String.valueOf(avail));
+            headers.put("star",String.valueOf(star));
+            headers.put("textField",comment);
+
+            String url = serverURL+"/add_retailer_product";
+            sendRequest(url,headers);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updateProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
+        String image = "product_"+retailerID+".jpeg";
+        //photo : blank
+
+        try{
+            headers.put("Content-Type","application/json");
+            headers.put("productID",productID);
+            headers.put("price",price);
+            headers.put("description",desc);
+            headers.put("availability",String.valueOf(avail));
+            headers.put("star",String.valueOf(star));
+            headers.put("textField",comment);
+
+            String url = serverURL+"/update_retailer_product";
+            sendRequest(url,headers);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendRequest(String url,Map<String,String> headers){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -83,52 +148,15 @@ public class SendData {
         requestQueue.add(jsonObjectRequest);
     }
 
-/*
 
-    public void addProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
-        String image = "product_"+retailerID+".jpeg";
-        //photo : blank
 
-        try{
-            header.put("Content-Type","application/json");
-            header.put("retailerID",retailerID);
-            header.put("productID",productID);
-            header.put("price",price);
-            header.put("photo","0");
-            header.put("description",desc);
-            header.put("availability",String.valueOf(avail));
-            header.put("star",String.valueOf(star));
-            header.put("textField",comment);
 
-            String url = serverURL+"/add_retailer_product";
-            sendRequest(url);
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
-    public void updateProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
-        String image = "product_"+retailerID+".jpeg";
-        //photo : blank
 
-        try{
-            header.put("Content-Type","application/json");
-            header.put("retailerID",retailerID);
-            header.put("productID",productID);
-            header.put("price",price);
-            header.put("description",desc);
-            header.put("availability",String.valueOf(avail));
-            header.put("star",String.valueOf(star));
-            header.put("textField",comment);
 
-            String url = serverURL+"/update_retailer_product";
-            sendRequest(url);
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+
 
     public void sendImageUploadRequest(Bitmap photoBitmap, final String imageName, int retailerId) {
 
@@ -175,7 +203,7 @@ public class SendData {
         Volley.newRequestQueue(context).add(volleyMultipartRequest);
     }
 
-*/
+
     public ServerResponse getServerResponseInstance(){
         if (serverResponse == null){
             serverResponse = new ServerResponse();

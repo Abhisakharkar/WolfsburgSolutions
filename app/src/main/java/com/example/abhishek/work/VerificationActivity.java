@@ -29,7 +29,7 @@ public class VerificationActivity extends AppCompatActivity {
     private Button verifyBtn;
 
     private int code;
-    private String mail,password;
+    private String mail, password;
 
     private Context context;
     private Authentication authentication;
@@ -43,7 +43,7 @@ public class VerificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verification);
 
         context = this;
-        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         authentication = new Authentication(context);
 
@@ -53,22 +53,18 @@ public class VerificationActivity extends AppCompatActivity {
         verifyBtn = (Button) findViewById(R.id.verification_activity_verify_btn_id);
 
 
-
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mail = sharedPreferences.getString("mail","");
-                password = sharedPreferences.getString("password","");
+                //mail = sharedPreferences.getString("mail", "");
+                //password = sharedPreferences.getString("password", "");
                 int code = 0;
                 code = Integer.parseInt(codeEdittext.getText().toString());
-                if ( code != 0 ) {
-                    if (!mail.isEmpty() && !password.isEmpty()) {
-                        authentication.sendVerificationCode(String.valueOf(code));
-                        Log.e("code sent to server","");
-                    }else {
-                        Toast.makeText(context, "Please Sign In !", Toast.LENGTH_SHORT).show();
-                    }
-                }else {
+                if (code != 0) {
+
+                    authentication.sendVerificationCode(String.valueOf(code));
+
+                } else {
                     Toast.makeText(context, "Enter verification code !", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -80,23 +76,25 @@ public class VerificationActivity extends AppCompatActivity {
                 //process the response
                 try {
 
-                    JSONObject retailerData = responseJSONObject.getJSONObject("retailerAuthTable");
-                    int isDataFilled = retailerData.getInt("mandatoryData");
-                    editor.putInt("retailerId",retailerData.getInt("retailerId"));
-                    boolean isVerified = retailerData.getInt("codeVerified") == 1 ? true : false;
-                    editor.putBoolean("isVerified",isVerified);
+                    boolean isDataFilled = sharedPreferences.getBoolean("isDataFilled", false);
+                    //editor.putInt("retailerId", retailerData.getInt("retailerId"));
+                    boolean isVerified = responseJSONObject.getBoolean("verificationStatus");
+                    editor.putBoolean("isVerified", isVerified);
                     editor.commit();
-
-                    if (isDataFilled == 0){
-                        editor.putBoolean("isDataFilled",false);
-                        editor.commit();
-                        startActivity(new Intent(VerificationActivity.this,ProfileActivity.class));
-                        finish();
-                    }else if (isDataFilled == 1){
-                        editor.putBoolean("isDataFilled",true);
-                        editor.commit();
-                        startActivity(new Intent(VerificationActivity.this,HomeActivity.class));
-                        finish();
+                    if (isVerified) {
+                        if (isDataFilled) {
+                            editor.putBoolean("isDataFilled", false);
+                            editor.commit();
+                            startActivity(new Intent(VerificationActivity.this, ProfileActivity.class));
+                            finish();
+                        } else {
+                            editor.putBoolean("isDataFilled", true);
+                            editor.commit();
+                            startActivity(new Intent(VerificationActivity.this, HomeActivity.class));
+                            finish();
+                        }
+                    }else {
+                        Toast.makeText(context, "Wrong code", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
@@ -125,10 +123,10 @@ public class VerificationActivity extends AppCompatActivity {
         unregisterReceiver(networkStateReceiver);
     }
 
-    private void updateUI(boolean isNetworkAbailable){
-        if (!isNetworkAbailable){
+    private void updateUI(boolean isNetworkAbailable) {
+        if (!isNetworkAbailable) {
             Toast.makeText(this, "no internet connection", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(this, "connected to internet", Toast.LENGTH_SHORT).show();
         }
     }
@@ -140,10 +138,10 @@ public class VerificationActivity extends AppCompatActivity {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
                     //connected
                     updateUI(true);
-                }else {
+                } else {
                     //not connected
                     updateUI(false);
                 }

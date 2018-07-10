@@ -40,12 +40,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.ServerOperations.ImageUpload;
+import com.example.abhishek.work.ServerOperations.SendData;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.LocationResponse;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.OnLocationResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -87,6 +90,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
     private FetchData fetchData;
     private Authentication authentication = new Authentication(ProfileActivity.this);
+    private SendData sendData = new SendData(ProfileActivity.this);
 
     // ****************           NEW                 *******************
     private EditText proprietorEdittext, mobileNoEdittext, shopNameEdittext, addressLine1Edittext, licenseNoEdittext;
@@ -98,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
     //image dialog layouts
     private View dpLayout, spLayout, lpLayout;
-    private ImageView dpDialogImageview,spDialogImageview,lpDialogImageview;
+    private ImageView dpDialogImageview, spDialogImageview, lpDialogImageview;
 
     //booleans to check what is changed when saving
     private boolean proprietorBool = false, mobileNoBool = false, shopNameBool = false, addressLine1Bool = false,
@@ -194,7 +198,14 @@ public class ProfileActivity extends AppCompatActivity implements
             longitude = Double.parseDouble(sharedPreferences.getString("longitude", ""));
             localityId = sharedPreferences.getInt("localityId", 0);
             sublocalityId = sharedPreferences.getInt("subLocality1Id", 0);
-            fetchData.getSubLocality(localityId);
+            locality = sharedPreferences.getString("locality", "");
+            subLocality = sharedPreferences.getString("subLocality1", "");
+            if (!locality.isEmpty()) {
+                localityTextView.setText(locality);
+            }
+            if (!subLocality.isEmpty()) {
+                sublocalityTextView.setText(subLocality);
+            }
             licenseNo = sharedPreferences.getString("shopActLicenseNo", "");
 
             proprietorEdittext.setText(proprietor);
@@ -259,6 +270,47 @@ public class ProfileActivity extends AppCompatActivity implements
             //TODO get data for the first time
         }
 
+        //SendData server response
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse = sendData.getServerResponseInstance();
+        serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+            @Override
+            public void onResponseReceive(JSONObject responseJSONObject) {
+                try {
+                    JSONObject localityData = responseJSONObject.getJSONObject("localityData");
+                    locality = localityData.getString("locality");
+                    localityTextView.setText(locality);
+                    editor.putString("locality", locality);
+                    editor.commit();
+
+                    JSONObject sublocality1Data = responseJSONObject.getJSONObject
+                            ("subLocality1Data");
+                    String sublocality1 = sublocality1Data.getString("subLocality1");
+                    subLocality = sublocality1;
+                    sublocalityTextView.setText(sublocality1);
+                    editor.putString("subLocality1", sublocality1);
+                    editor.commit();
+
+                    int length = responseJSONObject.getInt("length");
+                    if (length == 3) {
+                        JSONObject sublocality2Data = responseJSONObject.getJSONObject
+                                ("subLocality2Data");
+                        String sublocality2 = sublocality2Data.getString("subLocality2");
+                        editor.putString("subLocality2", sublocality2);
+                        editor.commit();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
+            }
+        });
+
 
         //server response
         authentication.serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
@@ -269,9 +321,7 @@ public class ProfileActivity extends AppCompatActivity implements
                     String responseFrom = responseJSONObject.getString("responseFrom");
                     if (responseFrom.equals("get_sublocality")) {
 
-                        //TODO parse response
-                        //TODO set values of locality,sublocality
-                        //TODO set textviews
+                        //implementation changed
 
                     } else if (responseFrom.equals("update_retailer_profile_data")) {
                         boolean update = responseJSONObject.getBoolean("update");
@@ -317,8 +367,7 @@ public class ProfileActivity extends AppCompatActivity implements
             @Override
             public void onLocationResponseReceive(double longitude, double latitude) {
                 try {
-
-                    //TODO send request to get locality,sublocality from lat,long
+                    sendData.sendLatLoc(latitude, longitude);
                     //TODO process response
 
                     /*
@@ -349,19 +398,22 @@ public class ProfileActivity extends AppCompatActivity implements
                 mobileNo = mobileNoEdittext.getText().toString();
                 shopName = shopNameEdittext.getText().toString();
                 licenseNo = licenseNoEdittext.getText().toString();
+                latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
+                longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
 
                 if (!proprietor.isEmpty()) {
                     if (!mobileNo.isEmpty()) {
                         if (!licenseNo.isEmpty()) {
                             if (Patterns.PHONE.matcher(mobileNo).matches()) {
-                                if (longitude == 0 || latitude == 0) {
+                                if (locality != null || subLocality != null) {
+                                    if (!locality.isEmpty() || !subLocality.isEmpty()) {
 
-                                    //TODO save updated data from response of below
-                                    //send data to server
-                                    authentication.updateProfile(proprietor, shopName, mobileNo, longitude, latitude, address, licenseNo);
-                                    //authentication.updateProfile("", "", proprietor, shopName,
-                                    //mobileNo, longitude, latitude, address, cityName, stateName, countryName);
-
+                                        //TODO save updated data from response of below
+                                        //send data to server
+                                        authentication.updateProfile(proprietor, shopName, mobileNo, longitude, latitude, address, licenseNo);
+                                        //authentication.updateProfile("", "", proprietor, shopName,
+                                        //mobileNo, longitude, latitude, address, cityName, stateName, countryName);
+                                    }
                                 } else {
                                     Toast.makeText(context, "Please set Location !", Toast.LENGTH_SHORT).show();
                                 }
@@ -402,7 +454,6 @@ public class ProfileActivity extends AppCompatActivity implements
 
                 break;
 
-            //TODO click listener for dpimageview,shopimageview,licenseimageview
             case R.id.profile_activity_dp_imageview_id:
 
                 dpLayout = layoutInflater.inflate(R.layout.dialog_profile_dp, null);
@@ -504,6 +555,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
                         editor.putString("longitude", String.valueOf(longitude));
                         editor.putString("latitude", String.valueOf(latitude));
+                        editor.commit();
 
                         locationResponse.saveLocationResponse(longitude, latitude);
                         fusedLocationProviderClient.removeLocationUpdates(this);

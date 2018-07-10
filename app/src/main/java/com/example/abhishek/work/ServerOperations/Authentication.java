@@ -30,7 +30,7 @@ import java.util.Map;
 public class Authentication {
 
     private Context context;
-    private String serverUrl = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868";
+    private String serverUrl = "http://ec2-18-220-165-73.us-east-2.compute.amazonaws.com:6868";
     public ServerResponse serverResponse;
     private Map<String, String> headers;
 
@@ -130,7 +130,7 @@ public class Authentication {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("VolleyResponseError", error.toString());
-                serverResponse.saveResponseError(error.getMessage().toString());
+                error.printStackTrace();
             }
         }) {
             @Override
@@ -138,7 +138,7 @@ public class Authentication {
 
                 HashMap<String, String> header = new HashMap<>();
                 SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
-                header.put("token", sharedPreferences.getString("token", ""));
+                header.put("Authorization", "bearer "+sharedPreferences.getString("token", ""));
 
                 return header;
             }

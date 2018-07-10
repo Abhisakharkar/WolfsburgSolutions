@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class FetchData {
 
-    private String serverURL = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868";
+    private String serverURL = "http://ec2-18-220-165-73.us-east-2.compute.amazonaws.com:6868";
     private Context context;
     private ServerResponse serverResponse = new ServerResponse();
     private JSONObject reqBody = new JSONObject();
@@ -65,11 +65,6 @@ public class FetchData {
 
         sendRequest(url,header);
 
-    }
-
-    public void getSubLocality(int localityId){
-        header = new HashMap<>();
-        header.put("localityId","0");
     }
 
     private void sendRequest(String url,Map<String,String> headers) {

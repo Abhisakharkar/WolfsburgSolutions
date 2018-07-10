@@ -200,15 +200,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         boolean signIn = responseJSONObject.getBoolean("signIn");
                         if (signIn) {
 
-                            editor.putString("token", responseJSONObject.getString("token"));
-
+                            try{
+                                boolean deviceIdUpdate = responseJSONObject.getBoolean
+                                        ("deviceIdUpdate");
+                                editor.putString("token", responseJSONObject.getString("token"));
+                                editor.commit();
+                            }catch (JSONException jsonEx){
+                                jsonEx.printStackTrace();
+                            }
                             JSONObject retailerAuthTableJson = responseJSONObject.getJSONObject("retailerAuthTable");
-                            JSONObject retailerDataTableJson = responseJSONObject.getJSONObject("retailerDataTable");
 
                             String deviceId = retailerAuthTableJson.getString("deviceId");
                             if (deviceId.equals(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))) {
                                 int isVerified = retailerAuthTableJson.getInt("codeVerified");
                                 if (isVerified == 1) {
+                                    JSONObject retailerDataTableJson = responseJSONObject.getJSONObject("retailerDataTable");
                                     int isDataFilled = retailerAuthTableJson.getInt("mandatoryData");
                                     if (isDataFilled == 1) {
                                         editor.putBoolean("isDataFilled", true);
@@ -297,10 +303,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                 } else if (isVerified == 0) {
                                     editor.putBoolean("isDataFilled", false);
-                                    editor.putInt("retailerId", retailerAuthTableJson.getInt("retailerId"));
+                                    //editor.putInt("retailerId", retailerAuthTableJson.getInt
+                                      //      ("retailerId"));
                                     editor.putBoolean("isVerified", false);
                                     editor.putBoolean("isSignedIn", true);
-                                    editor.putString("token", retailerAuthTableJson.getString("token"));
+                                    editor.putString("token", responseJSONObject.getString("token"));
                                     editor.commit();
                                     hideLoadingProgressbar();
                                     startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
@@ -315,8 +322,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         try {
                                             JSONObject tempJsonObject = responseJSONObject.getJSONObject("retailerAuthTable");
-                                            int retailerId = tempJsonObject.getInt("retailerId");
-                                            authentication.signInFromThisDevice(retailerId);
+                                            //int retailerId = tempJsonObject.getInt("retailerId");
+                                            authentication.signInFromThisDevice(14);
                                             dialogInterface.dismiss();
                                             showLoadingProgressbar();
                                         } catch (Exception e) {

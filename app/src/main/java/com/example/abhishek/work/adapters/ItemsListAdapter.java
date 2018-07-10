@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.abhishek.work.Model.ItemData;
 import com.example.abhishek.work.R;
+import com.example.abhishek.work.ServerOperations.SendData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +26,19 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
     private List<ItemData> itemList = new ArrayList<ItemData>();
     private int position;
     private Context context;
+    private SendData sendData;
 
-    public ItemsListAdapter(Context context, List<ItemData> itemList){
+    public ItemsListAdapter(Context context, List<ItemData> itemList) {
         this.itemList = itemList;
         this.context = context;
+        sendData = new SendData(context);
     }
 
     @Override
     public ItemsListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View v = layoutInflater.inflate( R.layout.items_list_row, parent,false);
+        View v = layoutInflater.inflate(R.layout.items_list_row, parent, false);
         ItemsListViewHolder viewHolder = new ItemsListViewHolder(v);
 
         return viewHolder;
@@ -47,11 +50,11 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
         this.position = position;
 
         holder.itemNameTextView.setText(itemList.get(position).getName());
-        Log.e("name  ...|",itemList.get(position).getName() + "| ... ");
+        Log.e("name  ...|", itemList.get(position).getName() + "| ... ");
         holder.itemMRPTextView.setText(String.valueOf(itemList.get(position).getPrice()));
         holder.itemSellingPriceEditText.setText(String.valueOf(itemList.get(position).getSellingPrice()));
         String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product/" + itemList.get(position).getPhoto();
-        if (!url.equals("0") && !url.isEmpty()){
+        if (!url.equals("0") && !url.isEmpty()) {
             Glide.with(context)
                     .load(url)
                     .into(holder.itemImageView);
@@ -95,7 +98,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
         private RadioButton itemAvailabilityBtn;
         private ImageView itemImageView;
         private Button itemSellingPriceEditText;
-        private TextView itemNameTextView,itemCategoryTextView,itemMRPTextView,promoteItemBtn;
+        private TextView itemNameTextView, itemCategoryTextView, itemMRPTextView, promoteItemBtn;
         private ImageButton itemStarImageBtn;
         private FrameLayout itemNotAvailableFrameLayout;
         private View layout;
@@ -130,15 +133,17 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
             int id = view.getId();
 
             // item availability radio button click listener
-            if(id == itemAvailabilityBtn.getId()){
-                if(itemAvailabilityBtn.isSelected()){
+            if (id == itemAvailabilityBtn.getId()) {
+                if (itemAvailabilityBtn.isSelected()) {
 
                     //set FrameLayout visible
                     itemAvailabilityBtn.setSelected(false);
                     itemAvailabilityBtn.setChecked(false);
                     itemNotAvailableFrameLayout.setVisibility(View.VISIBLE);
 
-                    //TODO send request as item not available
+                    //send request
+                    int productId = itemList.get(position).getProductID();
+                    sendData.updateProduct("availability","0",productId);
 
                     //set other elements as disabled
                     itemImageView.setClickable(false);
@@ -157,13 +162,15 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     itemStarImageBtn.setEnabled(false);
                     promoteItemBtn.setEnabled(false);
 
-                }else {
+                } else {
                     //set framelayout invisible
                     itemAvailabilityBtn.setSelected(true);
                     itemAvailabilityBtn.setChecked(true);
                     itemNotAvailableFrameLayout.setVisibility(View.INVISIBLE);
 
-                    //TODO send request as item is available
+                    //send request
+                    int productId = itemList.get(position).getProductID();
+                    sendData.updateProduct("availability","1",productId);
 
                     //set other elements as enabled
                     itemImageView.setClickable(true);
@@ -185,19 +192,19 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                 }
 
                 // item star button click listener
-            }else if(id == itemStarImageBtn.getId()){
-/*
-                if(itemList.get(position).isStar()){
+            } else if (id == itemStarImageBtn.getId()) {
+
+                if(itemList.get(position).getStar() == 1){
                     itemStarImageBtn.setImageResource(R.drawable.star_btn_hollow_vector);
-                    itemList.get(position).setStar(false);
+                    itemList.get(position).setStar(0);
                 }else{
                     itemStarImageBtn.setImageResource(R.drawable.star_btn_solid_vector);
-                    itemList.get(position).setStar(true);
+                    itemList.get(position).setStar(1);
                 }
 
-*/
+
                 // item promote product button click listener
-            }else if(id == promoteItemBtn.getId()){
+            } else if (id == promoteItemBtn.getId()) {
 
             }
         }

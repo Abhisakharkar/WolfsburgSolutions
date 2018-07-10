@@ -38,7 +38,13 @@
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.launcher" />
+            android:theme="@style/AppTheme.launcher" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".OrdersActivity" />
         <activity android:name=".ContactUsActivity" />
 
@@ -49,11 +55,7 @@
 
         <activity android:name=".ProductDetailsActivity" />
         <activity android:name=".ShopTimingActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".DeliverySettingsActivity"></activity>
     </application>
