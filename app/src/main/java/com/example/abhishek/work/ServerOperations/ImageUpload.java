@@ -77,7 +77,7 @@ public class ImageUpload {
 
     public void uploadImage(String photoName, String photoPath) {
 
-        String url = "http://ec2-18-220-165-73.us-east-2.compute.amazonaws.com:6868/upload";
+        String url = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com:6868/upload";
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

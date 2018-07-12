@@ -323,7 +323,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
                         //implementation changed
 
-                    } else if (responseFrom.equals("update_retailer_profile_data")) {
+                    } else if (responseFrom.equals("update_full_retailer_data")) {
                         boolean update = responseJSONObject.getBoolean("update");
                         if (update) {
 
@@ -331,9 +331,9 @@ public class ProfileActivity extends AppCompatActivity implements
                             editor.putString("mobileNo", mobileNo);
                             editor.putString("shopName", shopName);
                             editor.putString("shopAdress", address);
-                            editor.putString("city", cityName);
-                            editor.putString("state", stateName);
-                            editor.putString("country", countryName);
+                            editor.putString("locality", locality);
+                            editor.putString("subLocality", subLocality);
+                            editor.putString("licenseNo",licenseNo);
                             editor.putString("longitude", String.valueOf(longitude));
                             editor.putString("latitude", String.valueOf(latitude));
                             editor.putBoolean("isDataFilled", true);
@@ -872,6 +872,7 @@ public class ProfileActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
         finish();
     }
 

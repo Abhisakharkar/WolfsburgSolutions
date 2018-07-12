@@ -30,7 +30,7 @@ import java.util.Map;
 public class Authentication {
 
     private Context context;
-    private String serverUrl = "http://ec2-18-220-165-73.us-east-2.compute.amazonaws.com:6868";
+    private String serverUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com:6868";
     public ServerResponse serverResponse;
     private Map<String, String> headers;
 
@@ -139,7 +139,7 @@ public class Authentication {
                 HashMap<String, String> header = new HashMap<>();
                 SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
                 header.put("Authorization", "bearer "+sharedPreferences.getString("token", ""));
-
+                Log.e("Authentication token",sharedPreferences.getString("token","no-token"));
                 return header;
             }
         };
