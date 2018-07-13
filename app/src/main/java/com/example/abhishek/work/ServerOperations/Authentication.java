@@ -94,8 +94,7 @@ public class Authentication {
         sendRequestNew(url, headers);
     }
 
-    public void updateProfile(String proprietor, String shopName, String mobileNo
-            , double longitude, double latitude, String address, String licenseNo) {
+    public void updateProfile(String proprietor, String shopName, String mobileNo, String longitude, String latitude, String address, String licenseNo, String localityId, String subLocality1Id) {
 
         headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -103,10 +102,15 @@ public class Authentication {
         headers.put("proprietor", proprietor);
         headers.put("shopActLicenseNo", licenseNo);
         headers.put("mobileNo", mobileNo);
-        headers.put("latLoc", String.valueOf(latitude));
-        headers.put("longLoc", String.valueOf(longitude));
-        headers.put("address", address);
+        headers.put("latLoc",latitude);
+        headers.put("longLoc",longitude);
+        headers.put("localityId",localityId);
+        headers.put("subLocality1Id",subLocality1Id);
 
+//        headers.put("latLoc", String.valueOf(latitude));
+//        headers.put("longLoc", String.valueOf(longitude));
+        headers.put("addLine1", address);
+        headers.put("mandatoryData",Integer.toString(1));
         String url = serverUrl + "/update_full_retailer_data";
         sendRequestNew(url, headers);
     }

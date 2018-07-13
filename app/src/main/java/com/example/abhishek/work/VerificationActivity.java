@@ -83,14 +83,10 @@ public class VerificationActivity extends AppCompatActivity {
                     editor.commit();
                     if (isVerified) {
                         if (isDataFilled) {
-                            editor.putBoolean("isDataFilled", false);
-                            editor.commit();
-                            startActivity(new Intent(VerificationActivity.this, ProfileActivity.class));
+                            startActivity(new Intent(VerificationActivity.this, HomeActivity.class));
                             finish();
                         } else {
-                            editor.putBoolean("isDataFilled", true);
-                            editor.commit();
-                            startActivity(new Intent(VerificationActivity.this, HomeActivity.class));
+                            startActivity(new Intent(VerificationActivity.this, ProfileActivity.class));
                             finish();
                         }
                     }else {

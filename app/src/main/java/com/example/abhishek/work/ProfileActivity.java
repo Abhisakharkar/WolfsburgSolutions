@@ -111,9 +111,9 @@ public class ProfileActivity extends AppCompatActivity implements
 
     Bitmap licensePhotoBitmap, shopPhotoBitmap, profilePhotoBitmap;
     private String proprietor = "", address = "", shopName = "", mobileNo = "", licenseNo = "";
-    private int localityId = 0, sublocalityId = 0;
+    private int localityId = 0, subLocality1Id = 0;
     private double longitude = 0, latitude = 0;
-    private String locality, subLocality;
+    private String locality, subLocality1;
 
     private LayoutInflater layoutInflater;
 
@@ -197,14 +197,14 @@ public class ProfileActivity extends AppCompatActivity implements
             latitude = Double.parseDouble(sharedPreferences.getString("latitude", ""));
             longitude = Double.parseDouble(sharedPreferences.getString("longitude", ""));
             localityId = sharedPreferences.getInt("localityId", 0);
-            sublocalityId = sharedPreferences.getInt("subLocality1Id", 0);
+            subLocality1Id = sharedPreferences.getInt("subLocality1Id", 0);
             locality = sharedPreferences.getString("locality", "");
-            subLocality = sharedPreferences.getString("subLocality1", "");
+            subLocality1 = sharedPreferences.getString("subLocality1", "");
             if (!locality.isEmpty()) {
                 localityTextView.setText(locality);
             }
-            if (!subLocality.isEmpty()) {
-                sublocalityTextView.setText(subLocality);
+            if (!subLocality1.isEmpty()) {
+                sublocalityTextView.setText(subLocality1);
             }
             licenseNo = sharedPreferences.getString("shopActLicenseNo", "");
 
@@ -281,17 +281,24 @@ public class ProfileActivity extends AppCompatActivity implements
                     locality = localityData.getString("locality");
                     localityTextView.setText(locality);
                     editor.putString("locality", locality);
+                    editor.putInt("localityId",localityData.getInt("localityId"));
+                    editor.putBoolean("localityTier",localityData.getInt("tier")>0);
+                    editor.putBoolean("localityWholesaleTier",localityData.getInt("wholesaleTier")>0);
                     editor.commit();
-
-                    JSONObject sublocality1Data = responseJSONObject.getJSONObject
-                            ("subLocality1Data");
-                    String sublocality1 = sublocality1Data.getString("subLocality1");
-                    subLocality = sublocality1;
-                    sublocalityTextView.setText(sublocality1);
-                    editor.putString("subLocality1", sublocality1);
-                    editor.commit();
-
                     int length = responseJSONObject.getInt("length");
+                    if (length ==2) {
+                        JSONObject sublocality1Data = responseJSONObject.getJSONObject
+                                ("subLocality1Data");
+                        String sublocality = sublocality1Data.getString("subLocality1");
+                        subLocality1 = sublocality;
+                        sublocalityTextView.setText(subLocality1);
+                        editor.putString("subLocality1", subLocality1);
+                        editor.putInt("subLocality1Id",sublocality1Data.getInt("subLocality1Id"));
+                        editor.putBoolean("subLocality1Tier",sublocality1Data.getInt("tier")>0);
+                        editor.putBoolean("subLocality1WholesaleTier",sublocality1Data.getInt("wholesaleTier")>0);
+                        editor.commit();
+                    }
+
                     if (length == 3) {
                         JSONObject sublocality2Data = responseJSONObject.getJSONObject
                                 ("subLocality2Data");
@@ -330,10 +337,10 @@ public class ProfileActivity extends AppCompatActivity implements
                             editor.putString("proprietor", proprietor);
                             editor.putString("mobileNo", mobileNo);
                             editor.putString("shopName", shopName);
-                            editor.putString("shopAdress", address);
+                            editor.putString("addLine1", address);
                             editor.putString("locality", locality);
-                            editor.putString("subLocality", subLocality);
-                            editor.putString("licenseNo",licenseNo);
+                            editor.putString("subLocality1", subLocality1);
+                            editor.putString("shopActLicenseNo",licenseNo);
                             editor.putString("longitude", String.valueOf(longitude));
                             editor.putString("latitude", String.valueOf(latitude));
                             editor.putBoolean("isDataFilled", true);
@@ -398,19 +405,23 @@ public class ProfileActivity extends AppCompatActivity implements
                 mobileNo = mobileNoEdittext.getText().toString();
                 shopName = shopNameEdittext.getText().toString();
                 licenseNo = licenseNoEdittext.getText().toString();
+                address=addressLine1Edittext.getText().toString();
                 latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
                 longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
+                localityId=sharedPreferences.getInt("localityId",0);
+                subLocality1Id=sharedPreferences.getInt("subLocality1Id",0);
+
 
                 if (!proprietor.isEmpty()) {
                     if (!mobileNo.isEmpty()) {
                         if (!licenseNo.isEmpty()) {
                             if (Patterns.PHONE.matcher(mobileNo).matches()) {
-                                if (locality != null || subLocality != null) {
-                                    if (!locality.isEmpty() || !subLocality.isEmpty()) {
+                                if (locality != null || subLocality1 != null) {
+                                    if (!locality.isEmpty() || !subLocality1.isEmpty()) {
 
                                         //TODO save updated data from response of below
                                         //send data to server
-                                        authentication.updateProfile(proprietor, shopName, mobileNo, longitude, latitude, address, licenseNo);
+                                        authentication.updateProfile(proprietor, shopName, mobileNo, Double.toString(longitude), Double.toString(latitude), address, licenseNo,Integer.toString(localityId),Integer.toString(subLocality1Id));
                                         //authentication.updateProfile("", "", proprietor, shopName,
                                         //mobileNo, longitude, latitude, address, cityName, stateName, countryName);
                                     }

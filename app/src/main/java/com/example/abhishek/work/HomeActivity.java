@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -22,6 +23,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
     private ItemData itemData;
     private FloatingActionButton fab;
     private NavigationView navigationView;
-
+    private String shopName;
     //Recycler View
     private RecyclerView recyclerView;
     private ItemsListAdapter myListAdapter;
@@ -97,7 +99,10 @@ public class HomeActivity extends AppCompatActivity {
         Drawable image = new BitmapDrawable(getResources(), newImg);
         img = (ImageView) findViewById(R.id.collapsingToolbarImageViewId);
         img.setImageDrawable(image);
-
+        shopName=sharedPreferences.getString("shopName","Not Found");
+        shopNametxt.setText(shopName);
+        shopNametxt.setTextSize(TypedValue.COMPLEX_UNIT_SP,32);
+        shopNametxt.setTextColor(getResources().getColor(R.color.colorWhite));
         //Fade in/out effect for ShopNameText,SwitchBtn,Open/CloseText
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -115,9 +120,9 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    openCloseTxt.setText("Open");
+                    openCloseTxt.setText("Open Now");
                 } else {
-                    openCloseTxt.setText("Closed");
+                    openCloseTxt.setText("Closed Now");
                 }
             }
         });
@@ -150,9 +155,13 @@ public class HomeActivity extends AppCompatActivity {
 
                 if (itemId == R.id.home_nav_menu_home_id) {
 
-                } else if (itemId == R.id.home_nav_menu_manageSS_id) {
+                } else if (itemId == R.id.home_nav_menu_manageTiming_id) {
 
-                } else if (itemId == R.id.home_nav_menu_profile_id) {
+                    startActivity(new Intent(HomeActivity.this, ShopTimingActivity.class));
+                } else if (itemId == R.id.home_nav_menu_manageDelivery_id){
+
+                    startActivity(new Intent(HomeActivity.this,DeliverySettingsActivity.class));
+                }else if (itemId == R.id.home_nav_menu_profile_id) {
 
                     startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
 

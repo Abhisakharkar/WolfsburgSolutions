@@ -225,63 +225,75 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putString("addLine1", retailerDataTableJson.getString("addLine1"));
                                         editor.putInt("subLocality1Id", retailerDataTableJson.getInt("subLocality1Id"));
                                         editor.putInt("localityId", retailerDataTableJson.getInt("localityId"));
-                                        if (!retailerDataTableJson.getBoolean("openCloseIsManual")) {
-                                            editor.putInt("deliveryStatus", retailerDataTableJson.getInt("deliveryStatus"));
+                                        editor.putString("longitude", String.valueOf(retailerDataTableJson.getDouble("longLoc")));
+                                        editor.putString("latitude", String.valueOf(retailerDataTableJson.getDouble("latLoc")));
+                                        editor.putInt("verifiedByTeam", retailerDataTableJson.getInt("verifiedByTeam"));
+                                        editor.putInt("locationVerified", retailerDataTableJson.getInt("locationVerified"));
+                                        editor.putInt("mobileVerified", retailerDataTableJson.getInt("mobileVerified"));
+                                        editor.putBoolean("openCloseIsManual", retailerDataTableJson.getInt("openCloseIsManual")>0);
+                                        editor.putBoolean("currentState", retailerDataTableJson.getInt("currentState")>0);
+                                        if (retailerDataTableJson.getString("shopOpenTime1") != null) {
+                                                editor.putString("shopOpenTime1", retailerDataTableJson.getString("shopOpenTime1"));
+                                                editor.putString("shopCloseTime1", retailerDataTableJson.getString("shopCloseTime1"));
+                                        }
+                                        if (retailerDataTableJson.getString("shopOpenTime2") != null) {
+                                                editor.putString("shopOpenTime2", retailerDataTableJson.getString("shopOpenTime2"));
+                                                editor.putString("shopCloseTime2", retailerDataTableJson.getString("shopCloseTime2"));
+                                        }
+                                        if (retailerDataTableJson.getString("shopPhoto") != null) {
+                                                editor.putString("shopPhoto", retailerDataTableJson.getString("shopPhoto"));
+                                                editor.putString("profilePhoto",retailerDataTableJson.getString("profilePhoto"));
+
+                                        }
+                                        if (retailerDataTableJson.getInt("deliveryStatus")>0 ) {
+                                            editor.putBoolean("deliveryStatus", retailerDataTableJson.getInt("deliveryStatus")>0);
                                             editor.putInt("maxDeliveryDistanceInMeters", retailerDataTableJson.getInt("maxDeliveryDistanceInMeters"));
                                             editor.putInt("maxFreeDeliveryDistanceInMeters", retailerDataTableJson.getInt("maxFreeDeliveryDistanceInMeters"));
                                             editor.putInt("chargePerHalfKiloMeterForDelivery", retailerDataTableJson.getInt("chargePerHalfKiloMeterForDelivery"));
                                             editor.putInt("minAmountForFreeDelivery", retailerDataTableJson.getInt("minAmountForFreeDelivery"));
-                                            editor.putBoolean("openCloseIsManual", retailerDataTableJson.getBoolean("openCloseIsManual"));
-                                            if (retailerDataTableJson.getString("shopOpenTime1") != null) {
-                                                editor.putString("shopOpenTime1", retailerDataTableJson.getString("shopOpenTime1"));
-                                                editor.putString("shopCloseTime1", retailerDataTableJson.getString("shopCloseTime1"));
-                                            }
-                                            if (retailerDataTableJson.getString("shopOpenTime2") != null) {
-                                                editor.putString("shopOpenTime2", retailerDataTableJson.getString("shopOpenTime2"));
-                                                editor.putString("shopCloseTime2", retailerDataTableJson.getString("shopCloseTime2"));
-                                            }
-                                            editor.putBoolean("currentState", retailerDataTableJson.getBoolean("currentState"));
-                                            if (retailerDataTableJson.getString("shopPhoto") != null) {
-                                                editor.putString("shopPhoto", retailerDataTableJson.getString("shopPhoto"));
-                                            }
-                                            editor.putInt("verifiedByTeam", retailerDataTableJson.getInt("verifiedByTeam"));
-                                            editor.putInt("locationVerified", retailerDataTableJson.getInt("locationVerified"));
-                                            editor.putInt("mobileVerified", retailerDataTableJson.getInt("mobileVerified"));
-                                            //last status update not saved in pref
+                                        }else {
+                                            editor.putBoolean("deliveryStatus", retailerDataTableJson.getInt("deliveryStatus")>0);
                                         }
+                                            //last status update not saved in pref
+
                                         //profile photo download intent
                                         int retailerId = retailerAuthTableJson.getInt("retailerId");
-                                        if (retailerDataTableJson.getString("profilePhoto") != null) {
-                                            editor.putString("profilePhoto", retailerDataTableJson.getString("profilePhoto"));
+                                        String profilePhotoURLInLocal=sharedPreferences.getString("profilePhoto",null);
+                                        if (profilePhotoURLInLocal != null) {
                                             Intent dpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
-                                            String dpUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/Aniket/\"New directory\"/public/" + retailerId + ".dp.jpeg";
+                                            String dpUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/dp.jpeg";
                                             dpDownloadIntent.putExtra("url", dpUrl);
                                             String photoName = "";
                                             dpDownloadIntent.putExtra("photoName", "dp.jpeg");
                                             startActivity(dpDownloadIntent);
                                         }
                                         //license photo download intent
-                                        Intent lpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
-                                        String lpUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/Aniiket/\"New directory\"/private/" + retailerId + ".lp.jpeg";
-                                        lpDownloadIntent.putExtra("url", lpUrl);
-                                        String lpPhotoName = "";
-                                        lpDownloadIntent.putExtra("photoName", "lp.jpeg");
-                                        startActivity(lpDownloadIntent);
-                                        //shop photo download intent
-                                        Intent spDownloadIntent = new Intent(LoginActivity.this,ImageDownloadIntentService.class);
-                                        String spUrl = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/Aniiket/\"New directory\"/public/" + retailerId + ".sp.jpeg";
-                                        spDownloadIntent.putExtra("url",spUrl);
-                                        String photoName = "";
-                                        spDownloadIntent.putExtra("photoName","sp.jpeg");
-                                        startActivity(spDownloadIntent);
+                                        String shopActPhotoURLInLocal=sharedPreferences.getString("shopActPhoto",null);
+                                        if(shopActPhotoURLInLocal!=null) {
+                                            Intent lpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
+                                            String lpUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/private/" + retailerId + "/lp.jpeg";
+                                            lpDownloadIntent.putExtra("url", lpUrl);
+                                            String lpPhotoName = "";
+                                            lpDownloadIntent.putExtra("photoName", "lp.jpeg");
+                                            startActivity(lpDownloadIntent);
+                                        }
+//                                        //shop photo download intent
+//                                        String shopPhotoURLInLocal=sharedPreferences.getString("shopPhoto",null);
+//                                        if(shopPhotoURLInLocal!=null) {
+//                                            Intent spDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
+//                                            String spUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/sp.jpeg";
+//                                            spDownloadIntent.putExtra("url", spUrl);
+//                                            String photoName = "";
+//                                            spDownloadIntent.putExtra("photoName", "sp.jpeg");
+//                                            startActivity(spDownloadIntent);
+//                                        }
 
-                                        editor.putString("longitude", String.valueOf(retailerDataTableJson.getDouble("longLoc")));
-                                        editor.putString("latitude", String.valueOf(retailerDataTableJson.getDouble("latLoc")));
                                         editor.putBoolean("isSignedIn", true);
                                         editor.commit();
 
 
                                         hideLoadingProgressbar();
+                                        Log.e("reached intent ", "onResponseReceive: " );
                                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                         finish();
 
