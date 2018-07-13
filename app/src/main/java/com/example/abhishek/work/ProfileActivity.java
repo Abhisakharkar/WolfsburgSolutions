@@ -103,6 +103,7 @@ public class ProfileActivity extends AppCompatActivity implements
     //image dialog layouts
     private View dpLayout, spLayout, lpLayout;
     private ImageView dpDialogImageview, spDialogImageview, lpDialogImageview;
+    private int retailerId;
 
     //booleans to check what is changed when saving
     private boolean proprietorBool = false, mobileNoBool = false, shopNameBool = false, addressLine1Bool = false,
@@ -214,12 +215,12 @@ public class ProfileActivity extends AppCompatActivity implements
             addressLine1Edittext.setText(address);
             licenseNoEdittext.setText(licenseNo);
 
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            retailerId = sharedPreferences.getInt("retailerId", 0);
             try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-
                 //license photo
-                String licensePhotoName = "lp.jpeg";
+                String licensePhotoName = retailerId + ".lp.jpeg";
                 File licensePhotoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", licensePhotoName);
                 licensePhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(licensePhotoFile), null, options);
                 if (licensePhotoBitmap != null) {
@@ -228,7 +229,11 @@ public class ProfileActivity extends AppCompatActivity implements
                     Log.e("license photo error", "license bitmap null");
                 }
 
-                String shopPhotoName = "sp.jpeg";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                String shopPhotoName = retailerId + ".sp.jpeg";
                 File shopPhotoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", shopPhotoName);
                 shopPhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(shopPhotoFile), null, options);
                 if (shopPhotoBitmap != null) {
@@ -236,16 +241,19 @@ public class ProfileActivity extends AppCompatActivity implements
                 } else {
                     Log.e("shop photo error", "shop bitmap null");
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-                String profilePhotoName = "dp.jpeg";
+            try {
+                String profilePhotoName = retailerId + ".dp.jpeg";
                 File profilePhotoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", profilePhotoName);
                 profilePhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(profilePhotoFile), null, options);
                 if (profilePhotoBitmap != null) {
-                    lpImageView.setImageBitmap(profilePhotoBitmap);
+                    dpImageView.setImageBitmap(profilePhotoBitmap);
                 } else {
                     Log.e("profile photo error", "profile bitmap null");
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -281,21 +289,21 @@ public class ProfileActivity extends AppCompatActivity implements
                     locality = localityData.getString("locality");
                     localityTextView.setText(locality);
                     editor.putString("locality", locality);
-                    editor.putInt("localityId",localityData.getInt("localityId"));
-                    editor.putBoolean("localityTier",localityData.getInt("tier")>0);
-                    editor.putBoolean("localityWholesaleTier",localityData.getInt("wholesaleTier")>0);
+                    editor.putInt("localityId", localityData.getInt("localityId"));
+                    editor.putBoolean("localityTier", localityData.getInt("tier") > 0);
+                    editor.putBoolean("localityWholesaleTier", localityData.getInt("wholesaleTier") > 0);
                     editor.commit();
                     int length = responseJSONObject.getInt("length");
-                    if (length ==2) {
+                    if (length == 2) {
                         JSONObject sublocality1Data = responseJSONObject.getJSONObject
                                 ("subLocality1Data");
                         String sublocality = sublocality1Data.getString("subLocality1");
                         subLocality1 = sublocality;
                         sublocalityTextView.setText(subLocality1);
                         editor.putString("subLocality1", subLocality1);
-                        editor.putInt("subLocality1Id",sublocality1Data.getInt("subLocality1Id"));
-                        editor.putBoolean("subLocality1Tier",sublocality1Data.getInt("tier")>0);
-                        editor.putBoolean("subLocality1WholesaleTier",sublocality1Data.getInt("wholesaleTier")>0);
+                        editor.putInt("subLocality1Id", sublocality1Data.getInt("subLocality1Id"));
+                        editor.putBoolean("subLocality1Tier", sublocality1Data.getInt("tier") > 0);
+                        editor.putBoolean("subLocality1WholesaleTier", sublocality1Data.getInt("wholesaleTier") > 0);
                         editor.commit();
                     }
 
@@ -340,7 +348,7 @@ public class ProfileActivity extends AppCompatActivity implements
                             editor.putString("addLine1", address);
                             editor.putString("locality", locality);
                             editor.putString("subLocality1", subLocality1);
-                            editor.putString("shopActLicenseNo",licenseNo);
+                            editor.putString("shopActLicenseNo", licenseNo);
                             editor.putString("longitude", String.valueOf(longitude));
                             editor.putString("latitude", String.valueOf(latitude));
                             editor.putBoolean("isDataFilled", true);
@@ -405,11 +413,11 @@ public class ProfileActivity extends AppCompatActivity implements
                 mobileNo = mobileNoEdittext.getText().toString();
                 shopName = shopNameEdittext.getText().toString();
                 licenseNo = licenseNoEdittext.getText().toString();
-                address=addressLine1Edittext.getText().toString();
+                address = addressLine1Edittext.getText().toString();
                 latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
                 longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
-                localityId=sharedPreferences.getInt("localityId",0);
-                subLocality1Id=sharedPreferences.getInt("subLocality1Id",0);
+                localityId = sharedPreferences.getInt("localityId", 0);
+                subLocality1Id = sharedPreferences.getInt("subLocality1Id", 0);
 
 
                 if (!proprietor.isEmpty()) {
@@ -421,7 +429,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
                                         //TODO save updated data from response of below
                                         //send data to server
-                                        authentication.updateProfile(proprietor, shopName, mobileNo, Double.toString(longitude), Double.toString(latitude), address, licenseNo,Integer.toString(localityId),Integer.toString(subLocality1Id));
+                                        authentication.updateProfile(proprietor, shopName, mobileNo, Double.toString(longitude), Double.toString(latitude), address, licenseNo, Integer.toString(localityId), Integer.toString(subLocality1Id));
                                         //authentication.updateProfile("", "", proprietor, shopName,
                                         //mobileNo, longitude, latitude, address, cityName, stateName, countryName);
                                     }
@@ -821,9 +829,17 @@ public class ProfileActivity extends AppCompatActivity implements
                     } else if (imageRequestFrom.equals("sp")) {
                         shopPhotoBitmap = tempBitmap;
                         spImageView.setImageBitmap(shopPhotoBitmap);
+                        spDialogImageview.setImageBitmap(shopPhotoBitmap);
+                        int retailerId = sharedPreferences.getInt("retailerId", 0);
+                        String photoName = String.valueOf(retailerId) + ".sp.jpeg";
+                        saveImage(shopPhotoBitmap, photoName);
                     } else if (imageRequestFrom.equals("lp")) {
                         licensePhotoBitmap = tempBitmap;
                         lpImageView.setImageBitmap(licensePhotoBitmap);
+                        lpDialogImageview.setImageBitmap(licensePhotoBitmap);
+                        int retailerId = sharedPreferences.getInt("retailerId", 0);
+                        String photoName = String.valueOf(retailerId) + ".lp.jpeg";
+                        saveImage(licensePhotoBitmap, photoName);
                     }
                 }
 
@@ -842,8 +858,31 @@ public class ProfileActivity extends AppCompatActivity implements
                     int columnIndex = cursor.getColumnIndex(filePath[0]);
                     String picturePath = cursor.getString(columnIndex);
                     cursor.close();
-                    //photoBitmap = (BitmapFactory.decodeFile(picturePath));
+                    Bitmap tempBitmap = (BitmapFactory.decodeFile(picturePath));
 
+
+                    if (imageRequestFrom != null) {
+                        if (imageRequestFrom.equals("dp")) {
+                            profilePhotoBitmap = tempBitmap;
+                            dpImageView.setImageBitmap(profilePhotoBitmap);
+                            dpDialogImageview.setImageBitmap(profilePhotoBitmap);
+                            int retailerId = sharedPreferences.getInt("retailerId", 0);
+                            String photoName = String.valueOf(retailerId) + ".dp.jpeg";
+                            saveImage(profilePhotoBitmap, photoName);
+                        } else if (imageRequestFrom.equals("sp")) {
+                            shopPhotoBitmap = tempBitmap;
+                            spImageView.setImageBitmap(shopPhotoBitmap);
+                            int retailerId = sharedPreferences.getInt("retailerId", 0);
+                            String photoName = String.valueOf(retailerId) + ".sp.jpeg";
+                            saveImage(shopPhotoBitmap, photoName);
+                        } else if (imageRequestFrom.equals("lp")) {
+                            licensePhotoBitmap = tempBitmap;
+                            lpImageView.setImageBitmap(licensePhotoBitmap);
+                            int retailerId = sharedPreferences.getInt("retailerId", 0);
+                            String photoName = String.valueOf(retailerId) + ".lp.jpeg";
+                            saveImage(licensePhotoBitmap, photoName);
+                        }
+                    }
                     //set photo to imageView
                     //licenseImageview.setImageBitmap(photoBitmap);
                 }

@@ -77,6 +77,7 @@ public class FetchData {
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.e("FetchData Response",response.toString());
                 serverResponse.saveResponse(response);
             }
         }

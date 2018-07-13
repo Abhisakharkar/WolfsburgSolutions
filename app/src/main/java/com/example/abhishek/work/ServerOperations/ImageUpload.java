@@ -1,6 +1,7 @@
 package com.example.abhishek.work.ServerOperations;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -39,10 +40,13 @@ public class ImageUpload {
     private ImageUploadResponse imageUploadResponse;
     private Request request;
     private Context context;
+    private SharedPreferences sharedPreferences;
 
     public ImageUpload(Context context) {
         this.imageUploadResponse = new ImageUploadResponse();
         this.context = context;
+        sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata",
+                Context.MODE_PRIVATE);
     }
 
     public ImageUploadResponse getImageUploadResponseInstance(){
@@ -92,6 +96,7 @@ public class ImageUpload {
         request = new Request.Builder()
                 .url(url)
                 .addHeader("type","imageFile")
+                .addHeader("Authorization","bearer "+sharedPreferences.getString("token",""))
                 .post(requestBody)
                 .build();
 
