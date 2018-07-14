@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#fffacd"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DeliverySettingsActivity">
@@ -9,6 +10,8 @@
     <TextView
         android:id="@+id/delivery_setting_activity_textview_1_id"
         android:layout_width="0dp"
+        android:textStyle="bold"
+
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
@@ -31,6 +34,7 @@
         app:layout_constraintTop_toTopOf="@id/delivery_setting_activity_textview_1_id" />
 
     <TextView
+        android:textStyle="bold"
         android:id="@+id/delivery_setting_activity_textview_2_id"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -54,12 +58,14 @@
         app:layout_constraintTop_toTopOf="@id/delivery_setting_activity_textview_2_id" />
 
     <TextView
+
         android:id="@+id/delivery_setting_activity_textview_3_id"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Charge Per Half KiloMeter For Delivery"
         android:textSize="18dp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/delivery_setting_activity_textview_1_id"
         app:layout_constraintRight_toLeftOf="@id/delivery_setting_activity_edittext_3_id"
         app:layout_constraintTop_toBottomOf="@id/delivery_setting_activity_textview_2_id" />
@@ -82,6 +88,7 @@
         android:layout_marginTop="16dp"
         android:text="Min Amount For Free Delivery"
         android:textSize="18dp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/delivery_setting_activity_textview_1_id"
         app:layout_constraintRight_toLeftOf="@id/delivery_setting_activity_edittext_4_id"
         app:layout_constraintTop_toBottomOf="@id/delivery_setting_activity_textview_3_id" />

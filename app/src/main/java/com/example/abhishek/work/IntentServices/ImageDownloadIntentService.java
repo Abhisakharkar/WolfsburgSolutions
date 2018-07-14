@@ -26,6 +26,13 @@ public class ImageDownloadIntentService extends IntentService {
 
         String url = intent.getStringExtra("url");
         String photoName = intent.getStringExtra("photoName");
+
+        File photosLocationFile = new File(getApplicationContext().getFilesDir().getAbsolutePath
+                () , "images");
+        if (!photosLocationFile.exists()){
+            photosLocationFile.mkdir();
+        }
+
         try {
             URL URL = new URL(url);
             if (url != null) {
