@@ -35,6 +35,13 @@ public class SendData {
         this.context = context;
     }
 
+    public ServerResponse getServerResponseInstance(){
+        if (serverResponse == null){
+            serverResponse = new ServerResponse();
+        }
+        return this.serverResponse;
+    }
+
     public void sendLatLoc(double latitude,double longitude){
         headers = new HashMap<>();
         headers.put("latloc",String.valueOf(latitude));
@@ -157,7 +164,7 @@ public class SendData {
 
 
 
-
+    //deprecated
     public void sendImageUploadRequest(Bitmap photoBitmap, final String imageName, int retailerId) {
 
         String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/upload";
@@ -201,13 +208,5 @@ public class SendData {
             }
         };
         Volley.newRequestQueue(context).add(volleyMultipartRequest);
-    }
-
-
-    public ServerResponse getServerResponseInstance(){
-        if (serverResponse == null){
-            serverResponse = new ServerResponse();
-        }
-        return this.serverResponse;
     }
 }
