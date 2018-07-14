@@ -257,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             //last status update not saved in pref
 
                                         //profile photo download intent
-                                        int retailerId = retailerAuthTableJson.getInt("retailerId");
+                                        int retailerId = retailerDataTableJson.getInt("retailerId");
                                         //String profilePhotoURLInLocal=sharedPreferences.getString("profilePhoto",null);
                                         //if (profilePhotoURLInLocal != null) {
                                             Intent dpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
