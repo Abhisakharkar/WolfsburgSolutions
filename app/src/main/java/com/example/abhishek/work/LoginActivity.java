@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putBoolean("isDataFilled", true);
                                         editor.putBoolean("isVerified", true);
                                         //retailer auth table
-                                        editor.putInt("retailerId", retailerAuthTableJson.getInt("retailerId"));
+                                        editor.putInt("retailerId", retailerDataTableJson.getInt("retailerId"));
                                         editor.putString("shopActPhoto", retailerAuthTableJson.getString("shopActPhoto"));
                                         editor.putString("shopActLicenseNo", retailerAuthTableJson.getString("shopActLicenseNo"));
                                         //retailer data table
