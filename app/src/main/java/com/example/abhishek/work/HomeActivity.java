@@ -93,15 +93,14 @@ public class HomeActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.home_activity_navigation_view_id);
 
         // Make image blur and set as collapsing toolbar Background
-        /*
-        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable
-                .temp_toolbar_background);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_toolbar_background);
         BlurBuilder blurBuilder = new BlurBuilder();
         Bitmap newImg = blurBuilder.blur(this, bitmap);
         Drawable image = new BitmapDrawable(getResources(), newImg);
         img = (ImageView) findViewById(R.id.collapsingToolbarImageViewId);
         img.setImageDrawable(image);
-        */
+
         shopName=sharedPreferences.getString("shopName","Not Found");
         shopNametxt.setText(shopName);
         shopNametxt.setTextSize(TypedValue.COMPLEX_UNIT_SP,32);
