@@ -11,6 +11,10 @@ import android.widget.Switch;
 import android.widget.TimePicker;
 
 import com.example.abhishek.work.ServerOperations.SendData;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
+import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -23,6 +27,7 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
     private boolean isManual, isTiming2;
 
     private SendData sendData;
+    private ServerResponse serverResponse;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
@@ -32,6 +37,7 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_shop_timing);
 
         sendData = new SendData(ShopTimingActivity.this);
+        serverResponse = sendData.getServerResponseInstance();
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -41,6 +47,18 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
         close2Btn = (Button) findViewById(R.id.shop_timing_activity_close_2_btn_id);
         manualSwitch = (Switch) findViewById(R.id.shop_timing_activity_title_switch_id);
         timing2Switch = (Switch) findViewById(R.id.shop_timing_activity_title_3_switch_id);
+
+        serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+            @Override
+            public void onResponseReceive(JSONObject responseJSONObject) {
+                //TODO process response
+            }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
+            }
+        });
     }
 
     @Override
