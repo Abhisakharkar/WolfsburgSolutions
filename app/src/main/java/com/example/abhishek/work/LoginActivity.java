@@ -258,35 +258,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                         //profile photo download intent
                                         int retailerId = retailerAuthTableJson.getInt("retailerId");
-                                        String profilePhotoURLInLocal=sharedPreferences.getString("profilePhoto",null);
-                                        if (profilePhotoURLInLocal != null) {
+                                        //String profilePhotoURLInLocal=sharedPreferences.getString("profilePhoto",null);
+                                        //if (profilePhotoURLInLocal != null) {
                                             Intent dpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
                                             String dpUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/dp.jpeg";
                                             dpDownloadIntent.putExtra("url", dpUrl);
-                                            String photoName = "";
-                                            dpDownloadIntent.putExtra("photoName", "dp.jpeg");
-                                            startActivity(dpDownloadIntent);
-                                        }
+                                         //   String photoName = "";
+                                            dpDownloadIntent.putExtra("photoName", retailerId+".dp.jpeg");
+                                            startService(dpDownloadIntent);
+                                        //}
                                         //license photo download intent
-                                        String shopActPhotoURLInLocal=sharedPreferences.getString("shopActPhoto",null);
-                                        if(shopActPhotoURLInLocal!=null) {
+                                       // String shopActPhotoURLInLocal=sharedPreferences.getString("shopActPhoto",null);
+                                        //if(shopActPhotoURLInLocal!=null) {
                                             Intent lpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
                                             String lpUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/private/" + retailerId + "/lp.jpeg";
                                             lpDownloadIntent.putExtra("url", lpUrl);
-                                            String lpPhotoName = "";
-                                            lpDownloadIntent.putExtra("photoName", "lp.jpeg");
-                                            startActivity(lpDownloadIntent);
-                                        }
-//                                        //shop photo download intent
-//                                        String shopPhotoURLInLocal=sharedPreferences.getString("shopPhoto",null);
-//                                        if(shopPhotoURLInLocal!=null) {
-//                                            Intent spDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
-//                                            String spUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/sp.jpeg";
-//                                            spDownloadIntent.putExtra("url", spUrl);
-//                                            String photoName = "";
-//                                            spDownloadIntent.putExtra("photoName", "sp.jpeg");
-//                                            startActivity(spDownloadIntent);
-//                                        }
+                                          //  String lpPhotoName = "";
+                                            lpDownloadIntent.putExtra("photoName", retailerId+".lp.jpeg");
+                                            startService(lpDownloadIntent);
+                                        //}
+                                        //shop photo download intent
+                                        //String shopPhotoURLInLocal=sharedPreferences.getString("shopPhoto",null);
+                                        //if(shopPhotoURLInLocal!=null) {
+                                            Intent spDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
+                                            String spUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/sp.jpeg";
+                                            spDownloadIntent.putExtra("url", spUrl);
+                                          //  String photoName = "";
+                                            spDownloadIntent.putExtra("photoName", retailerId+".sp.jpeg");
+                                            startService(spDownloadIntent);
+                                       //}
 
                                         editor.putBoolean("isSignedIn", true);
                                         editor.commit();
