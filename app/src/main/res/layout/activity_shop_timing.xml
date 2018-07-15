@@ -23,6 +23,7 @@
         android:id="@+id/shop_timing_activity_title_switch_id"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:onClick="onClick"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@id/shop_timing_activity_title_1_textview_id"
         app:layout_constraintLeft_toRightOf="@id/shop_timing_activity_title_1_textview_id"
@@ -98,18 +99,19 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginRight="15dp"
         android:background="@drawable/close_shop_time"
         android:onClick="onClick"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:layout_marginRight="15dp"
         android:text="Close Time"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/shop_timing_activity_close_1_textview_id"
         app:layout_constraintLeft_toRightOf="@id/shop_timing_activity_close_1_textview_id"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/shop_timing_activity_close_1_textview_id" />
+        app:layout_constraintTop_toTopOf="@id/shop_timing_activity_close_1_textview_id"
+        app:layout_constraintVertical_bias="0.538" />
 
     <TextView
         android:id="@+id/shop_timing_activity_title_3_textview_id"
@@ -130,6 +132,7 @@
         android:id="@+id/shop_timing_activity_title_3_switch_id"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:onClick="onClick"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@id/shop_timing_activity_title_3_textview_id"
         app:layout_constraintLeft_toRightOf="@id/shop_timing_activity_title_3_textview_id"
@@ -214,5 +217,18 @@
         app:layout_constraintLeft_toRightOf="@id/shop_timing_activity_close_2_textview_id"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/shop_timing_activity_close_2_textview_id" />
+
+    <Button
+        android:id="@+id/save_timing_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="148dp"
+        android:layout_marginStart="148dp"
+        android:onClick="onClick"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

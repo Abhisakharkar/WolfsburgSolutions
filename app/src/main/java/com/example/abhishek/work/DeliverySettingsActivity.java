@@ -1,23 +1,28 @@
 package com.example.abhishek.work;
 
 import android.content.SharedPreferences;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.abhishek.work.ServerOperations.SendData;
 
-public class DeliverySettingsActivity extends AppCompatActivity {
+public class DeliverySettingsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText maxDistEdittext, maxFreeDistEdittext, chargeEdittext, minAmountEdittext;
     private int maxDist, maxFreeDIst, charge, minAmount;
-    private boolean sendRequest = false;
+    private boolean sendRequest = false,deliveryStatus;
     private SendData sendData;
-
+    private Switch deliverySwitch;
+    private Button save;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private ConstraintLayout myConstraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +32,19 @@ public class DeliverySettingsActivity extends AppCompatActivity {
         sendData = new SendData(DeliverySettingsActivity.this);
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
+        deliverySwitch=(Switch) findViewById(R.id.activity_delivery_settings_delivery_status_switch_btn_id);
+        myConstraintLayout=(ConstraintLayout) findViewById(R.id.delivery_layout_id);
         maxDistEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_1_id);
         maxFreeDistEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_2_id);
         chargeEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_3_id);
         minAmountEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_4_id);
-
+        deliveryStatus=sharedPreferences.getBoolean("deliveryStatus",false);
+        deliverySwitch.setChecked(deliveryStatus);
+        if(deliveryStatus){
+            myConstraintLayout.setVisibility(View.VISIBLE);
+        }else {
+            myConstraintLayout.setVisibility(View.INVISIBLE);
+        }
         if (sharedPreferences.getInt("maxDeliveryDistanceInMeters", 0) != 0) {
             maxDist = sharedPreferences.getInt("maxDeliveryDistanceInMeters", 0);
             maxFreeDIst = sharedPreferences.getInt("maxFreeDeliveryDistanceInMeters", 0);
@@ -141,6 +153,25 @@ public class DeliverySettingsActivity extends AppCompatActivity {
             editor.putInt("minAmountForFreeDelivery", minAmount);
             editor.commit();
             sendData.updateDeliverySettings(maxDist, maxFreeDIst, charge, minAmount);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.activity_delivery_settings_delivery_status_switch_btn_id:
+                if (deliverySwitch.isChecked()){
+                    myConstraintLayout.setVisibility(View.VISIBLE);
+                }else {
+                    myConstraintLayout.setVisibility(View.INVISIBLE);
+                }
+                break;
+            case R.id.activity_delivery_settings_save_btn_id:
+
+                onStop();
+                break;
+
+
         }
     }
 }

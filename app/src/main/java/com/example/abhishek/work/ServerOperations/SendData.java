@@ -148,7 +148,7 @@ public class SendData {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String,String> header = new HashMap<>();
                 SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences("userdata", Context.MODE_PRIVATE);
-                header.put("token", sharedPreferences.getString("token", ""));
+                header.put("Authorization", "Bearer "+sharedPreferences.getString("token", ""));
                 return header;
             }
         };

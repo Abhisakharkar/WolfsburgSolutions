@@ -232,32 +232,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putInt("mobileVerified", retailerDataTableJson.getInt("mobileVerified"));
                                         editor.putBoolean("openCloseIsManual", retailerDataTableJson.getInt("openCloseIsManual")>0);
                                         editor.putBoolean("currentState", retailerDataTableJson.getInt("currentState")>0);
-                                        if (retailerDataTableJson.getString("shopOpenTime1") != null) {
+                                        if (!retailerDataTableJson.getString("shopOpenTime1").equals("null")) {
                                                 editor.putString("shopOpenTime1", retailerDataTableJson.getString("shopOpenTime1"));
                                                 editor.putString("shopCloseTime1", retailerDataTableJson.getString("shopCloseTime1"));
                                         }
-                                        if (retailerDataTableJson.getString("shopOpenTime2") != null) {
+                                        if (!retailerDataTableJson.getString("shopOpenTime2").equals("null")) {
                                                 editor.putString("shopOpenTime2", retailerDataTableJson.getString("shopOpenTime2"));
                                                 editor.putString("shopCloseTime2", retailerDataTableJson.getString("shopCloseTime2"));
                                         }
-                                        if (retailerDataTableJson.getString("shopPhoto") != null) {
-                                                editor.putString("shopPhoto", retailerDataTableJson.getString("shopPhoto"));
-                                                editor.putString("profilePhoto",retailerDataTableJson.getString("profilePhoto"));
-
-                                        }
+                                        editor.putString("shopPhoto", retailerDataTableJson.getString("shopPhoto"));
+                                        editor.putString("profilePhoto",retailerDataTableJson.getString("profilePhoto"));
+                                        editor.putBoolean("deliveryStatus", retailerDataTableJson.getInt("deliveryStatus")>0);
                                         if (retailerDataTableJson.getInt("deliveryStatus")>0 ) {
-                                            editor.putBoolean("deliveryStatus", retailerDataTableJson.getInt("deliveryStatus")>0);
                                             editor.putInt("maxDeliveryDistanceInMeters", retailerDataTableJson.getInt("maxDeliveryDistanceInMeters"));
                                             editor.putInt("maxFreeDeliveryDistanceInMeters", retailerDataTableJson.getInt("maxFreeDeliveryDistanceInMeters"));
                                             editor.putInt("chargePerHalfKiloMeterForDelivery", retailerDataTableJson.getInt("chargePerHalfKiloMeterForDelivery"));
                                             editor.putInt("minAmountForFreeDelivery", retailerDataTableJson.getInt("minAmountForFreeDelivery"));
-                                        }else {
-                                            editor.putBoolean("deliveryStatus", retailerDataTableJson.getInt("deliveryStatus")>0);
                                         }
                                             //last status update not saved in pref
 
                                         //profile photo download intent
-                                        int retailerId = retailerAuthTableJson.getInt("retailerId");
+                                        int retailerId = retailerDataTableJson.getInt("retailerId");
                                         //String profilePhotoURLInLocal=sharedPreferences.getString("profilePhoto",null);
                                         //if (profilePhotoURLInLocal != null) {
                                             Intent dpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);

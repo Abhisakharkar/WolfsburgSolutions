@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DeliverySettingsActivity"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Do you provide Delivery"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+        <Switch
+            android:id="@+id/activity_delivery_settings_delivery_status_switch_btn_id"
+            android:onClick="onClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#fffacd"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/delivery_layout_id"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".DeliverySettingsActivity">
 
     <TextView
@@ -104,3 +132,10 @@
         app:layout_constraintTop_toTopOf="@id/delivery_setting_activity_textview_4_id" />
 
 </android.support.constraint.ConstraintLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:onClick="onClick"
+        android:id="@+id/activity_delivery_settings_save_btn_id"/>
+</LinearLayout>
