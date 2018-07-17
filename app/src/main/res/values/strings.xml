@@ -39,4 +39,26 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- Strings for activity_delivery_settings -->
+    <string name="provide_delivery">Delivery available ?</string>
+    <string name="max_free_delivery_distance">Max free deliver distance</string>
+    <string name="min_amt_free_delivery">Min amount for free delivery</string>
+    <string name="max_paid_delivery_dis">Max paid delivery distance</string>
+    <string name="charge_per_half_km">Charge per half KiloMeter for delivery</string>
+    <string name="save">Save</string>
+    <!--                                           -->
+
+    <!-- Strings for activity_shop_timing -->
+    <string name="opens_at">Opens at</string>
+    <string name="closes_at">Closes at</string>
+    <string name="open_time">Open Time</string>
+    <string name="close_time">Close Time</string>
+    <string name="time_management">Time Management</string>
+    <string name="add_business_hours">Add Business Hours</string>
+    <string name="closed_from_1_to_2">Closed from value 1 to value 2</string>
+    <string name="add_more">Add more</string>
+
+
+
+
 </resources>

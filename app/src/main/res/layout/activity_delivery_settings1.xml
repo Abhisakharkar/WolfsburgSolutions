@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGray"
+    tools:context=".DeliverySettingsActivity">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/delivery_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/DeliveryActivitySettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/provide_delivery"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="21sp" />
+
+                <Switch
+                    android:id="@+id/activity_delivery_settings_delivery_status_switch_btn_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:onClick="onClick" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/delivery_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/delivery_switch"
+        android:layout_margin="10dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+
+                android:id="@+id/delivery_layout_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:context=".DeliverySettingsActivity">
+
+                <TextView
+                    android:id="@+id/delivery_setting_activity_textview_1_id"
+                    style="@style/DeliveryActivitySettings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/max_paid_delivery_dis"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/delivery_setting_activity_edittext_1_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:minWidth="96dp"
+                    app:layout_constraintBottom_toBottomOf="@id/delivery_setting_activity_textview_1_id"
+                    app:layout_constraintLeft_toRightOf="@id/delivery_setting_activity_textview_1_id"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/delivery_setting_activity_textview_1_id" />
+
+                <TextView
+                    android:id="@+id/delivery_setting_activity_textview_2_id"
+                    style="@style/DeliveryActivitySettings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/max_free_delivery_distance"
+                    app:layout_constraintRight_toLeftOf="@id/delivery_setting_activity_edittext_2_id"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/delivery_setting_activity_textview_1_id" />
+
+                <EditText
+                    android:id="@+id/delivery_setting_activity_edittext_2_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:minWidth="96dp"
+                    app:layout_constraintBottom_toBottomOf="@id/delivery_setting_activity_textview_2_id"
+                    app:layout_constraintLeft_toRightOf="@id/delivery_setting_activity_textview_2_id"
+                    app:layout_constraintRight_toRightOf="@id/delivery_setting_activity_edittext_1_id"
+                    app:layout_constraintTop_toTopOf="@id/delivery_setting_activity_textview_2_id" />
+
+                <TextView
+
+                    android:id="@+id/delivery_setting_activity_textview_3_id"
+                    style="@style/DeliveryActivitySettings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/charge_per_half_km"
+                    app:layout_constraintRight_toLeftOf="@id/delivery_setting_activity_edittext_3_id"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/delivery_setting_activity_textview_2_id" />
+
+                <EditText
+                    android:id="@+id/delivery_setting_activity_edittext_3_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:minWidth="96dp"
+                    app:layout_constraintLeft_toRightOf="@id/delivery_setting_activity_textview_3_id"
+                    app:layout_constraintRight_toRightOf="@id/delivery_setting_activity_edittext_1_id"
+                    app:layout_constraintTop_toTopOf="@id/delivery_setting_activity_textview_3_id" />
+
+                <TextView
+                    android:id="@+id/delivery_setting_activity_textview_4_id"
+                    style="@style/DeliveryActivitySettings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/min_amt_free_delivery"
+                    app:layout_constraintRight_toLeftOf="@id/delivery_setting_activity_edittext_4_id"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/delivery_setting_activity_textview_3_id" />
+
+                <EditText
+                    android:id="@+id/delivery_setting_activity_edittext_4_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:minWidth="96dp"
+                    app:layout_constraintLeft_toRightOf="@id/delivery_setting_activity_textview_4_id"
+                    app:layout_constraintRight_toRightOf="@id/delivery_setting_activity_edittext_1_id"
+                    app:layout_constraintTop_toTopOf="@id/delivery_setting_activity_textview_4_id" />
+
+            </android.support.constraint.ConstraintLayout>
+        </FrameLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/activity_delivery_settings_save_btn_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:background="@color/save_green"
+        android:onClick="onClick"
+        android:text="@string/save"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

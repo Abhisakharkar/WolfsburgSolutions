@@ -56,7 +56,9 @@
         <activity android:name=".ProductDetailsActivity" />
         <activity android:name=".ShopTimingActivity">
         </activity>
-        <activity android:name=".DeliverySettingsActivity"></activity>
+        <activity
+            android:name=".DeliverySettingsActivity">
+        </activity>
 
         <service android:name=".IntentServices.ImageDownloadIntentService"
             android:enabled="true"/>

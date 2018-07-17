@@ -19,7 +19,7 @@
 
             <ImageView
                 android:id="@+id/profile_activity_shop_imageview_id"
-                android:layout_width="0dp"
+                android:layout_width="381dp"
                 android:layout_height="0dp"
                 android:background="@color/colorGreen"
                 android:onClick="onClick"
