@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -48,6 +50,7 @@ import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.ServerOperations.ImageUpload;
 import com.example.abhishek.work.ServerOperations.SendData;
+import com.example.abhishek.work.SupportClasses.BlurBuilder;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.LocationResponse;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.LocationResponseListener.OnLocationResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
@@ -174,28 +177,28 @@ public class ProfileActivity extends AppCompatActivity implements
         locationChangeBtn = (ImageButton) findViewById(R.id.profile_activity_location_btn_id);
         spImageView = (ImageView) findViewById(R.id.profile_activity_shop_imageview_id);
         dpImageView = (ImageView) findViewById(R.id.profile_activity_dp_imageview_id);
-        mFrameLayout=(FrameLayout)findViewById(R.id.maps_frame_layout);
+      //  mFrameLayout=(FrameLayout)findViewById(R.id.maps_frame_layout);
         mRelativeLayout=(RelativeLayout)findViewById(R.id.maps_layout);
         lpImageView = (ImageView) findViewById(R.id.profile_activity_license_photo_imageview_id);
 
         // *****************        OLD         ******************
-        imageButton = (ImageButton) findViewById(R.id.pro_pic_btn_id);
-        mob_no_edit = (EditText) findViewById(R.id.mob_no_edittext_id);
-        address_edit = (EditText) findViewById(R.id.shop_address_edittext_id);
-        shop_name_edit = (EditText) findViewById(R.id.shop_name_edittext_id);
-        proprieter_edit = (EditText) findViewById(R.id.proprieter_edittext_id);
-        //shop_pic_imageview = (ImageView) findViewById(R.id.shop_pic_view_id);
-        //shop_license_imageview = (ImageView) findViewById(R.id.shop_license_pic_view_id);
-        shop_category_spinner = (Spinner) findViewById(R.id.shop_category_spinner_id);
-        save_profile_btn = (Button) findViewById(R.id.save_profile_btn_id);
-        shop_location_btn = (Button) findViewById(R.id.shop_location_btn_id);
-        shop_pic_textview = (TextView) findViewById(R.id.profile_activity_shop_photo_textview_id);
-        shop_license_pic_textview = (TextView) findViewById(R.id.profile_activity_shop_license_photo_textview_id);
+//        imageButton = (ImageButton) findViewById(R.id.pro_pic_btn_id);
+//        mob_no_edit = (EditText) findViewById(R.id.mob_no_edittext_id);
+//        address_edit = (EditText) findViewById(R.id.shop_address_edittext_id);
+//        shop_name_edit = (EditText) findViewById(R.id.shop_name_edittext_id);
+//        proprieter_edit = (EditText) findViewById(R.id.proprieter_edittext_id);
+//        //shop_pic_imageview = (ImageView) findViewById(R.id.shop_pic_view_id);
+//        //shop_license_imageview = (ImageView) findViewById(R.id.shop_license_pic_view_id);
+//        shop_category_spinner = (Spinner) findViewById(R.id.shop_category_spinner_id);
+//        save_profile_btn = (Button) findViewById(R.id.save_profile_btn_id);
+//        shop_location_btn = (Button) findViewById(R.id.shop_location_btn_id);
+//        shop_pic_textview = (TextView) findViewById(R.id.profile_activity_shop_photo_textview_id);
+//        shop_license_pic_textview = (TextView) findViewById(R.id.profile_activity_shop_license_photo_textview_id);
 
-        save_profile_btn.setOnClickListener(this);
-        shop_location_btn.setOnClickListener(this);
-        shop_pic_textview.setOnClickListener(this);
-        shop_license_pic_textview.setOnClickListener(this);
+//        save_profile_btn.setOnClickListener(this);
+//        //shop_location_btn.setOnClickListener(this);
+//        shop_pic_textview.setOnClickListener(this);
+//        shop_license_pic_textview.setOnClickListener(this);
 
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -219,7 +222,7 @@ public class ProfileActivity extends AppCompatActivity implements
             subLocality1Id = sharedPreferences.getInt("subLocality1Id", 0);
             locality = sharedPreferences.getString("locality", "");
             subLocality1 = sharedPreferences.getString("subLocality1", "");
-            if (!locality.isEmpty()) {
+            if(!locality.isEmpty()){
                 localityTextView.setText(locality);
             }
             if (!subLocality1.isEmpty()) {
@@ -261,6 +264,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                spImageView.setImageResource(R.drawable.temp_toolbar_background);
             }
 
             try {
@@ -447,7 +451,23 @@ public class ProfileActivity extends AppCompatActivity implements
 
                                         //TODO save updated data from response of below
                                         //send data to server
-                                        authentication.updateProfile(proprietor, shopName, mobileNo, Double.toString(longitude), Double.toString(latitude), address, licenseNo, Integer.toString(localityId), Integer.toString(subLocality1Id));
+                                        try {
+                                            //license photo
+                                            BitmapFactory.Options options = new BitmapFactory.Options();
+                                            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                                            retailerId = sharedPreferences.getInt("retailerId", 0);
+                                            String licensePhotoName = retailerId + ".lp.jpeg";
+                                            File licensePhotoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", licensePhotoName);
+                                            licensePhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(licensePhotoFile), null, options);
+                                            if (licensePhotoBitmap != null) {
+                                                authentication.updateProfile(proprietor, shopName, mobileNo, Double.toString(longitude), Double.toString(latitude), address, licenseNo, Integer.toString(localityId), Integer.toString(subLocality1Id));
+                                            } else {
+                                                Toast.makeText(context, "Please Upload Shop License Photo !", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         //authentication.updateProfile("", "", proprietor, shopName,
                                         //mobileNo, longitude, latitude, address, cityName, stateName, countryName);
                                     }
@@ -741,7 +761,7 @@ public class ProfileActivity extends AppCompatActivity implements
         //for location
         if (requestCode == LOC_PERM_REQ_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //location permission granted
+                //location permission granted6
                 getLocation();
             } else {
                 //location permission not granted
@@ -956,15 +976,13 @@ public class ProfileActivity extends AppCompatActivity implements
         mMap = googleMap;
 
 
-        if((longitude!=0 && latitude!=0) || longitude!=0 || latitude!=0){
+        if((longitude!=0 && latitude!=0)){
             LatLng mylocation = new LatLng(latitude, longitude);
             mMap.addMarker(new MarkerOptions().position(mylocation).title("Marker in Location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation,15));
-            mFrameLayout.setVisibility(View.INVISIBLE);
-        }
+            }
         else{
-            mFrameLayout.setVisibility(View.VISIBLE);
-            mRelativeLayout.setVisibility(View.INVISIBLE);
+//            mRelativeLayout.setVisibility(View.INVISIBLE);
         }
     }
 

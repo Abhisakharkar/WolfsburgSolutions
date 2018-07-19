@@ -20,22 +20,21 @@ public class DeliverySettingsActivity extends AppCompatActivity implements View.
     private boolean sendRequest = false,deliveryStatus;
     private SendData sendData;
     private Switch deliverySwitch;
-    private Button save;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private ConstraintLayout myConstraintLayout;
+    private FrameLayout deliveryFrame;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delivery_settings);
+        setContentView(R.layout.activity_delivery_settings1);
 
         sendData = new SendData(DeliverySettingsActivity.this);
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         deliverySwitch=(Switch) findViewById(R.id.activity_delivery_settings_delivery_status_switch_btn_id);
-        myConstraintLayout=(ConstraintLayout) findViewById(R.id.delivery_layout_id);
+        deliveryFrame=(FrameLayout) findViewById(R.id.delivery_frame);
         maxDistEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_1_id);
         maxFreeDistEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_2_id);
         chargeEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_3_id);
@@ -43,11 +42,7 @@ public class DeliverySettingsActivity extends AppCompatActivity implements View.
 
         deliveryStatus=sharedPreferences.getBoolean("deliveryStatus",false);
         deliverySwitch.setChecked(deliveryStatus);
-        if(deliveryStatus){
-            myConstraintLayout.setVisibility(View.VISIBLE);
-        }else {
-            myConstraintLayout.setVisibility(View.INVISIBLE);
-        }
+        setVisibility();
         if (sharedPreferences.getInt("maxDeliveryDistanceInMeters", 0) != 0) {
             maxDist = sharedPreferences.getInt("maxDeliveryDistanceInMeters", 0);
             maxFreeDIst = sharedPreferences.getInt("maxFreeDeliveryDistanceInMeters", 0);
@@ -163,11 +158,7 @@ public class DeliverySettingsActivity extends AppCompatActivity implements View.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.activity_delivery_settings_delivery_status_switch_btn_id:
-                if (deliverySwitch.isChecked()){
-                    myConstraintLayout.setVisibility(View.VISIBLE);
-                }else {
-                    myConstraintLayout.setVisibility(View.INVISIBLE);
-                }
+                setVisibility();
                 break;
             case R.id.activity_delivery_settings_save_btn_id:
 
@@ -175,6 +166,22 @@ public class DeliverySettingsActivity extends AppCompatActivity implements View.
                 break;
 
 
+        }
+    }
+
+    public void setVisibility(){
+        if (deliverySwitch.isChecked()){
+            deliveryFrame.setVisibility(View.INVISIBLE);
+            maxDistEdittext.setEnabled(true);
+            maxFreeDistEdittext.setEnabled(true);
+            chargeEdittext.setEnabled(true);
+            minAmountEdittext.setEnabled(true);
+        }else {
+            deliveryFrame.setVisibility(View.VISIBLE);
+            maxDistEdittext.setEnabled(false);
+            maxFreeDistEdittext.setEnabled(false);
+            chargeEdittext.setEnabled(false);
+            minAmountEdittext.setEnabled(false);
         }
     }
 }

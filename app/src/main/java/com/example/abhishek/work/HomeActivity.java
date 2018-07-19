@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.abhishek.work.Model.ItemData;
 import com.example.abhishek.work.ServerOperations.Authentication;
+import com.example.abhishek.work.ServerOperations.SendData;
 import com.example.abhishek.work.SupportClasses.BlurBuilder;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
@@ -46,8 +47,9 @@ import org.json.JSONObject;
 import org.w3c.dom.ProcessingInstruction;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -59,9 +61,11 @@ public class HomeActivity extends AppCompatActivity {
     private ItemData itemData;
     private FloatingActionButton fab;
     private NavigationView navigationView;
-    private String shopName;
+    private String shopName,locality,subLocality1,subLocality2;
+    private double latitude,longitude;
     //Recycler View
     private RecyclerView recyclerView;
+    private int retailerId;
     private ItemsListAdapter myListAdapter;
     private ArrayList<ItemData> arrayList;
     private RecyclerView.LayoutManager layoutManager;
@@ -72,7 +76,9 @@ public class HomeActivity extends AppCompatActivity {
     //local database
     private LocalDatabaseHelper databaseHelper;
 
-    private SharedPreferences sharedPreferences;
+    public SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private SendData sendData = new SendData(HomeActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
 
         context = HomeActivity.this;
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         authentication = new Authentication(context);
 
         //initialize ui components
@@ -93,19 +100,80 @@ public class HomeActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.home_activity_navigation_view_id);
 
         // Make image blur and set as collapsing toolbar Background
-
-        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_toolbar_background);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        retailerId=sharedPreferences.getInt("retailerId",0);
         BlurBuilder blurBuilder = new BlurBuilder();
-        Bitmap newImg = blurBuilder.blur(this, bitmap);
-        Drawable image = new BitmapDrawable(getResources(), newImg);
-        img = (ImageView) findViewById(R.id.collapsingToolbarImageViewId);
-        img.setImageDrawable(image);
-
+        try {
+            String shopPhotoName = retailerId + ".sp.jpeg";
+            File shopPhotoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", shopPhotoName);
+            Bitmap shopPhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(shopPhotoFile), null, options);
+            Bitmap newImg = blurBuilder.blur(this, shopPhotoBitmap);
+            Drawable image = new BitmapDrawable(getResources(), newImg);
+            img = (ImageView) findViewById(R.id.collapsingToolbarImageViewId);
+            img.setImageDrawable(image);
+        }catch (Exception e) {
+            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_toolbar_background);
+            Bitmap newImg = blurBuilder.blur(this, bitmap);
+            Drawable image = new BitmapDrawable(getResources(), newImg);
+            img = (ImageView) findViewById(R.id.collapsingToolbarImageViewId);
+            img.setImageDrawable(image);
+        }
         shopName=sharedPreferences.getString("shopName","Not Found");
         shopNametxt.setText(shopName);
         shopNametxt.setTextSize(TypedValue.COMPLEX_UNIT_SP,32);
         shopNametxt.setTextColor(getResources().getColor(R.color.colorWhite));
+        latitude = Double.parseDouble(sharedPreferences.getString("latitude","0"));
+        longitude= Double.parseDouble(sharedPreferences.getString("longitude","0"));
+        locality =sharedPreferences.getString("locality","");
+        Log.e("value", "onCreate: "+latitude+" longitude"+longitude );
+        if(latitude!=0 && longitude!=0){
+            String check =sharedPreferences.getString("locality","");
+            if(check.isEmpty()){
+            sendData.sendLatLoc(latitude, longitude);}
+        }
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse = sendData.getServerResponseInstance();
+        serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+            @Override
+            public void onResponseReceive(JSONObject responseJSONObject) {
+                try {
+                    Log.e("response object", "onResponseReceive: "+responseJSONObject);
+                    JSONObject localityData = responseJSONObject.getJSONObject("localityData");
+                    locality = localityData.getString("locality");
+                    editor.putString("locality", locality);
+                    editor.putInt("localityId", localityData.getInt("localityId"));
+                    editor.putBoolean("localityTier", localityData.getInt("tier") > 0);
+                    editor.putBoolean("localityWholesaleTier", localityData.getInt("wholesaleTier") > 0);
+                    editor.commit();
+                    int length = responseJSONObject.getInt("length");
+                    if (length == 2) {
+                        JSONObject sublocality1Data = responseJSONObject.getJSONObject("subLocality1Data");
+                        subLocality1 = sublocality1Data.getString("subLocality1");
+                        editor.putString("subLocality1", subLocality1);
+                        editor.putInt("subLocality1Id", sublocality1Data.getInt("subLocality1Id"));
+                        editor.putBoolean("subLocality1Tier", sublocality1Data.getInt("tier") > 0);
+                        editor.putBoolean("subLocality1WholesaleTier", sublocality1Data.getInt("wholesaleTier") > 0);
+                        editor.commit();
+                    }
 
+                    if (length == 3) {
+                        JSONObject sublocality2Data = responseJSONObject.getJSONObject("subLocality2Data");
+                        subLocality2 = sublocality2Data.getString("subLocality2");
+                        editor.putString("subLocality2", subLocality2);
+                        editor.commit();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
+            }
+        });
         //Fade in/out effect for ShopNameText,SwitchBtn,Open/CloseText
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -281,6 +349,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     };
+
 }
 
 

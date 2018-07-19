@@ -4,6 +4,14 @@
     <string name="close">close</string>
     <string name="mrp"> <strike>this is mrp</strike></string>
 
+
+    <string name="baseURL">"http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com"</string>
+    <string name="retailerDataImageBaseURL">"http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt"</string>
+    <string name="baseURLWithPort">"http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com:6868"</string>
+    <string name="categoryImageBaseUrl">"http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/category/"</string>
+    <string name="productImageBaseUrl">"http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product"</string>
+
+
     <string-array name="shop_category">
         <item>category 1</item>
         <item>category 2</item>
@@ -40,7 +48,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Strings for activity_delivery_settings -->
-    <string name="provide_delivery">Delivery available ?</string>
+    <string name="provide_delivery">Do You Provide Home Delivery ?</string>
     <string name="max_free_delivery_distance">Max free deliver distance</string>
     <string name="min_amt_free_delivery">Min amount for free delivery</string>
     <string name="max_paid_delivery_dis">Max paid delivery distance</string>
@@ -53,9 +61,9 @@
     <string name="closes_at">Closes at</string>
     <string name="open_time">Open Time</string>
     <string name="close_time">Close Time</string>
-    <string name="time_management">Time Management</string>
+    <string name="time_management">Shop Opening/Closing</string>
     <string name="add_business_hours">Add Business Hours</string>
-    <string name="closed_from_1_to_2">Closed from value 1 to value 2</string>
+    <string name="closed_from_1_to_2">Closed between</string>
     <string name="add_more">Add more</string>
 
     <!-- Strings for profile activity-->

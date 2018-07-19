@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -22,6 +24,8 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
     private Button open1Btn, open2Btn, close1Btn, close2Btn;
     private Switch manualSwitch, timing2Switch;
     private String open1, open2, close1, close2;
+    private FrameLayout frame1,frame2;
+    private TextView textView;
     private boolean isManual;
     private int length=0;
     private SendData sendData;
@@ -32,7 +36,7 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop_timing);
+        setContentView(R.layout.activity_shop_timing1);
 
         sendData = new SendData(ShopTimingActivity.this);
         serverResponse = sendData.getServerResponseInstance();
@@ -45,7 +49,10 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
         close2Btn = (Button) findViewById(R.id.shop_timing_activity_close_2_btn_id);
         manualSwitch = (Switch) findViewById(R.id.shop_timing_activity_title_switch_id);
         timing2Switch = (Switch) findViewById(R.id.shop_timing_activity_title_3_switch_id);
-        isManual = sharedPreferences.getBoolean("openCloseIsManual", false);
+        frame1=(FrameLayout) findViewById(R.id.frame_layout_timing_1);
+        frame2=(FrameLayout) findViewById(R.id.frame_layout_timing_2);
+        isManual= sharedPreferences.getBoolean("openCloseIsManual", false);
+        textView=(TextView) findViewById(R.id.text_below_button);
         manualSwitch.setChecked(isManual);
         open1=sharedPreferences.getString("shopOpenTime1",null);
         close1=sharedPreferences.getString("shopCloseTime1",null);
@@ -100,17 +107,26 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
     }
     public void setButtons() {
         if (manualSwitch.isChecked()) {
+            textView.setText("Manual");
+            frame1.setVisibility(View.VISIBLE);
+            frame2.setVisibility(View.VISIBLE);
+            timing2Switch.setEnabled(false);
             open1Btn.setEnabled(false);
             open2Btn.setEnabled(false);
             close1Btn.setEnabled(false);
             close2Btn.setEnabled(false);
         } else {
+            timing2Switch.setEnabled(true);
+            textView.setText("Time Based");
+            frame1.setVisibility(View.INVISIBLE);
             open1Btn.setEnabled(true);
             close1Btn.setEnabled(true);
             if (timing2Switch.isChecked()) {
+                frame2.setVisibility(View.INVISIBLE);
                 open2Btn.setEnabled(true);
                 close2Btn.setEnabled(true);
             } else {
+                frame2.setVisibility(View.VISIBLE);
                 open2Btn.setEnabled(false);
                 close2Btn.setEnabled(false);
             }

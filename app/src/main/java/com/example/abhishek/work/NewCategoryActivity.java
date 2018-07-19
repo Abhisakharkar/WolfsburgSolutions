@@ -190,7 +190,7 @@ public class NewCategoryActivity extends AppCompatActivity {
                             categoryData.setParent_id(j.getInt("parent_id"));
 
                             list.add(categoryData);
-                        }
+                       }
                         categoriesViewModel.setCategoriesList(list);
                     } else if (responseFrom.equals("magento_search_product")) {
                         //TODO parse response and make arraylist
