@@ -25,6 +25,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,8 +35,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +62,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -75,9 +84,10 @@ import java.util.Locale;
 import java.util.zip.Inflater;
 
 public class ProfileActivity extends AppCompatActivity implements
-        View.OnClickListener {
+        View.OnClickListener,OnMapReadyCallback {
 
     private Context context;
+    private GoogleMap mMap;
 
     public static final int LOC_PERM_REQ_CODE = 201;
     public static final int LOC_ENABLE_REQ_CODE = 202;
@@ -87,6 +97,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private FrameLayout mFrameLayout;
 
     private FetchData fetchData;
     private Authentication authentication = new Authentication(ProfileActivity.this);
@@ -99,6 +110,7 @@ public class ProfileActivity extends AppCompatActivity implements
     private ImageView dpImageView, spImageView, lpImageView;
     private Button saveProfileBtn;
     private ImageButton locationChangeBtn;
+    private RelativeLayout mRelativeLayout;
 
     //image dialog layouts
     private View dpLayout, spLayout, lpLayout;
@@ -162,6 +174,8 @@ public class ProfileActivity extends AppCompatActivity implements
         locationChangeBtn = (ImageButton) findViewById(R.id.profile_activity_location_btn_id);
         spImageView = (ImageView) findViewById(R.id.profile_activity_shop_imageview_id);
         dpImageView = (ImageView) findViewById(R.id.profile_activity_dp_imageview_id);
+        mFrameLayout=(FrameLayout)findViewById(R.id.maps_frame_layout);
+        mRelativeLayout=(RelativeLayout)findViewById(R.id.maps_layout);
         lpImageView = (ImageView) findViewById(R.id.profile_activity_license_photo_imageview_id);
 
         // *****************        OLD         ******************
@@ -187,6 +201,10 @@ public class ProfileActivity extends AppCompatActivity implements
         editor = sharedPreferences.edit();
         layoutInflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         fetchData = new FetchData(ProfileActivity.this);
+
+         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         //check if data is saved previously
         boolean isDataFilled = sharedPreferences.getBoolean("isDataFilled", false);
@@ -931,6 +949,23 @@ public class ProfileActivity extends AppCompatActivity implements
         super.onResume();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkStateReceiver, intentFilter);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+
+        if((longitude!=0 && latitude!=0) || longitude!=0 || latitude!=0){
+            LatLng mylocation = new LatLng(latitude, longitude);
+            mMap.addMarker(new MarkerOptions().position(mylocation).title("Marker in Location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation,15));
+            mFrameLayout.setVisibility(View.INVISIBLE);
+        }
+        else{
+            mFrameLayout.setVisibility(View.VISIBLE);
+            mRelativeLayout.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

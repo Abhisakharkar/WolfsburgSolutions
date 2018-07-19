@@ -58,7 +58,18 @@
     <string name="closed_from_1_to_2">Closed from value 1 to value 2</string>
     <string name="add_more">Add more</string>
 
-
+    <!-- Strings for profile activity-->
+    <string name="shop_name">Shop name</string>
+    <string name="proprietor">Proprietor</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="address_line">Address line</string>
+    <string name="sublocality_area">SubLocality Area</string>
+    <string name="locality">Locality</string>
+    <string name="change_location">Change Location</string>
+    <string name="license_number">License Number</string>
+    <string name="shop_details">Shop Location</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="tap_to_mylocation">Tap to my location button to set shop loaction</string>
 
 
 </resources>

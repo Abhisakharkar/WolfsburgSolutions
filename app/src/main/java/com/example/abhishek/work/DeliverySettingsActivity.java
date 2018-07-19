@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class DeliverySettingsActivity extends AppCompatActivity implements View.
     private SharedPreferences.Editor editor;
     private ConstraintLayout myConstraintLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class DeliverySettingsActivity extends AppCompatActivity implements View.
         maxFreeDistEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_2_id);
         chargeEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_3_id);
         minAmountEdittext = (EditText) findViewById(R.id.delivery_setting_activity_edittext_4_id);
+
         deliveryStatus=sharedPreferences.getBoolean("deliveryStatus",false);
         deliverySwitch.setChecked(deliveryStatus);
         if(deliveryStatus){
