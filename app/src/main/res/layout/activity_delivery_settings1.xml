@@ -51,8 +51,6 @@
         android:layout_below="@+id/delivery_switch"
         android:layout_margin="10dp">
 
-
-
             <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -164,7 +162,6 @@
             android:visibility="visible">
         </FrameLayout>
 
-
     </android.support.v7.widget.CardView>
 
     <Button
@@ -177,9 +174,7 @@
         style="@style/AuthButtonStyle"
         android:onClick="onClick"
         android:text="@string/save"
-        android:textColor="@color/colorWhite"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp" />
 
 </RelativeLayout>
