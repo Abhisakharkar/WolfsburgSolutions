@@ -174,7 +174,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:background="@color/save_green"
+        style="@style/AuthButtonStyle"
         android:onClick="onClick"
         android:text="@string/save"
         android:textColor="@color/colorWhite"

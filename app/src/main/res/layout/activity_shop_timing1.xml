@@ -242,7 +242,7 @@
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:background="@color/save_green"/>
+        style="@style/AuthButtonStyle"/>
 
 
 </RelativeLayout>

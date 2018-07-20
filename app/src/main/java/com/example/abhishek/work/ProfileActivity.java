@@ -497,8 +497,11 @@ public class ProfileActivity extends AppCompatActivity implements
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (ActivityCompat.checkSelfPermission(context, "android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
                         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
                             getLocation();
+
                         } else {
+
                             showEnableGPSDialog();
                         }
                     } else {
@@ -608,7 +611,9 @@ public class ProfileActivity extends AppCompatActivity implements
                     public void onLocationResult(LocationResult locationResult) {
                         Location location = locationResult.getLastLocation();
                         longitude = location.getLongitude();
+                        Log.d("ProfileActivity", String.valueOf(longitude));
                         latitude = location.getLatitude();
+                        Log.d("ProfileActitvity", String.valueOf(latitude));
 
                         editor.putString("longitude", String.valueOf(longitude));
                         editor.putString("latitude", String.valueOf(latitude));
@@ -616,6 +621,15 @@ public class ProfileActivity extends AppCompatActivity implements
 
                         locationResponse.saveLocationResponse(longitude, latitude);
                         fusedLocationProviderClient.removeLocationUpdates(this);
+                        if((longitude!=0 && latitude!=0)){
+                            Log.d("ProfileActivity", String.valueOf(longitude));
+                            LatLng mylocation = new LatLng(latitude, longitude);
+                            mMap.addMarker(new MarkerOptions().position(mylocation).title("Marker in Location"));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation,15));
+                        }
+
+
+
                     }
                 }, null);
             } else {
@@ -636,6 +650,7 @@ public class ProfileActivity extends AppCompatActivity implements
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(locationRequest);
+
         Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
         result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
             @Override
@@ -644,8 +659,11 @@ public class ProfileActivity extends AppCompatActivity implements
                     LocationSettingsResponse locationSettingsResponse = task.getResult(ApiException.class);
                     //just get location now
                     if (task.isSuccessful()) {
+
                         getLocation();
+
                     } else {
+
                         AlertDialog.Builder gpsDalog = new AlertDialog.Builder(ProfileActivity.this);
                         gpsDalog.setMessage("Please enable GPS !");
                         gpsDalog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
