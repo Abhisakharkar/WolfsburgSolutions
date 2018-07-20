@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -41,6 +42,7 @@ import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerRespo
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 import com.example.abhishek.work.SupportClasses.LocalDatabaseHelper;
 import com.example.abhishek.work.adapters.ItemsListAdapter;
+import com.example.abhishek.work.SupportClasses.ImageConverter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,18 +52,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class HomeActivity extends AppCompatActivity {
 
-    private ImageView img;
+    private ImageView img,navigationProfilePic;
     private Context context;
     private AppBarLayout appBarLayout;
-    private TextView shopNametxt, openCloseTxt, tempTextView;
+    private TextView shopNametxt, openCloseTxt, tempTextView,navigationProprietorText;
     private Switch openCloseSwitch;
     private ItemData itemData;
     private FloatingActionButton fab;
     private NavigationView navigationView;
-    private String shopName,locality,subLocality1,subLocality2;
+    private String shopName,locality,subLocality1,subLocality2,proprietor;
     private double latitude,longitude;
     //Recycler View
     private RecyclerView recyclerView;
@@ -69,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
     private ItemsListAdapter myListAdapter;
     private ArrayList<ItemData> arrayList;
     private RecyclerView.LayoutManager layoutManager;
+    private View headerView;
 
     //server
     private Authentication authentication;
@@ -98,7 +103,13 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.itemslist_recyclerview_id);
         fab = (FloatingActionButton) findViewById(R.id.new_item_fab_id);
         navigationView = (NavigationView) findViewById(R.id.home_activity_navigation_view_id);
-
+        headerView = navigationView.getHeaderView(0);
+        navigationProprietorText = (TextView)headerView.findViewById(R.id.nav_header_name_textview_id);
+        proprietor=sharedPreferences.getString("proprietor","");
+        if (!proprietor.isEmpty()){
+            navigationProprietorText.setText(proprietor);
+        }
+        navigationProfilePic=(CircleImageView) headerView.findViewById(R.id.nav_header_profile_pic_id);
         // Make image blur and set as collapsing toolbar Background
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -118,6 +129,19 @@ public class HomeActivity extends AppCompatActivity {
             Drawable image = new BitmapDrawable(getResources(), newImg);
             img = (ImageView) findViewById(R.id.collapsingToolbarImageViewId);
             img.setImageDrawable(image);
+        }
+        try {
+            String profilePhotoName = retailerId + ".dp.jpeg";
+            File profilePhotoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", profilePhotoName);
+            Bitmap profilePhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(profilePhotoFile), null, options);
+            if (profilePhotoBitmap != null) {
+                Bitmap circularBitmap = ImageConverter.getRoundedCornerBitmap(profilePhotoBitmap, 100);
+                navigationProfilePic.setImageBitmap(profilePhotoBitmap);
+            } else {
+                Log.e("profile photo error", "profile bitmap null");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         shopName=sharedPreferences.getString("shopName","Not Found");
         shopNametxt.setText(shopName);
@@ -245,8 +269,12 @@ public class HomeActivity extends AppCompatActivity {
                 } else if (itemId == R.id.home_nav_menu_advertise_id) {
 
                 } else if (itemId == R.id.home_nav_menu_contact_id) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto","wolfsburgproject@gmail.com", null));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback/query");
+                    startActivity(Intent.createChooser(emailIntent, "Send email..."));
 
-                    startActivity(new Intent(HomeActivity.this, ContactUsActivity.class));
+                    //startActivity(new Intent(HomeActivity.this, ContactUsActivity.class));
                 }else if (itemId == R.id.home_nav_menu_logout_id){
                     clearAppData();
                     Intent intent = new Intent(HomeActivity.this,LoginActivity.class);

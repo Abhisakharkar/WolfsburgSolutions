@@ -21,11 +21,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/nav_header_pro_pic"
             android:id="@+id/nav_header_profile_pic_id"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            app:srcCompat="@drawable/nav_header_pro_pic" />
+            />
+
 
         <TextView
             android:id="@+id/nav_header_name_textview_id"
@@ -36,13 +40,7 @@
             android:textColor="#fff"
             android:textSize="24sp"/>
 
-        <TextView
-            android:id="@+id/nav_header_shopId_textview_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:textSize="16sp"
-            android:text="shop id"/>
+
 
     </LinearLayout>
 
