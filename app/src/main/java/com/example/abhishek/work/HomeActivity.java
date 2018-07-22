@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.example.abhishek.work.Model.ItemData;
 import com.example.abhishek.work.ServerOperations.Authentication;
+import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.ServerOperations.SendData;
 import com.example.abhishek.work.SupportClasses.BlurBuilder;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
@@ -44,6 +45,7 @@ import com.example.abhishek.work.SupportClasses.LocalDatabaseHelper;
 import com.example.abhishek.work.adapters.ItemsListAdapter;
 import com.example.abhishek.work.SupportClasses.ImageConverter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.ProcessingInstruction;
@@ -52,7 +54,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -77,6 +79,8 @@ public class HomeActivity extends AppCompatActivity {
 
     //server
     private Authentication authentication;
+    private FetchData fetchData;
+    private ServerResponse fetchDataServerResponse;
 
     //local database
     private LocalDatabaseHelper databaseHelper;
@@ -94,6 +98,11 @@ public class HomeActivity extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         authentication = new Authentication(context);
+        fetchData = new FetchData(context);
+        fetchDataServerResponse = fetchData.getServerResponseInstance();
+
+        //local database
+        databaseHelper = new LocalDatabaseHelper(context);
 
         //initialize ui components
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayoutId);
@@ -109,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
         if (!proprietor.isEmpty()){
             navigationProprietorText.setText(proprietor);
         }
-        navigationProfilePic=(CircleImageView) headerView.findViewById(R.id.nav_header_profile_pic_id);
+        //navigationProfilePic=(CircleImageView) headerView.findViewById(R.id.nav_header_profile_pic_id);
         // Make image blur and set as collapsing toolbar Background
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -136,7 +145,7 @@ public class HomeActivity extends AppCompatActivity {
             Bitmap profilePhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(profilePhotoFile), null, options);
             if (profilePhotoBitmap != null) {
                 Bitmap circularBitmap = ImageConverter.getRoundedCornerBitmap(profilePhotoBitmap, 100);
-                navigationProfilePic.setImageBitmap(profilePhotoBitmap);
+                //navigationProfilePic.setImageBitmap(profilePhotoBitmap);
             } else {
                 Log.e("profile photo error", "profile bitmap null");
             }
@@ -288,8 +297,46 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //local database
-        databaseHelper = new LocalDatabaseHelper(context);
+        fetchDataServerResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
+            @Override
+            public void onResponseReceive(JSONObject responseJSONObject) {
+                try {
+                    String responseFrom = "";
+                    responseFrom = responseJSONObject.getString("responseFrom");
+                    if (responseFrom.equals("display_products_associated_with_retailer_id")){
+                        JSONArray products = responseJSONObject.getJSONArray("items");
+                        for (int i=0;i<products.length();i++){
+                            ItemData itemData = new ItemData();
+                            JSONObject tmpProduct = (JSONObject) products.get(i);
+                            itemData.setProductID(tmpProduct.getInt("productId"));
+                            itemData.setSellingPrice(tmpProduct.getInt("price"));
+                            itemData.setDescription(tmpProduct.getString("description"));
+                            itemData.setAvailability(tmpProduct.getInt("availability"));
+                            itemData.setStar(tmpProduct.getInt("star"));
+                            itemData.setComment(tmpProduct.getString("textField"));
+
+                            databaseHelper.insertItem(itemData);
+                        }
+
+                        arrayList.clear();
+                        int productsCount = databaseHelper.getProductesCount();
+                        if (productsCount > 0) {
+                            arrayList.addAll(databaseHelper.getAllProducts());
+                            myListAdapter.notifyDataSetChanged();
+                        }
+
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponseErrorReceive(String msg) {
+
+            }
+        });
     }
 
     @Override
@@ -302,8 +349,12 @@ public class HomeActivity extends AppCompatActivity {
             Log.e("all products ...|", databaseHelper.getAllProducts().get(0).getName() + "| ... ");
             arrayList.addAll(databaseHelper.getAllProducts());
             myListAdapter.notifyDataSetChanged();
+        }else {
+            fetchData.getProductsDatabase();
         }
     }
+
+
 
     private void clearAppData(){
         //clearing shared pref data

@@ -37,6 +37,12 @@ public class FetchData {
         sendRequest(url,header);
     }
 
+    public void getProductsDatabase(){
+        header = new HashMap<>();
+        String url = serverURL + "/display_products_associated_with_retailer_id";
+        sendRequest(url,header);
+    }
+
     public void getProducts(String name, int id) {
 
         String url = serverURL + "/magento_product_display";
