@@ -81,15 +81,15 @@ public class SendData {
     }
 
     public void addProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
-        String image = "product_"+retailerID+".jpeg";
+       // String image = "product_"+retailerID+".jpeg";
         //photo : blank
 
         try{
             headers = new HashMap<>();
             headers.put("Content-Type","application/json");
-            headers.put("productID",productID);
+            headers.put("productId",productID);
             headers.put("price",price);
-            headers.put("photo","0");
+            //headers.put("photo","0");
             headers.put("description",desc);
             headers.put("availability",String.valueOf(avail));
             headers.put("star",String.valueOf(star));
@@ -109,7 +109,7 @@ public class SendData {
 
         try{
             headers.put("Content-Type","application/json");
-            headers.put("productID",productID);
+            headers.put("productId",productID);
             headers.put("price",price);
             headers.put("description",desc);
             headers.put("availability",String.valueOf(avail));

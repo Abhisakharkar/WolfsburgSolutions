@@ -53,7 +53,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
         Log.e("name  ...|", itemList.get(position).getName() + "| ... ");
         holder.itemMRPTextView.setText(String.valueOf(itemList.get(position).getPrice()));
         holder.itemSellingPriceEditText.setText(String.valueOf(itemList.get(position).getSellingPrice()));
-        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product/" + itemList.get(position).getPhoto();
+        String url = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product" + itemList.get(position).getPhoto();
         if (!url.equals("0") && !url.isEmpty()) {
             Glide.with(context)
                     .load(url)

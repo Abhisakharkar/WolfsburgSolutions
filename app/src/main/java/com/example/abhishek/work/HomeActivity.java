@@ -183,7 +183,7 @@ public class HomeActivity extends AppCompatActivity {
                     editor.putBoolean("localityWholesaleTier", localityData.getInt("wholesaleTier") > 0);
                     editor.commit();
                     int length = responseJSONObject.getInt("length");
-                    if (length == 2) {
+                    if (length> 1) {
                         JSONObject sublocality1Data = responseJSONObject.getJSONObject("subLocality1Data");
                         subLocality1 = sublocality1Data.getString("subLocality1");
                         editor.putString("subLocality1", subLocality1);
@@ -193,7 +193,7 @@ public class HomeActivity extends AppCompatActivity {
                         editor.commit();
                     }
 
-                    if (length == 3) {
+                    if (length >2) {
                         JSONObject sublocality2Data = responseJSONObject.getJSONObject("subLocality2Data");
                         subLocality2 = sublocality2Data.getString("subLocality2");
                         editor.putString("subLocality2", subLocality2);
@@ -331,7 +331,7 @@ public class HomeActivity extends AppCompatActivity {
                             }
                             fetchData.getProductDetailsForDatabase(ids);
                         }
-                    } else if (responseFrom.equals("magento_get_product_in_category")) {
+                    } else if (responseFrom.equals("magento_get_product_with_ids")) {
                         JSONArray items = responseJSONObject.getJSONArray("items");
                         CustomAttributesParser customAttributesParser = new CustomAttributesParser();
                         for (int i = 0; i < items.length(); i++) {

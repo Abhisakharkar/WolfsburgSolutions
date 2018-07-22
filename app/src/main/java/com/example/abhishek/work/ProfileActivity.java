@@ -316,7 +316,7 @@ public class ProfileActivity extends AppCompatActivity implements
                     editor.putBoolean("localityWholesaleTier", localityData.getInt("wholesaleTier") > 0);
                     editor.commit();
                     int length = responseJSONObject.getInt("length");
-                    if (length == 2) {
+                    if (length>1) {
                         JSONObject sublocality1Data = responseJSONObject.getJSONObject
                                 ("subLocality1Data");
                         String sublocality = sublocality1Data.getString("subLocality1");
@@ -329,7 +329,7 @@ public class ProfileActivity extends AppCompatActivity implements
                         editor.commit();
                     }
 
-                    if (length == 3) {
+                    if (length>2) {
                         JSONObject sublocality2Data = responseJSONObject.getJSONObject
                                 ("subLocality2Data");
                         String sublocality2 = sublocality2Data.getString("subLocality2");
