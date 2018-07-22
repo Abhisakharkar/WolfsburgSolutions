@@ -43,6 +43,14 @@ public class FetchData {
         sendRequest(url,header);
     }
 
+    public void getProductDetailsForDatabase(String ids){
+        header = new HashMap<>();
+        header.put("Ids",ids);
+        String url = serverURL + "/magento_get_product_with_ids";
+
+        sendRequest(url,header);
+    }
+
     public void getProducts(String name, int id) {
 
         String url = serverURL + "/magento_product_display";
@@ -51,7 +59,6 @@ public class FetchData {
         header.put("name", name);
         header.put("id_category", String.valueOf(id));
         sendRequest(url,header);
-
     }
 
     public void searchProduct(String searchTerm) {

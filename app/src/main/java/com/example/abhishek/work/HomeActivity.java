@@ -39,6 +39,7 @@ import com.example.abhishek.work.ServerOperations.Authentication;
 import com.example.abhishek.work.ServerOperations.FetchData;
 import com.example.abhishek.work.ServerOperations.SendData;
 import com.example.abhishek.work.SupportClasses.BlurBuilder;
+import com.example.abhishek.work.SupportClasses.CustomAttributesParser;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.OnResponseReceiveListener;
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 import com.example.abhishek.work.SupportClasses.LocalDatabaseHelper;
@@ -53,22 +54,23 @@ import org.w3c.dom.ProcessingInstruction;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class HomeActivity extends AppCompatActivity {
 
-    private ImageView img,navigationProfilePic;
+    private ImageView img, navigationProfilePic;
     private Context context;
     private AppBarLayout appBarLayout;
-    private TextView shopNametxt, openCloseTxt, tempTextView,navigationProprietorText;
+    private TextView shopNametxt, openCloseTxt, tempTextView, navigationProprietorText;
     private Switch openCloseSwitch;
     private ItemData itemData;
     private FloatingActionButton fab;
     private NavigationView navigationView;
-    private String shopName,locality,subLocality1,subLocality2,proprietor;
-    private double latitude,longitude;
+    private String shopName, locality, subLocality1, subLocality2, proprietor;
+    private double latitude, longitude;
     //Recycler View
     private RecyclerView recyclerView;
     private int retailerId;
@@ -113,16 +115,16 @@ public class HomeActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.new_item_fab_id);
         navigationView = (NavigationView) findViewById(R.id.home_activity_navigation_view_id);
         headerView = navigationView.getHeaderView(0);
-        navigationProprietorText = (TextView)headerView.findViewById(R.id.nav_header_name_textview_id);
-        proprietor=sharedPreferences.getString("proprietor","");
-        if (!proprietor.isEmpty()){
+        navigationProprietorText = (TextView) headerView.findViewById(R.id.nav_header_name_textview_id);
+        proprietor = sharedPreferences.getString("proprietor", "");
+        if (!proprietor.isEmpty()) {
             navigationProprietorText.setText(proprietor);
         }
         //navigationProfilePic=(CircleImageView) headerView.findViewById(R.id.nav_header_profile_pic_id);
         // Make image blur and set as collapsing toolbar Background
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        retailerId=sharedPreferences.getInt("retailerId",0);
+        retailerId = sharedPreferences.getInt("retailerId", 0);
         BlurBuilder blurBuilder = new BlurBuilder();
         try {
             String shopPhotoName = retailerId + ".sp.jpeg";
@@ -132,7 +134,7 @@ public class HomeActivity extends AppCompatActivity {
             Drawable image = new BitmapDrawable(getResources(), newImg);
             img = (ImageView) findViewById(R.id.collapsingToolbarImageViewId);
             img.setImageDrawable(image);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.temp_toolbar_background);
             Bitmap newImg = blurBuilder.blur(this, bitmap);
             Drawable image = new BitmapDrawable(getResources(), newImg);
@@ -152,18 +154,19 @@ public class HomeActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        shopName=sharedPreferences.getString("shopName","Not Found");
+        shopName = sharedPreferences.getString("shopName", "Not Found");
         shopNametxt.setText(shopName);
-        shopNametxt.setTextSize(TypedValue.COMPLEX_UNIT_SP,32);
+        shopNametxt.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
         shopNametxt.setTextColor(getResources().getColor(R.color.colorWhite));
-        latitude = Double.parseDouble(sharedPreferences.getString("latitude","0"));
-        longitude= Double.parseDouble(sharedPreferences.getString("longitude","0"));
-        locality =sharedPreferences.getString("locality","");
-        Log.e("value", "onCreate: "+latitude+" longitude"+longitude );
-        if(latitude!=0 && longitude!=0){
-            String check =sharedPreferences.getString("locality","");
-            if(check.isEmpty()){
-            sendData.sendLatLoc(latitude, longitude);}
+        latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
+        longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
+        locality = sharedPreferences.getString("locality", "");
+        Log.e("value", "onCreate: " + latitude + " longitude" + longitude);
+        if (latitude != 0 && longitude != 0) {
+            String check = sharedPreferences.getString("locality", "");
+            if (check.isEmpty()) {
+                sendData.sendLatLoc(latitude, longitude);
+            }
         }
         ServerResponse serverResponse = new ServerResponse();
         serverResponse = sendData.getServerResponseInstance();
@@ -171,7 +174,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponseReceive(JSONObject responseJSONObject) {
                 try {
-                    Log.e("response object", "onResponseReceive: "+responseJSONObject);
+                    Log.e("response object", "onResponseReceive: " + responseJSONObject);
                     JSONObject localityData = responseJSONObject.getJSONObject("localityData");
                     locality = localityData.getString("locality");
                     editor.putString("locality", locality);
@@ -236,9 +239,9 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, NewCategoryActivity.class);
-                intent.putExtra("activityCalledFrom","home");
-                intent.putExtra("level",1);
-                intent.putExtra("parent_id",0);
+                intent.putExtra("activityCalledFrom", "home");
+                intent.putExtra("level", 1);
+                intent.putExtra("parent_id", 0);
                 startActivity(intent);
             }
         });
@@ -262,10 +265,10 @@ public class HomeActivity extends AppCompatActivity {
                 } else if (itemId == R.id.home_nav_menu_manageTiming_id) {
 
                     startActivity(new Intent(HomeActivity.this, ShopTimingActivity.class));
-                } else if (itemId == R.id.home_nav_menu_manageDelivery_id){
+                } else if (itemId == R.id.home_nav_menu_manageDelivery_id) {
 
-                    startActivity(new Intent(HomeActivity.this,DeliverySettingsActivity.class));
-                }else if (itemId == R.id.home_nav_menu_profile_id) {
+                    startActivity(new Intent(HomeActivity.this, DeliverySettingsActivity.class));
+                } else if (itemId == R.id.home_nav_menu_profile_id) {
 
                     startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
 
@@ -279,14 +282,14 @@ public class HomeActivity extends AppCompatActivity {
 
                 } else if (itemId == R.id.home_nav_menu_contact_id) {
                     Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                            "mailto","wolfsburgproject@gmail.com", null));
+                            "mailto", "wolfsburgproject@gmail.com", null));
                     emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback/query");
                     startActivity(Intent.createChooser(emailIntent, "Send email..."));
 
                     //startActivity(new Intent(HomeActivity.this, ContactUsActivity.class));
-                }else if (itemId == R.id.home_nav_menu_logout_id){
+                } else if (itemId == R.id.home_nav_menu_logout_id) {
                     clearAppData();
-                    Intent intent = new Intent(HomeActivity.this,LoginActivity.class);
+                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -303,9 +306,9 @@ public class HomeActivity extends AppCompatActivity {
                 try {
                     String responseFrom = "";
                     responseFrom = responseJSONObject.getString("responseFrom");
-                    if (responseFrom.equals("display_products_associated_with_retailer_id")){
+                    if (responseFrom.equals("display_products_associated_with_retailer_id")) {
                         JSONArray products = responseJSONObject.getJSONArray("items");
-                        for (int i=0;i<products.length();i++){
+                        for (int i = 0; i < products.length(); i++) {
                             ItemData itemData = new ItemData();
                             JSONObject tmpProduct = (JSONObject) products.get(i);
                             itemData.setProductID(tmpProduct.getInt("productId"));
@@ -317,17 +320,40 @@ public class HomeActivity extends AppCompatActivity {
 
                             databaseHelper.insertItem(itemData);
                         }
+                        arrayList.clear();
+                        if (databaseHelper.getProductesCount() > 0) {
+                            arrayList.addAll(databaseHelper.getAllProducts());
+
+                            String ids = "";
+                            ids = String.valueOf(arrayList.get(0).getProductID());
+                            for (int i = 1; i < arrayList.size(); i++) {
+                                ids = ids + "," + String.valueOf(arrayList.get(i).getProductID());
+                            }
+                            fetchData.getProductDetailsForDatabase(ids);
+                        }
+                    } else if (responseFrom.equals("magento_get_product_in_category")) {
+                        JSONArray items = responseJSONObject.getJSONArray("items");
+                        CustomAttributesParser customAttributesParser = new CustomAttributesParser();
+                        for (int i = 0; i < items.length(); i++) {
+                            JSONObject tmpItem = items.getJSONObject(i);
+                            String name = tmpItem.getString("name");
+                            int productId = tmpItem.getInt("id");
+                            int attribute_set_id = tmpItem.getInt("attribute_set_id");
+                            int mrp = tmpItem.getInt("price");
+
+                            JSONArray customAttr = tmpItem.getJSONArray("custom_attributes");
+                            String url = customAttributesParser.getImageUrl(customAttr);
+                            databaseHelper.updateProductDetails(productId, name, url, attribute_set_id, mrp);
+                        }
 
                         arrayList.clear();
-                        int productsCount = databaseHelper.getProductesCount();
-                        if (productsCount > 0) {
+                        if (databaseHelper.getProductesCount() > 0){
                             arrayList.addAll(databaseHelper.getAllProducts());
                             myListAdapter.notifyDataSetChanged();
                         }
-
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -349,16 +375,15 @@ public class HomeActivity extends AppCompatActivity {
             Log.e("all products ...|", databaseHelper.getAllProducts().get(0).getName() + "| ... ");
             arrayList.addAll(databaseHelper.getAllProducts());
             myListAdapter.notifyDataSetChanged();
-        }else {
+        } else {
             fetchData.getProductsDatabase();
         }
     }
 
 
-
-    private void clearAppData(){
+    private void clearAppData() {
         //clearing shared pref data
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
         sharedPreferences.edit().clear().commit();
 
         //clear databases
@@ -367,11 +392,11 @@ public class HomeActivity extends AppCompatActivity {
         //clear cashe data
         File cashe = getApplicationContext().getCacheDir();
         File appDir = new File(cashe.getParent());
-        if (appDir.exists()){
+        if (appDir.exists()) {
             String[] appDirChildren = appDir.list();
-            for (String s : appDirChildren){
-                if (!s.equals("lib")){
-                    deleteDir(new File(appDir,s));
+            for (String s : appDirChildren) {
+                if (!s.equals("lib")) {
+                    deleteDir(new File(appDir, s));
                 }
             }
         }
@@ -403,10 +428,10 @@ public class HomeActivity extends AppCompatActivity {
         unregisterReceiver(networkStateReceiver);
     }
 
-    private void updateUI(boolean isNetworkAbailable){
-        if (!isNetworkAbailable){
+    private void updateUI(boolean isNetworkAbailable) {
+        if (!isNetworkAbailable) {
             Toast.makeText(context, "no internet connection", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(context, "connected to internet", Toast.LENGTH_SHORT).show();
         }
     }
@@ -418,10 +443,10 @@ public class HomeActivity extends AppCompatActivity {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED){
+                if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
                     //connected
                     updateUI(true);
-                }else {
+                } else {
                     //not connected
                     updateUI(false);
                 }

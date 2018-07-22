@@ -131,6 +131,18 @@ public class LocalDatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    public void updateProductDetails(int productId,String name,String url,int attribute_set_id,int mrp){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ItemData.COLUMN_NAME,name);
+        values.put(ItemData.COLUMN_PRICE,mrp);
+        values.put(ItemData.COLUMN_ATTRIBUTE_SET_ID,attribute_set_id);
+        values.put(ItemData.COLUMN_PHOTO,url);
+
+        db.update(ItemData.TABLE_NAME,values,ItemData.COLUMN_PRODUCT_ID + " = ? "
+                , new String[]{String.valueOf(productId)});
+    }
+
     public int updateProduct(ItemData itemData) {
 
         SQLiteDatabase db = this.getWritableDatabase();
