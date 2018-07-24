@@ -81,9 +81,6 @@ public class SendData {
     }
 
     public void addProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
-       // String image = "product_"+retailerID+".jpeg";
-        //photo : blank
-
         try{
             headers = new HashMap<>();
             headers.put("Content-Type","application/json");
@@ -118,6 +115,19 @@ public class SendData {
             headers.put("textField",comment);
 
             String url = serverURL+"/update_retailer_product";
+            sendRequest(url,headers);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void updateShopStatusInManual(int currentState){
+
+        try{
+            headers = new HashMap<>();
+            headers.put("Content-Type","application/json");
+            headers.put("currentState",String.valueOf(currentState));
+            String url = serverURL+"/update_full_retailer_data";
             sendRequest(url,headers);
 
         }catch (Exception e){

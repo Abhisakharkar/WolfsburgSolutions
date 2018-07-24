@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -112,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity implements
     private TextInputLayout proprietorLayout, mobileNoLayout, shopNameLayout, addressLine1Layout, licenseNoLayout;
     private TextView sublocalityTextView, localityTextView;
     private ImageView dpImageView, spImageView, lpImageView;
-    private Button saveProfileBtn;
+    private Button myLocationBtn;
     private ImageButton locationChangeBtn;
     private RelativeLayout mRelativeLayout;
 
@@ -174,8 +175,8 @@ public class ProfileActivity extends AppCompatActivity implements
         licenseNoLayout = (TextInputLayout) findViewById(R.id.profile_activity_license_no_layout_id);
         sublocalityTextView = (TextView) findViewById(R.id.profile_activity_sublocality_txtview_id);
         localityTextView = (TextView) findViewById(R.id.profile_activity_locality_textview_id);
-        saveProfileBtn = (Button) findViewById(R.id.profile_activity_save_profile_btn_id);
-        locationChangeBtn = (ImageButton) findViewById(R.id.profile_activity_location_btn_id);
+       // myLocationBtn = (Button) findViewById(R.id.profile_activity_location_btn_id);
+        locationChangeBtn = (FloatingActionButton) findViewById(R.id.profile_activity_location_btn_id);
         spImageView = (ImageView) findViewById(R.id.profile_activity_shop_imageview_id);
         dpImageView = (ImageView) findViewById(R.id.profile_activity_dp_imageview_id);
       //  mFrameLayout=(FrameLayout)findViewById(R.id.maps_frame_layout);
@@ -236,7 +237,12 @@ public class ProfileActivity extends AppCompatActivity implements
             shopNameEdittext.setText(shopName);
             addressLine1Edittext.setText(address);
             licenseNoEdittext.setText(licenseNo);
-
+            if (sharedPreferences.getInt("locationVerified",0)>0){
+                locationChangeBtn.setEnabled(false);
+                shopNameEdittext.setEnabled(false);
+                licenseNoEdittext.setEnabled(false);
+                lpImageView.setEnabled(false);
+            }
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             retailerId = sharedPreferences.getInt("retailerId", 0);

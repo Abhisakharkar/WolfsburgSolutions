@@ -56,6 +56,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 //import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -120,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
         if (!proprietor.isEmpty()) {
             navigationProprietorText.setText(proprietor);
         }
-        //navigationProfilePic=(CircleImageView) headerView.findViewById(R.id.nav_header_profile_pic_id);
+        navigationProfilePic=(CircleImageView) headerView.findViewById(R.id.nav_header_profile_pic_id);
         // Make image blur and set as collapsing toolbar Background
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -147,7 +149,7 @@ public class HomeActivity extends AppCompatActivity {
             Bitmap profilePhotoBitmap = BitmapFactory.decodeStream(new FileInputStream(profilePhotoFile), null, options);
             if (profilePhotoBitmap != null) {
                 Bitmap circularBitmap = ImageConverter.getRoundedCornerBitmap(profilePhotoBitmap, 100);
-                //navigationProfilePic.setImageBitmap(profilePhotoBitmap);
+                navigationProfilePic.setImageBitmap(circularBitmap);
             } else {
                 Log.e("profile photo error", "profile bitmap null");
             }
@@ -158,6 +160,7 @@ public class HomeActivity extends AppCompatActivity {
         shopNametxt.setText(shopName);
         shopNametxt.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
         shopNametxt.setTextColor(getResources().getColor(R.color.colorWhite));
+        setOpenCloseTextAndSwitch();
         latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
         longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
         locality = sharedPreferences.getString("locality", "");
@@ -226,11 +229,22 @@ public class HomeActivity extends AppCompatActivity {
         openCloseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    openCloseTxt.setText("Open Now");
-                } else {
-                    openCloseTxt.setText("Closed Now");
+                if (sharedPreferences.getInt("locationVerified",0)>0){
+                    int temp;
+                    if(isChecked){
+                        temp=1;
+                    }else {
+                        temp=0;
+                    }
+                    sendData.updateShopStatusInManual(temp);
+                    editor.putBoolean("currentState",isChecked);
+                    editor.commit();
+                    setOpenCloseTextAndSwitch();
+                }else {
+                    openCloseSwitch.setChecked(false);
+                    Toast.makeText(context, "You can open your shop after verification", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
 
@@ -413,6 +427,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
         return dir.delete();
+    }
+    private void setOpenCloseTextAndSwitch(){
+        openCloseSwitch.setChecked(sharedPreferences.getBoolean("currentState",false));
+        if (openCloseSwitch.isChecked()) {
+            openCloseTxt.setText("Open Now");
+        } else {
+            openCloseTxt.setText("Closed Now");
+        }
+
     }
 
     @Override

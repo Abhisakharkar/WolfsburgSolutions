@@ -53,11 +53,11 @@ public class FetchData {
 
     public void getProducts(String name, int id) {
 
-        String url = serverURL + "/magento_product_display";
+        String url = serverURL + "/magento_get_product_in_category";
         header = new HashMap<>();
         header.put("Content-Type", "application/json");
         header.put("name", name);
-        header.put("id_category", String.valueOf(id));
+        header.put("categoryId", String.valueOf(id));
         sendRequest(url,header);
     }
 

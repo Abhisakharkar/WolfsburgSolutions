@@ -23,6 +23,7 @@ import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerRespo
 import com.example.abhishek.work.SupportClasses.CustomEventListeners.ServerResponseListener.ServerResponse;
 import com.example.abhishek.work.ViewModels.ProductsViewModel;
 import com.example.abhishek.work.adapters.ProductListAdapter;
+import com.example.abhishek.work.SupportClasses.CustomAttributesParser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,7 +42,6 @@ public class NewProductActivity extends AppCompatActivity {
     private ProductListAdapter adapter;
     private ArrayList<ProductData> arrayList;
     private JSONArray jsonArray;
-
     private ProductsViewModel productsViewModel;
 
     @Override
@@ -84,17 +84,20 @@ public class NewProductActivity extends AppCompatActivity {
                 try {
 
                     String responseFrom = responseJSONObject.getString("responseFrom");
-                    if (responseFrom.equals("magento_product_display")) {
+                    if (responseFrom.equals("magento_get_product_in_category")) {
                         ArrayList<ProductData> list = new ArrayList<>();
                         jsonArray = responseJSONObject.getJSONArray("items");
+                        CustomAttributesParser customAttributesParser = new CustomAttributesParser();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                             ProductData productData = new ProductData();
                             productData.setName(jsonObject.getString("name"));
                             productData.setProductID(jsonObject.getInt("id"));
-                            productData.setAttribute_set_id(jsonObject.getInt("attribute-set-id"));
+                            productData.setAttribute_set_id(jsonObject.getInt("attribute_set_id"));
                             productData.setPrice(jsonObject.getDouble("price"));
-                            productData.setPhoto(jsonObject.getString("image-url"));
+                            JSONArray customAttributes= jsonObject.getJSONArray("custom_attributes");
+                            String url = customAttributesParser.getImageUrl(customAttributes);
+                            productData.setPhoto(url);
                             list.add(productData);
                         }
                         productsViewModel.setProductsList(list);

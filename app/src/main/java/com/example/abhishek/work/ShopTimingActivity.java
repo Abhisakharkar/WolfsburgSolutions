@@ -195,7 +195,12 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
                 timePickerDialog4.show();
                 break;
             case R.id.shop_timing_activity_title_switch_id:
-                setButtons();
+                if (sharedPreferences.getInt("locationVerified",0)>0){
+                    setButtons();
+                }else {
+                    Toast.makeText(this, "You cannot change it to time based until you get verified", Toast.LENGTH_LONG).show();
+                    manualSwitch.setChecked(true);
+                }
                 break;
             case R.id.shop_timing_activity_title_3_switch_id:
                 setButtons();

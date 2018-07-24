@@ -158,7 +158,12 @@ public class DeliverySettingsActivity extends AppCompatActivity implements View.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.activity_delivery_settings_delivery_status_switch_btn_id:
-                setVisibility();
+                if (sharedPreferences.getInt("verifiedByTeam",0)>0){
+                    setVisibility();
+                }else
+                {   deliverySwitch.setChecked(false);
+                    Toast.makeText(this, "if your shop is in Mumbai you can contact us to start deliverying", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.activity_delivery_settings_save_btn_id:
 

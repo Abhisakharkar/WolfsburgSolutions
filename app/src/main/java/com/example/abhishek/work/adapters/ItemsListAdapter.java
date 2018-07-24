@@ -193,13 +193,15 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
 
                 // item star button click listener
             } else if (id == itemStarImageBtn.getId()) {
-
+                int productId = itemList.get(position).getProductID();
                 if(itemList.get(position).getStar() == 1){
                     itemStarImageBtn.setImageResource(R.drawable.star_btn_hollow_vector);
                     itemList.get(position).setStar(0);
+
                 }else{
                     itemStarImageBtn.setImageResource(R.drawable.star_btn_solid_vector);
                     itemList.get(position).setStar(1);
+
                 }
 
 
