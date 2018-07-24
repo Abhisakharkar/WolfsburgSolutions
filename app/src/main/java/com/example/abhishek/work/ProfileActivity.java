@@ -82,6 +82,7 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.zip.Inflater;
@@ -907,16 +908,20 @@ public class ProfileActivity extends AppCompatActivity implements
 
                 if (resultCode == RESULT_OK) {
                     //get bitmap image
-                    Uri selectedImage = data.getData();
-                    String[] filePath = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePath[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
-                    Bitmap tempBitmap = (BitmapFactory.decodeFile(picturePath));
-
-
+//                    Uri selectedImage = data.getData();
+//                    String[] filePath = {MediaStore.Images.Media.DATA};
+//                    Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
+//                    cursor.moveToFirst();
+//                    int columnIndex = cursor.getColumnIndex(filePath[0]);
+//                    String picturePath = cursor.getString(columnIndex);
+//                    cursor.close();
+//                    Bitmap tempBitmap = (BitmapFactory.decodeFile(picturePath));
+                    Bitmap tempBitmap=null;
+                    try {
+                        tempBitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                     if (imageRequestFrom != null) {
                         if (imageRequestFrom.equals("dp")) {
                             profilePhotoBitmap = tempBitmap;
@@ -962,7 +967,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 //save photo to memory
                 File photoFile = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/images", photoName);
                 fileOutputStream = new FileOutputStream(photoFile);
-                photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                photoBitmap.compress(Bitmap.CompressFormat.JPEG, 95, fileOutputStream);
                 fileOutputStream.close();
 
                 //send photo to server
@@ -978,8 +983,14 @@ public class ProfileActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if (!sharedPreferences.getBoolean("isDataFilled",false)){
+            startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+            clearAppData();
+            finish();
+        }else {
         startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
         finish();
+        }
     }
 
     @Override
@@ -1016,6 +1027,39 @@ public class ProfileActivity extends AppCompatActivity implements
         } else {
             Toast.makeText(this, "connected to internet", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void clearAppData() {
+        //clearing shared pref data
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("userdata", MODE_PRIVATE);
+        sharedPreferences.edit().clear().commit();
+
+        //clear databases
+        getApplicationContext().deleteDatabase("ProductsData");
+
+        //clear cashe data
+        File cashe = getApplicationContext().getCacheDir();
+        File appDir = new File(cashe.getParent());
+        if (appDir.exists()) {
+            String[] appDirChildren = appDir.list();
+            for (String s : appDirChildren) {
+                if (!s.equals("lib")) {
+                    deleteDir(new File(appDir, s));
+                }
+            }
+        }
+    }
+    private boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {

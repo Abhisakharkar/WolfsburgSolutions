@@ -25,6 +25,8 @@
         <EditText
             android:id="@+id/email_edittext_signup_id"
             style="@style/AuthEdittextStyle"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title_textview_id"
@@ -67,12 +69,14 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
+            android:singleLine="true"
             android:hint="Password"
             android:inputType="textPassword" />
 
         <EditText
             android:id="@+id/confirm_password_edittext_signup_id"
             style="@style/AuthEdittextStyle"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/password_edittext_signup_id"

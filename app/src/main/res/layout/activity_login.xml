@@ -36,6 +36,7 @@
             android:layout_toLeftOf="@id/login_activity_mail_check_framelayout_id"
             android:drawableLeft="@drawable/vector_mail"
             android:drawablePadding="8dp"
+            android:inputType="textEmailAddress"
             android:hint="Email"
             android:singleLine="true" />
 
@@ -75,6 +76,7 @@
             android:layout_marginTop="8dp"
             android:drawableLeft="@drawable/vector_lock"
             android:drawablePadding="8dp"
+            android:singleLine="true"
             android:hint="Password"
             android:inputType="textPassword" />
 

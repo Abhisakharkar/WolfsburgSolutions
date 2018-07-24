@@ -73,8 +73,20 @@ public class ProductEditActivity extends AppCompatActivity {
         star = (Switch) findViewById(R.id.product_edit_activity_star_swict_id);
         availability = (Switch) findViewById(R.id.product_edit_activity_availability_swict_id);
         addBtn = (Button) findViewById(R.id.product_edit_activity_add_btn_id);
+        if(productID!=-1) {
+            ItemData tempItemData = databaseHelper.getProduct(productID);
+            if (tempItemData.getProductID() == -1){
+                priceEdittext.setText(String.valueOf(price));
+            }else {
+                priceEdittext.setText(String.valueOf(tempItemData.getSellingPrice()));
+                commentEdittext.setText(tempItemData.getComment());
+                descriptionEdittext.setText(tempItemData.getDescription());
+                star.setChecked(tempItemData.getStar()>0);
+                availability.setChecked(tempItemData.getAvailability()>0);
+            }
+        }
 
-        priceEdittext.setText(String.valueOf(price));
+
 
         serverResponse.setOnResponseReceiveListener(new OnResponseReceiveListener() {
             @Override

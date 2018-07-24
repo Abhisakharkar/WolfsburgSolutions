@@ -53,33 +53,7 @@ public class ImageUpload {
         return imageUploadResponse;
     }
 
-    public void uploadImage2(String photoName, String photoPath) {
-        String uploadId = UUID.randomUUID().toString();
-        String url = "http://ec2-18-222-137-50.us-east-2.compute.amazonaws.com:6868/upload";
-
-        try {
-            new MultipartUploadRequest(context, uploadId, url)
-                    .addFileToUpload(photoPath, photoName, photoName)
-                    .setNotificationConfig(new UploadNotificationConfig())
-                    .setMaxRetries(1)
-                    .setMethod("POST")
-                    .addHeader("ENCTYPE","recfile")
-                    .startUpload();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public void uploadImage4(String name,String path){
-        String url = "http://ec2-18-216-46-195.us-east-2.compute.amazonaws.com:6868/upload";
-        MultipartRequest multipartRequest = new MultipartRequest(context);
-        multipartRequest.addFile(name,path,name);
-        multipartRequest.execute(url);
-    }
-
-    public void uploadImage(String photoName, String photoPath) {
+   public void uploadImage(String photoName, String photoPath) {
 
         String url = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com:6868/upload";
 

@@ -108,6 +108,7 @@ public class SendData {
         //photo : blank
 
         try{
+            headers = new HashMap<>();
             headers.put("Content-Type","application/json");
             headers.put("productId",productID);
             headers.put("price",price);
