@@ -20,8 +20,9 @@
         android:id="@+id/home_nav_menu_membership_id"
         android:title="Membership"/>
     <item
-        android:id="@+id/home_nav_menu_advertise_id"
-        android:title="Advertise"/>
+        android:id="@+id/home_nav_menu_advertisment_id"
+        android:title="Apply For Verification"/>
+
     <item
         android:id="@+id/home_nav_menu_contact_id"
         android:title="Contact Us"/>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.abhishek.work.ApplyVerificationActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/verification_profile_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+        android:src="@drawable/temp_img" />
+
+    <TextView
+        android:id="@+id/verification_enterprise_name"
+        android:textColor="@color/colorBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WolfsburgSolutions"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:layout_below="@+id/verification_profile_view"
+        android:layout_marginTop="25dp"/>
+
+    <TextView
+        android:id="@+id/verify_details"
+        android:textColor="@color/colorBlack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verify Your Details"
+        android:textStyle="bold"
+        android:textSize="21sp"
+        android:layout_below="@+id/verification_enterprise_name"
+        android:layout_marginTop="25dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/verification_status_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="current status"
+        android:layout_marginStart="20dp"
+        android:layout_below="@+id/verify_details"
+        android:layout_marginTop="25dp"
+        android:textAlignment="center"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/verification_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/verification_status_heading"
+        android:layout_alignBottom="@+id/verification_status_heading"
+        android:layout_alignStart="@+id/verification_status_heading"
+        android:layout_marginStart="24dp"
+        android:text="Your status here"
+        android:textSize="18sp"
+        android:textAlignment="center" />
+
+
+    <Button
+        style="@style/AuthButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="Apply For Verification"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
+
+</RelativeLayout>

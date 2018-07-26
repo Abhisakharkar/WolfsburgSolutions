@@ -292,7 +292,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 } else if (itemId == R.id.home_nav_menu_membership_id) {
 
-                } else if (itemId == R.id.home_nav_menu_advertise_id) {
+                } else if (itemId == R.id.home_nav_menu_advertisment_id) {
 
                 } else if (itemId == R.id.home_nav_menu_contact_id) {
                     Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(

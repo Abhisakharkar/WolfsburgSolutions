@@ -31,6 +31,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB2t4PAMR5gqD--qzc3_33P1jG1rs6mC-g" />
+
         <activity android:name=".HomeActivity" />
         <activity
             android:name=".SignUpActivity"
@@ -41,7 +42,7 @@
             android:theme="@style/AppTheme.AuthActivityStyle" />
         <activity
             android:name=".ProfileActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".NewCategoryActivity" />
         <activity android:name=".NewProductActivity" />
         <activity android:name=".AddNewProductActivity" />
@@ -52,7 +53,7 @@
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.launcher" >
+            android:theme="@style/AppTheme.launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,15 +69,14 @@
             android:exported="true" />
 
         <activity android:name=".ProductDetailsActivity" />
-        <activity android:name=".ShopTimingActivity">
-        </activity>
-        <activity
-            android:name=".DeliverySettingsActivity">
-        </activity>
+        <activity android:name=".ShopTimingActivity"></activity>
+        <activity android:name=".DeliverySettingsActivity"></activity>
 
-        <service android:name=".IntentServices.ImageDownloadIntentService"
-            android:enabled="true"/>
+        <service
+            android:name=".IntentServices.ImageDownloadIntentService"
+            android:enabled="true" />
 
+        <activity android:name=".ApplyVerificationActivity"></activity>
     </application>
 
 </manifest>
