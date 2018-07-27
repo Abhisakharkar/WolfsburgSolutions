@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -53,7 +54,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
         Log.e("name  ...|", itemList.get(position).getName() + "| ... ");
         holder.itemMRPTextView.setText(String.valueOf(itemList.get(position).getPrice()));
         holder.itemSellingPriceEditText.setText(String.valueOf(itemList.get(position).getSellingPrice()));
-        String url = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product" + itemList.get(position).getPhoto();
+        String url = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product" + itemList.get(position).getPhoto();
         if (!url.equals("0") && !url.isEmpty()) {
             Glide.with(context)
                     .load(url)
@@ -97,8 +98,8 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
 
         private RadioButton itemAvailabilityBtn;
         private ImageView itemImageView;
-        private Button itemSellingPriceEditText;
-        private TextView itemNameTextView, itemCategoryTextView, itemMRPTextView, promoteItemBtn;
+        private EditText itemSellingPriceEditText;
+        private TextView itemNameTextView,itemMRPTextView;//itemCategoryTextView, promoteItemBtn;
         private ImageButton itemStarImageBtn;
         private FrameLayout itemNotAvailableFrameLayout;
         private View layout;
@@ -110,18 +111,18 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
             itemAvailabilityBtn = (RadioButton) layout.findViewById(R.id.item_availability_btn_id);
             itemImageView = (ImageView) layout.findViewById(R.id.itemslist_row_image_id);
             itemNameTextView = (TextView) layout.findViewById(R.id.itemslist_name_textview_id);
-            itemCategoryTextView = (TextView) layout.findViewById(R.id.itemlist_category_textview_id);
-            itemSellingPriceEditText = (Button) layout.findViewById(R.id.item_selling_price_textview_id);
+            //itemCategoryTextView = (TextView) layout.findViewById(R.id.itemlist_category_textview_id);
+            itemSellingPriceEditText =  layout.findViewById(R.id.item_selling_price_textview_id);
             itemMRPTextView = (TextView) layout.findViewById(R.id.item_mrp_textview_id);
             itemStarImageBtn = (ImageButton) layout.findViewById(R.id.item_start_btn_id);
-            promoteItemBtn = (TextView) layout.findViewById(R.id.promote_product_btn_id);
+           // promoteItemBtn = (TextView) layout.findViewById(R.id.promote_product_btn_id);
             itemNotAvailableFrameLayout = (FrameLayout) layout.findViewById(R.id.item_not_available_framelayout_id);
 
 
             // button click listener
             itemAvailabilityBtn.setOnClickListener(this);
             itemStarImageBtn.setOnClickListener(this);
-            promoteItemBtn.setOnClickListener(this);
+           // promoteItemBtn.setOnClickListener(this);
 
             itemAvailabilityBtn.setSelected(true);
             itemAvailabilityBtn.setChecked(true);
@@ -148,19 +149,19 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     //set other elements as disabled
                     itemImageView.setClickable(false);
                     itemNameTextView.setClickable(false);
-                    itemCategoryTextView.setClickable(false);
+                   // itemCategoryTextView.setClickable(false);
                     itemSellingPriceEditText.setClickable(false);
                     itemMRPTextView.setClickable(false);
                     itemStarImageBtn.setClickable(false);
-                    promoteItemBtn.setClickable(false);
+                   // promoteItemBtn.setClickable(false);
 
                     itemImageView.setEnabled(false);
                     itemNameTextView.setEnabled(false);
-                    itemCategoryTextView.setEnabled(false);
+                    //itemCategoryTextView.setEnabled(false);
                     itemSellingPriceEditText.setEnabled(false);
                     itemMRPTextView.setEnabled(false);
                     itemStarImageBtn.setEnabled(false);
-                    promoteItemBtn.setEnabled(false);
+                   // promoteItemBtn.setEnabled(false);
 
                 } else {
                     //set framelayout invisible
@@ -175,19 +176,19 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     //set other elements as enabled
                     itemImageView.setClickable(true);
                     itemNameTextView.setClickable(true);
-                    itemCategoryTextView.setClickable(true);
+                    //itemCategoryTextView.setClickable(true);
                     itemSellingPriceEditText.setClickable(true);
                     itemMRPTextView.setClickable(true);
                     itemStarImageBtn.setClickable(true);
-                    promoteItemBtn.setClickable(true);
+                    //promoteItemBtn.setClickable(true);
 
                     itemImageView.setEnabled(true);
                     itemNameTextView.setEnabled(true);
-                    itemCategoryTextView.setEnabled(true);
+                    //itemCategoryTextView.setEnabled(true);
                     itemSellingPriceEditText.setEnabled(true);
                     itemMRPTextView.setEnabled(true);
                     itemStarImageBtn.setEnabled(true);
-                    promoteItemBtn.setEnabled(true);
+                    //promoteItemBtn.setEnabled(true);
 
                 }
 
@@ -206,8 +207,6 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
 
 
                 // item promote product button click listener
-            } else if (id == promoteItemBtn.getId()) {
-
             }
         }
     }

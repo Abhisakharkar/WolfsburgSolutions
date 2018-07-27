@@ -32,13 +32,13 @@
 
             <ImageView
                 android:id="@+id/itemslist_row_image_id"
-                android:layout_width="112dp"
-                android:layout_height="match_parent"
+                android:layout_width="110dp"
+                android:layout_height="fill_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/temp_item_image" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
@@ -48,53 +48,70 @@
 
                 <TextView
                     android:id="@+id/itemslist_name_textview_id"
-                    android:layout_width="wrap_content"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Item Name"
-                    android:textSize="24sp" />
+                    android:textSize="18sp"
+                    android:textColor="@color/colorBlack"/>
 
-                <TextView
-                    android:id="@+id/itemlist_category_textview_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Category"
-                    android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/item_mrp_textview_id"
-                    android:layout_width="112dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/mrp_strike_effect_vector"
-                    android:text="MRP: Rs.800"
-                    android:textSize="18sp" />
 
-            </LinearLayout>
+
+
 
             <ImageButton
                 android:id="@+id/item_start_btn_id"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="8dp"
                 android:backgroundTint="@android:color/transparent"
                 android:src="@drawable/star_btn_solid_vector" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:paddingBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MRP:"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"/>
+                <TextView
+                    android:id="@+id/item_mrp_textview_id"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/mrp_strike_effect_vector"
+                    android:text="Rs.800"
+                    android:textSize="18sp"
+                    android:layout_marginRight="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rs."
+                        android:textColor="@color/colorBlack"
+                        android:textSize="20dp"/>
 
-            <Button
-                android:id="@+id/item_selling_price_textview_id"
-                android:layout_width="112dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/promote_product_btn_id"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp"
-                android:backgroundTint="#fff"
-                android:elevation="4dp"
-                android:text="Rs.800"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/item_selling_price_textview_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:text="800"
+                        android:textColor="#000"
+                        android:textSize="20sp"
+                        android:textStyle="normal" />
+
+                </LinearLayout>
+
+
+
+            </RelativeLayout>
+            <!--
 
             <TextView
                 android:id="@+id/promote_product_btn_id"
@@ -106,7 +123,7 @@
                 android:backgroundTint="@android:color/transparent"
                 android:gravity="center"
                 android:text="Promote product"
-                android:textColor="#123456" />
+                android:textColor="#123456" /> -->
 
 
             <FrameLayout

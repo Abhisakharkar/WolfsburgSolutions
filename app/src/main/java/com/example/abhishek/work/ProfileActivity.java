@@ -343,6 +343,7 @@ public class ProfileActivity extends AppCompatActivity implements
                         editor.putString("subLocality2", sublocality2);
                         editor.commit();
                     }
+                    finish();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -351,7 +352,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
             @Override
             public void onResponseErrorReceive(String msg) {
-
+                Toast.makeText(ProfileActivity.this, "error sending data to server but updated locally. try sending it after some time", Toast.LENGTH_LONG).show();
             }
         });
 

@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class SendData {
 
-    private String serverURL = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com:6868";
+    private String serverURL = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com:6868";
     private Context context;
     //private ServerResponse serverResponse = new ServerResponse();
     private ServerResponse serverResponse;
@@ -69,6 +69,13 @@ public class SendData {
         String url = serverURL + "/update_full_retailer_data";
         sendRequest(url,headers);
     }
+    public void updateDeliveryData(HashMap<String,String> headers){
+        this.headers = new HashMap<>();
+        this.headers = headers;
+        String url = serverURL + "/update_full_retailer_data";
+        sendRequest(url,headers);
+    }
+
 
     public void updateProduct(String key,String value,int productId){
         headers = new HashMap<>();
@@ -127,6 +134,19 @@ public class SendData {
             headers = new HashMap<>();
             headers.put("Content-Type","application/json");
             headers.put("currentState",String.valueOf(currentState));
+            String url = serverURL+"/update_full_retailer_data";
+            sendRequest(url,headers);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void applyForVerification(){
+
+        try{
+            headers = new HashMap<>();
+            headers.put("Content-Type","application/json");
+            headers.put("appliedForVerification",String.valueOf(1));
             String url = serverURL+"/update_full_retailer_data";
             sendRequest(url,headers);
 

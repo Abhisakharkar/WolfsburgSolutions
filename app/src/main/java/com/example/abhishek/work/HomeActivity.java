@@ -18,6 +18,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +27,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,6 +76,7 @@ public class HomeActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private String shopName, locality, subLocality1, subLocality2, proprietor;
     private double latitude, longitude;
+    private DrawerLayout drawerLayout;
     //Recycler View
     private RecyclerView recyclerView;
     private int retailerId;
@@ -119,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
         headerView = navigationView.getHeaderView(0);
         navigationProprietorText = (TextView) headerView.findViewById(R.id.nav_header_name_textview_id);
         proprietor = sharedPreferences.getString("proprietor", "");
+        drawerLayout=findViewById(R.id.drawerLayoutId);
         if (!proprietor.isEmpty()) {
             navigationProprietorText.setText(proprietor);
         }
@@ -293,6 +298,7 @@ public class HomeActivity extends AppCompatActivity {
                 } else if (itemId == R.id.home_nav_menu_membership_id) {
 
                 } else if (itemId == R.id.home_nav_menu_advertisment_id) {
+                    startActivity(new Intent(HomeActivity.this,ApplyVerificationActivity.class));
 
                 } else if (itemId == R.id.home_nav_menu_contact_id) {
                     Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
@@ -441,6 +447,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)){
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        }
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkStateReceiver, intentFilter);
     }
@@ -449,6 +458,15 @@ public class HomeActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(networkStateReceiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)){
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        }else {
+            super.onBackPressed();
+        }
     }
 
     private void updateUI(boolean isNetworkAbailable) {

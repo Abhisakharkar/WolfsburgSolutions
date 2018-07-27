@@ -77,7 +77,10 @@
     <string name="license_number">License Number</string>
     <string name="shop_details">Shop Location</string>
     <string name="save_profile">Save Profile</string>
-    <string name="tap_to_mylocation">Tap to my location button to set shop loaction</string>
-
+    <string name="tap_to_mylocation">Tap to my location button to set shop location</string>
+    <string name="verify_note">Note: \n
+        1. Please make sure you have filled all the mandatory data in profile correctly \n
+        2. Once you get the mail for successful verification of your data please logout and sign in again \n
+    3. After verification you will not be able to change the shop name, location, shop act license and license number</string>
 
 </resources>

@@ -227,6 +227,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         editor.putInt("localityId", retailerDataTableJson.getInt("localityId"));
                                         editor.putString("longitude", String.valueOf(retailerDataTableJson.getDouble("longLoc")));
                                         editor.putString("latitude", String.valueOf(retailerDataTableJson.getDouble("latLoc")));
+                                        editor.putInt("appliedForVerification",retailerDataTableJson.getInt("appliedForVerification"));
                                         editor.putInt("verifiedByTeam", retailerDataTableJson.getInt("verifiedByTeam"));
                                         editor.putInt("locationVerified", retailerDataTableJson.getInt("locationVerified"));
                                         editor.putInt("mobileVerified", retailerDataTableJson.getInt("mobileVerified"));
@@ -256,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         //String profilePhotoURLInLocal=sharedPreferences.getString("profilePhoto",null);
                                         //if (profilePhotoURLInLocal != null) {
                                             Intent dpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
-                                            String dpUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/dp.jpeg";
+                                            String dpUrl = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/dp.jpeg";
                                             dpDownloadIntent.putExtra("url", dpUrl);
                                          //   String photoName = "";
                                             dpDownloadIntent.putExtra("photoName", retailerId+".dp.jpeg");
@@ -266,7 +267,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                        // String shopActPhotoURLInLocal=sharedPreferences.getString("shopActPhoto",null);
                                         //if(shopActPhotoURLInLocal!=null) {
                                             Intent lpDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
-                                            String lpUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/private/" + retailerId + "/lp.jpeg";
+                                            String lpUrl = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com/rt/private/" + retailerId + "/lp.jpeg";
                                             lpDownloadIntent.putExtra("url", lpUrl);
                                           //  String lpPhotoName = "";
                                             lpDownloadIntent.putExtra("photoName", retailerId+".lp.jpeg");
@@ -276,7 +277,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         //String shopPhotoURLInLocal=sharedPreferences.getString("shopPhoto",null);
                                         //if(shopPhotoURLInLocal!=null) {
                                             Intent spDownloadIntent = new Intent(LoginActivity.this, ImageDownloadIntentService.class);
-                                            String spUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/sp.jpeg";
+                                            String spUrl = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com/rt/public/" + retailerId + "/sp.jpeg";
                                             spDownloadIntent.putExtra("url", spUrl);
                                           //  String photoName = "";
                                             spDownloadIntent.putExtra("photoName", retailerId+".sp.jpeg");

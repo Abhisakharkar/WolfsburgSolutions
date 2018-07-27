@@ -90,12 +90,12 @@ public class ShopTimingActivity extends AppCompatActivity implements View.OnClic
                     editor.putString("shopCloseTime2",close2);
                 }
                 editor.apply();
-
+                finish();
             }
 
             @Override
             public void onResponseErrorReceive(String msg) {
-
+                Toast.makeText(ShopTimingActivity.this, "error sending data to server but updated locally. try sending it after some time", Toast.LENGTH_LONG).show();
             }
         });
     }

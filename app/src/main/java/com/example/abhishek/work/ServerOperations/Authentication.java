@@ -30,7 +30,7 @@ import java.util.Map;
 public class Authentication {
 
     private Context context;
-    private String serverUrl = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com:6868";
+    private String serverUrl = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com:6868";
     public ServerResponse serverResponse;
     private Map<String, String> headers;
 

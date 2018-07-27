@@ -41,7 +41,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(ProductViewHolder holder, final int position) {
         holder.nameTextView.setText(arrayList.get(position).getName());
         holder.priceTextView.setText("Rs. " + String.valueOf(arrayList.get(position).getPrice()));
-        String url = "http://ec2-13-58-16-206.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product" + arrayList.get(position).getPhoto();
+        String url = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com/magento/pub/media/catalog/product" + arrayList.get(position).getPhoto();
         if (!url.equals("0") && !url.isEmpty()){
             Glide.with(context)
                     .load(url)
