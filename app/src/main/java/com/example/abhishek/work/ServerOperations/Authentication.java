@@ -122,12 +122,13 @@ public class Authentication {
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("sendRequest Response", response.toString());
-                try {
-                    //responseJSONObject = new JSONObject(response);
-                    serverResponse.saveResponse(response);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (response != null) {
+                    Log.e("sendRequest Response", response.toString());
+                    try {
+                        serverResponse.saveResponse(response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }, new Response.ErrorListener() {

@@ -268,7 +268,7 @@ public class HomeActivity extends AppCompatActivity {
         arrayList = new ArrayList<ItemData>();
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        myListAdapter = new ItemsListAdapter(context, arrayList);
+        myListAdapter = new ItemsListAdapter(context, arrayList,databaseHelper);
         recyclerView.setAdapter(myListAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 

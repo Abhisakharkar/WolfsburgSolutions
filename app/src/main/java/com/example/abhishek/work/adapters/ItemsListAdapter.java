@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.abhishek.work.Model.ItemData;
 import com.example.abhishek.work.R;
 import com.example.abhishek.work.ServerOperations.SendData;
+import com.example.abhishek.work.SupportClasses.LocalDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,13 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
     private int position;
     private Context context;
     private SendData sendData;
+    private LocalDatabaseHelper databaseHelper;
 
-    public ItemsListAdapter(Context context, List<ItemData> itemList) {
+    public ItemsListAdapter(Context context, List<ItemData> itemList,LocalDatabaseHelper databaseHelper) {
         this.itemList = itemList;
         this.context = context;
         sendData = new SendData(context);
+        this.databaseHelper = databaseHelper;
     }
 
     @Override
@@ -61,32 +64,120 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     .into(holder.itemImageView);
         }
 
-/*
-        //radio button set
-        if(itemList.get(position).isAvailable()){
-            holder.itemAvailabilityBtn.setSelected(true);
-            holder.itemAvailabilityBtn.setChecked(true);
-            holder.itemNotAvailableFrameLayout.setVisibility(View.INVISIBLE);
-        }else {
-            holder.itemAvailabilityBtn.setSelected(false);
-            holder.itemAvailabilityBtn.setChecked(false);
-            holder.itemNotAvailableFrameLayout.setVisibility(View.VISIBLE);
-        }
+        holder.itemStarImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("pppp ",String.valueOf(position));
+                if(itemList.get(position).getStar() == 1){
+                    holder.itemStarImageBtn.setImageResource(R.drawable.star_btn_hollow_vector);
+                    itemList.get(position).setStar(0);
 
-        //name,category,mrp,price  ---   value set
-        holder.itemNameTextView.setText(itemList.get(position).getName());
-        holder.itemCategoryTextView.setText(itemList.get(position).getCategory());
-        holder.itemSellingPriceEditText.setText(itemList.get(position).getSellingPrice());
-        holder.itemMRPTextView.setText(itemList.get(position).getMrp());
+                    //send updat request
+                    sendData.updateProduct("star","0",itemList.get(position).getProductID());
+                    //update local database
+                    databaseHelper.updateProduct(itemList.get(position));
 
-        //star button set
-        if (itemList.get(position).isStar()){
-            holder.itemStarImageBtn.setImageResource(R.drawable.star_btn_solid_vector);
-        }else {
-            holder.itemStarImageBtn.setImageResource(R.drawable.star_btn_hollow_vector);
-        }
+                }else{
+                    holder.itemStarImageBtn.setImageResource(R.drawable.star_btn_solid_vector);
+                    itemList.get(position).setStar(1);
 
-*/
+                    //send updat request
+                    sendData.updateProduct("star","1",itemList.get(position).getProductID());
+                    //update local database
+                    databaseHelper.updateProduct(itemList.get(position));
+                }
+            }
+        });
+
+        holder.itemAvailabilityBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.itemAvailabilityBtn.isSelected()) {
+
+                    //set FrameLayout visible
+                    holder.itemAvailabilityBtn.setSelected(false);
+                    holder.itemAvailabilityBtn.setChecked(false);
+                    holder.itemNotAvailableFrameLayout.setVisibility(View.VISIBLE);
+
+                    //send request
+                    int productId = itemList.get(position).getProductID();
+                    sendData.updateProduct("availability","0",productId);
+                    //update local database
+                    databaseHelper.updateProduct(itemList.get(position));
+
+                    //set other elements as disabled
+                    holder.itemImageView.setClickable(false);
+                    holder.itemNameTextView.setClickable(false);
+                    // itemCategoryTextView.setClickable(false);
+                    holder.itemSellingPriceEditText.setClickable(false);
+                    holder.itemMRPTextView.setClickable(false);
+                    holder.itemStarImageBtn.setClickable(false);
+                    // promoteItemBtn.setClickable(false);
+
+                    holder.itemImageView.setEnabled(false);
+                    holder.itemNameTextView.setEnabled(false);
+                    //itemCategoryTextView.setEnabled(false);
+                    holder.itemSellingPriceEditText.setEnabled(false);
+                    holder.itemMRPTextView.setEnabled(false);
+                    holder.itemStarImageBtn.setEnabled(false);
+                    // promoteItemBtn.setEnabled(false);
+
+                } else {
+                    //set framelayout invisible
+                    holder.itemAvailabilityBtn.setSelected(true);
+                    holder.itemAvailabilityBtn.setChecked(true);
+                    holder.itemNotAvailableFrameLayout.setVisibility(View.INVISIBLE);
+
+                    //send request
+                    int productId = itemList.get(position).getProductID();
+                    sendData.updateProduct("availability","1",productId);
+                    //update local database
+                    databaseHelper.updateProduct(itemList.get(position));
+
+                    //set other elements as enabled
+                    holder.itemImageView.setClickable(true);
+                    holder.itemNameTextView.setClickable(true);
+                    //itemCategoryTextView.setClickable(true);
+                    holder.itemSellingPriceEditText.setClickable(true);
+                    holder.itemMRPTextView.setClickable(true);
+                    holder.itemStarImageBtn.setClickable(true);
+                    //promoteItemBtn.setClickable(true);
+
+                    holder.itemImageView.setEnabled(true);
+                    holder.itemNameTextView.setEnabled(true);
+                    //itemCategoryTextView.setEnabled(true);
+                    holder.itemSellingPriceEditText.setEnabled(true);
+                    holder.itemMRPTextView.setEnabled(true);
+                    holder.itemStarImageBtn.setEnabled(true);
+                }
+            }
+        });
+
+        holder.itemSellingPriceEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus){
+                    String edittextString = "";
+                    edittextString = holder.itemSellingPriceEditText.getText().toString();
+                    if (edittextString.isEmpty()){
+                        itemList.get(position).setSellingPrice(itemList.get(position).getPrice());
+                        //send updat request
+                        sendData.updateProduct("price",String.valueOf(itemList.get(position).getPrice()),itemList.get(position).getProductID());
+                        //update local database
+                        databaseHelper.updateProduct(itemList.get(position));
+                    }else {
+                        if (itemList.get(position).getSellingPrice() != Double.parseDouble(edittextString)){
+                            itemList.get(position).setSellingPrice(Double.parseDouble(edittextString));
+                            //send updat request
+                            sendData.updateProduct("price",String.valueOf(edittextString),itemList.get(position).getProductID());
+                            //update local database
+                            databaseHelper.updateProduct(itemList.get(position));
+                        }
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
@@ -94,7 +185,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
         return itemList.size();
     }
 
-    class ItemsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ItemsListViewHolder extends RecyclerView.ViewHolder {
 
         private RadioButton itemAvailabilityBtn;
         private ImageView itemImageView;
@@ -118,96 +209,8 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
            // promoteItemBtn = (TextView) layout.findViewById(R.id.promote_product_btn_id);
             itemNotAvailableFrameLayout = (FrameLayout) layout.findViewById(R.id.item_not_available_framelayout_id);
 
-
-            // button click listener
-            itemAvailabilityBtn.setOnClickListener(this);
-            itemStarImageBtn.setOnClickListener(this);
-           // promoteItemBtn.setOnClickListener(this);
-
             itemAvailabilityBtn.setSelected(true);
             itemAvailabilityBtn.setChecked(true);
-        }
-
-        @Override
-        public void onClick(View view) {
-
-            int id = view.getId();
-
-            // item availability radio button click listener
-            if (id == itemAvailabilityBtn.getId()) {
-                if (itemAvailabilityBtn.isSelected()) {
-
-                    //set FrameLayout visible
-                    itemAvailabilityBtn.setSelected(false);
-                    itemAvailabilityBtn.setChecked(false);
-                    itemNotAvailableFrameLayout.setVisibility(View.VISIBLE);
-
-                    //send request
-                    int productId = itemList.get(position).getProductID();
-                    sendData.updateProduct("availability","0",productId);
-
-                    //set other elements as disabled
-                    itemImageView.setClickable(false);
-                    itemNameTextView.setClickable(false);
-                   // itemCategoryTextView.setClickable(false);
-                    itemSellingPriceEditText.setClickable(false);
-                    itemMRPTextView.setClickable(false);
-                    itemStarImageBtn.setClickable(false);
-                   // promoteItemBtn.setClickable(false);
-
-                    itemImageView.setEnabled(false);
-                    itemNameTextView.setEnabled(false);
-                    //itemCategoryTextView.setEnabled(false);
-                    itemSellingPriceEditText.setEnabled(false);
-                    itemMRPTextView.setEnabled(false);
-                    itemStarImageBtn.setEnabled(false);
-                   // promoteItemBtn.setEnabled(false);
-
-                } else {
-                    //set framelayout invisible
-                    itemAvailabilityBtn.setSelected(true);
-                    itemAvailabilityBtn.setChecked(true);
-                    itemNotAvailableFrameLayout.setVisibility(View.INVISIBLE);
-
-                    //send request
-                    int productId = itemList.get(position).getProductID();
-                    sendData.updateProduct("availability","1",productId);
-
-                    //set other elements as enabled
-                    itemImageView.setClickable(true);
-                    itemNameTextView.setClickable(true);
-                    //itemCategoryTextView.setClickable(true);
-                    itemSellingPriceEditText.setClickable(true);
-                    itemMRPTextView.setClickable(true);
-                    itemStarImageBtn.setClickable(true);
-                    //promoteItemBtn.setClickable(true);
-
-                    itemImageView.setEnabled(true);
-                    itemNameTextView.setEnabled(true);
-                    //itemCategoryTextView.setEnabled(true);
-                    itemSellingPriceEditText.setEnabled(true);
-                    itemMRPTextView.setEnabled(true);
-                    itemStarImageBtn.setEnabled(true);
-                    //promoteItemBtn.setEnabled(true);
-
-                }
-
-                // item star button click listener
-            } else if (id == itemStarImageBtn.getId()) {
-                int productId = itemList.get(position).getProductID();
-                if(itemList.get(position).getStar() == 1){
-                    itemStarImageBtn.setImageResource(R.drawable.star_btn_hollow_vector);
-                    itemList.get(position).setStar(0);
-
-                }else{
-                    itemStarImageBtn.setImageResource(R.drawable.star_btn_solid_vector);
-                    itemList.get(position).setStar(1);
-
-                }
-
-
-                // item promote product button click listener
-            }
         }
     }
 

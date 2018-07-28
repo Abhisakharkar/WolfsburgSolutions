@@ -43,8 +43,6 @@ public class ProductEditActivity extends AppCompatActivity {
     private double price,selling_price;
     private int attribute_set_id,productID,retailerID;
 
-    private SharedPreferences sharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +52,6 @@ public class ProductEditActivity extends AppCompatActivity {
         databaseHelper = new LocalDatabaseHelper(context);
         sendData = new SendData(context);
         serverResponse = sendData.getServerResponseInstance();
-
-        sharedPreferences = getApplicationContext().getSharedPreferences("userdata",MODE_PRIVATE);
-        retailerID = sharedPreferences.getInt("retailerId",0);
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
@@ -154,14 +149,14 @@ public class ProductEditActivity extends AppCompatActivity {
                     //update existing item
                     databaseHelper.insertItem(itemData);
                     //sending product data to server
-                    sendData.addProductToShop(String.valueOf(retailerID),String.valueOf(productID)
+                    sendData.addProductToShop(String.valueOf(productID)
                             ,String.valueOf(priceTxt),descriptionTxt,isAvailable,isStar,commentTxt);
                 }else {
                     //item not present
                     //add this new item
                     databaseHelper.updateProduct(itemData);
                     //sending product data to server
-                    sendData.updateProductToShop(String.valueOf(retailerID),String.valueOf(productID)
+                    sendData.updateProductToShop(String.valueOf(productID)
                             ,String.valueOf(priceTxt),descriptionTxt,isAvailable,isStar,commentTxt);
                 }
 

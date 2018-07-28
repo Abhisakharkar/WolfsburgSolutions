@@ -26,8 +26,8 @@ public class SendData {
 
     private String serverURL = "http://ec2-13-59-88-132.us-east-2.compute.amazonaws.com:6868";
     private Context context;
-    //private ServerResponse serverResponse = new ServerResponse();
-    private ServerResponse serverResponse;
+    private ServerResponse serverResponse = new ServerResponse();
+    //private ServerResponse serverResponse;
     private JSONObject reqBody = new JSONObject();
     private HashMap<String,String> headers;
 
@@ -83,11 +83,11 @@ public class SendData {
         headers.put(key,value);
         headers.put("productId",String.valueOf(productId));
 
-        String url = serverURL + "/update";
+        String url = serverURL + "/update_retailer_product";
         sendRequest(url,headers);
     }
 
-    public void addProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
+    public void addProductToShop(String productID,String price,String desc,int avail,int star,String comment){
         try{
             headers = new HashMap<>();
             headers.put("Content-Type","application/json");
@@ -107,8 +107,8 @@ public class SendData {
         }
     }
 
-    public void updateProductToShop(String retailerID,String productID,String price,String desc,int avail,int star,String comment){
-        String image = "product_"+retailerID+".jpeg";
+    public void updateProductToShop(String productID,String price,String desc,int avail,int star,String comment){
+        //String image = "product_"+retailerID+".jpeg";
         //photo : blank
 
         try{
@@ -128,6 +128,7 @@ public class SendData {
             e.printStackTrace();
         }
     }
+
     public void updateShopStatusInManual(int currentState){
 
         try{
@@ -166,7 +167,9 @@ public class SendData {
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                serverResponse.saveResponse(response);
+                if (response != null) {
+                    serverResponse.saveResponse(response);
+                }
             }
         }
                 , new Response.ErrorListener() {
