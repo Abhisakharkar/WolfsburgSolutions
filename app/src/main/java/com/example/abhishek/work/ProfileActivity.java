@@ -910,6 +910,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 //set bitmap image to imageView
                 //licenseImageview.setImageBitmap(photoBitmap);
             }
+        }
 
             if (requestCode == GALLERY_REQ_CODE) {
 
@@ -956,7 +957,6 @@ public class ProfileActivity extends AppCompatActivity implements
                 }
             }
         }
-    }
 
     private void saveImage(Bitmap photoBitmap, String photoName) {
         if (photoBitmap == null) {
