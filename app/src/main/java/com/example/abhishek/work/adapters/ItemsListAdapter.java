@@ -63,6 +63,45 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     .load(url)
                     .into(holder.itemImageView);
         }
+        if (databaseHelper.getProduct(itemList.get(position).getProductID()).getAvailability() == 1){
+            holder.itemAvailabilityBtn.setSelected(true);
+            holder.itemAvailabilityBtn.setChecked(true);
+            holder.itemNotAvailableFrameLayout.setVisibility(View.INVISIBLE);
+            //set other elements as enabled
+            holder.itemImageView.setClickable(true);
+            holder.itemNameTextView.setClickable(true);
+            //itemCategoryTextView.setClickable(true);
+            holder.itemSellingPriceEditText.setClickable(true);
+            holder.itemMRPTextView.setClickable(true);
+            holder.itemStarImageBtn.setClickable(true);
+            //promoteItemBtn.setClickable(true);
+
+            holder.itemImageView.setEnabled(true);
+            holder.itemNameTextView.setEnabled(true);
+            //itemCategoryTextView.setEnabled(true);
+            holder.itemSellingPriceEditText.setEnabled(true);
+            holder.itemMRPTextView.setEnabled(true);
+            holder.itemStarImageBtn.setEnabled(true);
+        }else {
+            holder.itemAvailabilityBtn.setSelected(false);
+            holder.itemAvailabilityBtn.setChecked(false);
+            holder.itemNotAvailableFrameLayout.setVisibility(View.VISIBLE);
+            //set other elements as disabled
+            holder.itemImageView.setClickable(false);
+            holder.itemNameTextView.setClickable(false);
+            // itemCategoryTextView.setClickable(false);
+            holder.itemSellingPriceEditText.setClickable(false);
+            holder.itemMRPTextView.setClickable(false);
+            holder.itemStarImageBtn.setClickable(false);
+            // promoteItemBtn.setClickable(false);
+
+            holder.itemImageView.setEnabled(false);
+            holder.itemNameTextView.setEnabled(false);
+            //itemCategoryTextView.setEnabled(false);
+            holder.itemSellingPriceEditText.setEnabled(false);
+            holder.itemMRPTextView.setEnabled(false);
+            holder.itemStarImageBtn.setEnabled(false);
+        }
 
         holder.itemStarImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +142,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     int productId = itemList.get(position).getProductID();
                     sendData.updateProduct("availability","0",productId);
                     //update local database
+                    itemList.get(position).setAvailability(0);
                     databaseHelper.updateProduct(itemList.get(position));
 
                     //set other elements as disabled
@@ -132,6 +172,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
                     int productId = itemList.get(position).getProductID();
                     sendData.updateProduct("availability","1",productId);
                     //update local database
+                    itemList.get(position).setAvailability(0);
                     databaseHelper.updateProduct(itemList.get(position));
 
                     //set other elements as enabled
@@ -208,9 +249,6 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
             itemStarImageBtn = (ImageButton) layout.findViewById(R.id.item_start_btn_id);
            // promoteItemBtn = (TextView) layout.findViewById(R.id.promote_product_btn_id);
             itemNotAvailableFrameLayout = (FrameLayout) layout.findViewById(R.id.item_not_available_framelayout_id);
-
-            itemAvailabilityBtn.setSelected(true);
-            itemAvailabilityBtn.setChecked(true);
         }
     }
 
