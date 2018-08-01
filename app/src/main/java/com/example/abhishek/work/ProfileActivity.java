@@ -343,7 +343,6 @@ public class ProfileActivity extends AppCompatActivity implements
                         editor.putString("subLocality2", sublocality2);
                         editor.commit();
                     }
-                    finish();
 
                 } catch (Exception e) {
                     e.printStackTrace();
