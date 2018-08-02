@@ -32,7 +32,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB2t4PAMR5gqD--qzc3_33P1jG1rs6mC-g" />
 
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".HomeActivity" android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".SignUpActivity"
             android:theme="@style/AppTheme.AuthActivityStyle" />

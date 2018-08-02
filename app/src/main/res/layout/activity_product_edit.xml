@@ -10,19 +10,57 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#dfdfdf"
+        android:background="@color/colorPrimary"
         android:gravity="center"
-        android:text="Add Product"
+        android:text="Add Product To Shop"
         android:textSize="24dp"
-        android:textStyle="bold" />
+        android:textColor="@color/colorWhite"/>
 
-    <EditText
-        android:id="@+id/product_edit_activity_selling_price_edittext_id"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:hint="selling price" />
+    <TextView
+        android:id="@+id/product_edit_activity_product_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Product name"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/colorBlack"/>
+
+    <TextView
+        android:id="@+id/product_edit_activity_suggested_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suggested price of product is Rs:599"
+        android:textSize="20sp"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You can put your price here"
+            android:textSize="20sp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="1dp"
+            android:textColor="@color/colorBlack"/>
+
+        <EditText
+            android:id="@+id/product_edit_activity_selling_price_edittext_id"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:hint="selling price"
+            android:layout_marginStart="5dp"/>
+
+
+    </LinearLayout>
+
+
 
     <EditText
         android:id="@+id/product_edit_activity_descriptio_edittext_id"
@@ -30,7 +68,8 @@
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:hint="Description" />
+        android:hint="Description"
+        android:visibility="invisible"/>
 
     <EditText
         android:id="@+id/product_edit_activity_comment_edittext_id"
@@ -38,7 +77,8 @@
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:hint="Comment" />
+        android:hint="Comment"
+        android:visibility="invisible"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -52,8 +92,9 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:gravity="center"
-            android:text="availability"
-            android:textSize="24dp" />
+            android:text="Availability"
+            android:textSize="24dp"
+            android:textColor="@color/colorBlack"/>
 
         <Switch
             android:id="@+id/product_edit_activity_availability_swict_id"
@@ -75,8 +116,9 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:gravity="center"
-            android:text="star"
-            android:textSize="24dp" />
+            android:text="Star"
+            android:textSize="24dp"
+            android:textColor="@color/colorBlack"/>
 
         <Switch
             android:id="@+id/product_edit_activity_star_swict_id"
@@ -88,9 +130,12 @@
 
     <Button
         android:id="@+id/product_edit_activity_add_btn_id"
+        style="@style/AuthButtonStyle"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:text="Add" />
 
 </LinearLayout>

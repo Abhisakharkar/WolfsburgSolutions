@@ -1,11 +1,13 @@
 package com.example.abhishek.work.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -102,6 +104,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
             holder.itemMRPTextView.setEnabled(false);
             holder.itemStarImageBtn.setEnabled(false);
         }
+
 
         holder.itemStarImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,6 +224,8 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
 
     }
 
+
+
     @Override
     public int getItemCount() {
         return itemList.size();
@@ -247,7 +252,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.Item
             itemSellingPriceEditText =  layout.findViewById(R.id.item_selling_price_textview_id);
             itemMRPTextView = (TextView) layout.findViewById(R.id.item_mrp_textview_id);
             itemStarImageBtn = (ImageButton) layout.findViewById(R.id.item_start_btn_id);
-           // promoteItemBtn = (TextView) layout.findViewById(R.id.promote_product_btn_id);
+            // promoteItemBtn = (TextView) layout.findViewById(R.id.promote_product_btn_id);
             itemNotAvailableFrameLayout = (FrameLayout) layout.findViewById(R.id.item_not_available_framelayout_id);
         }
     }

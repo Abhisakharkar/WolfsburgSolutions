@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.work.Model.ItemData;
@@ -29,6 +30,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private EditText priceEdittext,commentEdittext,descriptionEdittext;
     private Switch star,availability;
     private Button addBtn;
+    private TextView productName,suggestedPrice;
 
     private String priceTxt,commentTxt,descriptionTxt;
     private int isStar,isAvailable;
@@ -68,6 +70,8 @@ public class ProductEditActivity extends AppCompatActivity {
         star = (Switch) findViewById(R.id.product_edit_activity_star_swict_id);
         availability = (Switch) findViewById(R.id.product_edit_activity_availability_swict_id);
         addBtn = (Button) findViewById(R.id.product_edit_activity_add_btn_id);
+        productName=(TextView)findViewById(R.id.product_edit_activity_product_name);
+        suggestedPrice=(TextView) findViewById(R.id.product_edit_activity_suggested_price);
         if(productID!=-1) {
             ItemData tempItemData = databaseHelper.getProduct(productID);
             if (tempItemData.getProductID() == -1){
@@ -78,6 +82,8 @@ public class ProductEditActivity extends AppCompatActivity {
                 descriptionEdittext.setText(tempItemData.getDescription());
                 star.setChecked(tempItemData.getStar()>0);
                 availability.setChecked(tempItemData.getAvailability()>0);
+                productName.setText(name);
+                suggestedPrice.setText("Suggested price of Product is Rs "+price);
             }
         }
 
